@@ -1,0 +1,59 @@
+
+AppConfig → used to configure Spring Security
+SecurityFilterChain → defines security rules for HTTP requests
+HttpSecurity → used to customize authentication & authorization
+
+
+SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+
+}
+
+SecurityFilterChain decides which requests are allowed and which are blocked
+HttpSecurity = security rules ka builder
+
+Is method ke andar hum batate hain
+➡️ Login chahiye ya nahi
+➡️ CSRF on/off
+➡️ JWT / form login
+➡️ Customer vs Restaurant Owner access
+
+
+http.sessionManagement(
+    management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+)
+
+➡️ Server session save nahi karega
+➡️ Har request me token aayega (JWT based auth)
+➡️ REST APIs ke liye best practice
+
+.authorizeHttpRequests(Authorize -> Authorize
+
+#AUTHORIZATION RULES
+➡️ Yahan hum URL access rules likhte hain
+
+.requestMatchers("/api/admin/**").hasAnyRole("RESTAURANT_OWNER","ADMIN")
+
+#ADMIN ROUTES
+➡️ /api/admin/... URLs
+➡️ Sirf ADMIN ya RESTAURANT_OWNER access kar sakta hai
+
+.requestMatchers("/api/**").authenticated()
+
+#API ROUTES
+➡️ /api/... ke sab endpoints
+➡️ Login + valid token required
+
+.anyRequest().permitAll()
+
+#PUBLIC ROUTES
+➡️ Baaki sab URLs
+➡️ Public access (login not needed)
+
+.addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
+
+➡️ Apna custom JWT filter add kar rahe ho
+➡️ Ye filter:
+Token check karega
+User authenticate karega
+➡️ BasicAuthenticationFilter se pehle chalega
+

@@ -1,0 +1,19 @@
+JWT (JSON WEB TOKEN) Filter ka meaning (simple words me):
+
+👉 JWT Filter ek security guard jaisa hota hai
+Jo har incoming request ko check karta hai ki user ne valid JWT token bheja hai ya nahi.
+
+🔹 JWT Filter kya karta hai? (step-by-step)
+
+1️⃣ Request aati hai frontend se
+2️⃣ JWT Filter Authorization header check karta hai
+3️⃣ Token present hai ya nahi dekhta hai
+4️⃣ Token valid / expired hai ya nahi verify karta hai
+5️⃣ Agar token sahi ho:
+
+User ko authenticate karta hai
+
+User ka role set karta hai
+6️⃣ Agar token galat ho:
+
+Request ko reject (401 Unauthorized) kar deta hai
