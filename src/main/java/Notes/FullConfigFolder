@@ -1,0 +1,235 @@
+Socho tumhara backend ek 🏢 building hai.
+Security guard ka system = **config folder**.
+
+Is folder ka kaam hai:
+
+> Kaun andar aa sakta hai?
+> Kaun admin floor pe ja sakta hai?
+> Kaun fake ID lekar aa raha hai?
+
+# 📁 CONFIG FOLDER ME 4 FILES HAIN
+
+1. AppConfig
+2. JwtConstant
+3. JwtProvider
+4. JwtTokenValidator
+
+Ab ek-ek karke samjhte hain.
+
+# 1️⃣ JwtConstant – (Secret Locker)
+
+public class JwtConstant {
+    public static final String SECRET_KEY="....";
+    public static final String JWT_HEADER = "Authorization";
+}
+
+## Ye file kyu banayi?
+
+Taaki:
+
+* Secret key ek hi jagah rahe
+* Baar-baar string hardcode na karni pade
+
+## SECRET_KEY kya hai?
+
+Ye tumhara **digital signature password** hai.
+
+Jab token banega:
+→ Ye key se sign hoga
+Jab token check hoga:
+→ Isi key se verify hoga
+
+Agar key match nahi karegi → token invalid ❌
+
+
+## JWT_HEADER kya hai?
+
+Ye batata hai:
+> Token request ke header me kaha milega
+
+Frontend request bhejta hai:
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+Isliye hum header ka naam constant me rakhte hain.
+
+# 2️⃣ JwtProvider – (Token Banane Wala Machine)
+
+@Service
+public class JwtProvider
+
+Ye class token generate karti hai.
+
+## Is file ka kaam kya hai?
+
+👉 Login ke time token banana
+👉 Token se email nikalna
+
+## 🔥 generateToken Method
+
+public String generateToken(Authentication auth)
+
+
+Ye tab chalta hai jab user login karta hai.
+
+Isme kya hota hai?
+
+1️⃣ User ka email liya
+2️⃣ User ke roles liye (ADMIN / USER etc)
+3️⃣ Token banaya
+4️⃣ Expiry set ki (24 hours)
+5️⃣ Secret key se sign kiya
+
+
+.setExpiration(new Date(new Date().getTime()+86400000))
+86400000 = 24 hours
+
+Matlab token 1 din valid rahega.
+
+
+## populateAuthorities Method
+
+Ye roles ko string me convert karta hai.
+
+Example:
+ADMIN,USER
+
+Kyuki JWT me direct object store nahi karte.
+
+
+## getEmailFromJwtToken
+
+Ye method token se email nikalta hai.
+
+Jab hume token mila:
+→ Hum usko decode karke email nikaal sakte hain.
+
+So summary:
+JwtProvider = Token BANATA hai 🏭
+
+
+# 3️⃣ JwtTokenValidator – (Security Guard)
+
+public class JwtTokenValidator extends OncePerRequestFilter
+
+
+Ye sabse important class hai.
+## Ye kya karta hai?
+
+Har request pe check karta hai:
+> Token valid hai ya nahi?
+
+## Flow Inside doFilterInternal
+
+String jwt = request.getHeader("Authorization");
+
+Header se token nikala.
+
+Agar token present hai:
+jwt = jwt.substring(7);
+
+Bearer hata diya.
+
+## Fir kya hota hai?
+
+1️⃣ Secret key se token verify
+2️⃣ Claims nikale (email + roles)
+3️⃣ Authentication object banaya
+4️⃣ Spring Security context me set kiya
+
+SecurityContextHolder.getContext().setAuthentication(authentication);
+
+Matlab:
+> Ab Spring ko pata hai user kaun hai.
+
+Agar token galat hai:
+throw new BadCredentialsException
+
+Request reject ❌
+
+So summary:
+
+JwtTokenValidator = Token CHECK karta hai 🛂
+
+# 4️⃣ AppConfig – (Security Rules Book)
+
+Ye sabse badi file hai.
+
+Iska kaam:
+
+✔ Spring Security ON karna
+✔ Kaun access kare define karna
+✔ JWT filter add karna
+✔ CORS allow karna
+✔ Password encoder define karna
+
+
+## 🔐 Session Policy
+
+SessionCreationPolicy.STATELESS
+
+Matlab:
+Server session store nahi karega.
+Har request me token bhejna padega.
+
+
+## 🔐 Authorization Rules
+
+.requestMatchers("/api/admin/**").hasAnyRole("RESTAURANT_OWNER","ADMIN")
+
+Admin routes:
+Sirf owner ya admin access kar sakta hai.
+
+.requestMatchers("/api/**").authenticated()
+
+Baaki API:
+Login required.
+
+.anyRequest().permitAll()
+
+Baaki sab public.
+
+## 🔐 JWT Filter Add
+
+.addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
+
+Matlab:
+Basic filter se pehle
+→ JWT token check hoga.
+
+
+## 🔐 Password Encoder
+
+return new BCryptPasswordEncoder();
+
+Password plain text me save nahi hoga.
+Hash me save hoga.
+
+Security 🔒
+
+# 🧠 FULL FLOW AB CLEAR KARO
+
+User Login karta hai
+⬇
+Spring authenticate karta hai
+⬇
+JwtProvider token generate karta hai
+⬇
+Token frontend ko milta hai
+⬇
+Frontend har request me token bhejta hai
+⬇
+JwtTokenValidator token check karta hai
+⬇
+Agar valid → request allowed
+
+
+# 🎯 Ek Line Me
+
+| File              | Kaam                          |
+| ----------------- | ----------------------------- |
+| JwtConstant       | Secret values store karta hai |
+| JwtProvider       | Token banata hai              |
+| JwtTokenValidator | Token check karta hai         |
+| AppConfig         | Security rules set karta hai  |
+
+
