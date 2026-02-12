@@ -1,0 +1,110 @@
+# 🧠 Sabse Pehle Clear Karo — DTO kya hota hai?
+
+DTO ka full form hota hai:
+Data Transfer Object
+
+Ye normally use hota hai:
+* API me data bhejne ke liye
+* Ya frontend ko limited data dene ke liye
+* Database se direct connected nahi hota
+
+# 🔴 Ab Problem Kahan Hai?
+
+Tumhara `RestaurantDto` aisa likha hai:
+
+@Data
+@Embeddable
+public class RestaurantDto
+
+⚠️ Yaha pe `@Embeddable` laga hua hai.
+
+Iska matlab:
+
+👉 Ye normal DTO nahi hai
+👉 Ye actually database ke andar embed hone wala component ban gaya hai
+
+
+# 📦 `@Embeddable` ka Simple Matlab
+
+Agar kisi class pe `@Embeddable` lagate ho, toh:
+
+> Us class ka alag table nahi banega
+> Uske fields kisi dusri Entity ke table ke andar store honge
+
+Jaise tumhare Restaurant me:
+
+@Embedded
+private ContactInformation contactInformation;
+
+Matlab:
+ContactInformation ke fields → Restaurant table ke andar hi save honge.
+
+
+# 🔵 Ab Tumhara Restaurant Entity Samjhte Hain
+
+@Entity
+public class Restaurant
+
+Ye kya karta hai?
+
+✔ Database me table banata hai
+✔ Relations manage karta hai
+✔ Orders, Foods, Address sab handle karta hai
+
+Ye full heavy object hai.
+
+# 🟡 Ab Tumhara RestaurantDto
+
+@Embeddable
+public class RestaurantDto
+
+
+Isme sirf:
+
+private String title;
+private List<String> images;
+private String description;
+private Long id;
+
+Ye ek **light version** hai restaurant ka.
+
+Par kyunki tumne `@Embeddable` laga diya hai:
+
+👉 Ye database ke structure ka part ban gaya hai
+👉 Ye pure DTO jaisa behave nahi kar raha
+
+
+# 💥 Important Difference
+
+## 🔷 Restaurant (Entity)
+
+* Database table banata hai
+* Relationships rakhta hai
+* Full data rakhta hai
+* Heavy object
+
+## 🔷 RestaurantDto (Normally)
+
+* Sirf API ke liye hota hai
+* Database se direct link nahi
+* No annotations like `@Entity`, `@Embeddable`, `@Column`
+* Sirf simple class
+
+
+# 🔥 Short Summary (Exam Style)
+
+| Restaurant Entity   | RestaurantDto      |
+| ------------------- | ------------------ |
+| Database table      | API data object    |
+| Heavy object        | Light object       |
+| Has relations       | No relations       |
+| Has JPA annotations | No JPA annotations |
+
+# 🧠 Simple Real-Life Example
+
+Restaurant Entity = Full Aadhaar card
+RestaurantDto = Website pe dikhne wala profile
+
+Tum Aadhaar ka password sabko nahi dikhaogi na? 😅
+
+
