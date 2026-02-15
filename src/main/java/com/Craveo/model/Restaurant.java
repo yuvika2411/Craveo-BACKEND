@@ -22,7 +22,7 @@ public class Restaurant {
     private Long id;
 
     @OneToOne
-    private User ownwer;
+    private User owner;
 
     private String name;
 
@@ -36,7 +36,7 @@ public class Restaurant {
     @Embedded // used to include fields of an @Embeddable class inside an entity table.
     private ContactInformation contactInformation;
 
-    private String OpeningHrs;
+    private String openingHrs;
 
     @OneToMany(mappedBy = "restaurant" ,cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders= new ArrayList<>();

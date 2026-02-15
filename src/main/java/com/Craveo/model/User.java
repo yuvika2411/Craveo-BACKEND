@@ -2,6 +2,7 @@ package com.Craveo.model;
 
 import com.Craveo.dto.RestaurantDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,10 +30,12 @@ public class User {
 
     private String email;
 
+    @JsonProperty(access= JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @Enumerated
+    //@Enumerated
     //Enum is used to restrict a variable to fixed, predefined values (to avoid invalid or wrong data).
+
     private USER_ROLE role =USER_ROLE.ROLE_CUSTOMER;
 
     @JsonIgnore // bolta hai ki jab data JSON me convert ho, to ye field send na ho.
