@@ -30,5 +30,7 @@ public class AdminRestaurantController {
 
         Restaurant restaurant= restaurantService.createRestaurant(req,user);
         return null;
+
+        //...
     }
 }
