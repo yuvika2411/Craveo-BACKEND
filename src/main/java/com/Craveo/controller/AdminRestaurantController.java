@@ -68,6 +68,8 @@ public class AdminRestaurantController {
         Restaurant restaurant= restaurantService.updateRestaurantStatus(id);
         MessageResponse res= new MessageResponse();
         res.setMessage("Restaurant deleted successfully");
+///
+
         return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
     }
 
