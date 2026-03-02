@@ -10,11 +10,13 @@ import com.Craveo.model.User;
 import com.Craveo.request.CreateRestaurantRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class RestaurantServiceImp implements RestaurantService{
 
     @Autowired

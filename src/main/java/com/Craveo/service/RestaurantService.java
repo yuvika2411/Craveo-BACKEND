@@ -4,6 +4,7 @@ import com.Craveo.dto.RestaurantDto;
 import com.Craveo.model.Restaurant;
 import com.Craveo.model.User;
 import com.Craveo.request.CreateRestaurantRequest;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
