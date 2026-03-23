@@ -22,7 +22,7 @@ public class CategoryServiceImp implements CategoryService{
 
     @Override
     public FoodCategory createCategory(String name, Long userId) throws Exception {
-        Restaurant restaurant= restaurantService.findRestaurantById(userId);
+        Restaurant restaurant= restaurantService.getRestaurantByUserId(userId);
         FoodCategory foodCategory= new FoodCategory();
         foodCategory.setName(name);
         foodCategory.setRestaurant(restaurant);
@@ -32,7 +32,8 @@ public class CategoryServiceImp implements CategoryService{
 
     @Override
     public List<FoodCategory> findCategoryByRestaurantId(Long id) throws Exception {
-        return categoryRepository.findByRestaurantId(id);
+        Restaurant restaurant= restaurantService.getRestaurantByUserId(id);
+        return categoryRepository.findByRestaurantId(restaurant.getId());
     }
 
     @Override
@@ -42,7 +43,7 @@ public class CategoryServiceImp implements CategoryService{
         if(optionalFoodCategory.isEmpty()){
             throw new Exception("Category not found");
         }
-        return null;
+        return optionalFoodCategory.get();
     }
 
 
