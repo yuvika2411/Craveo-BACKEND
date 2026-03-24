@@ -2,9 +2,11 @@ package com.Craveo.controller;
 
 import com.Craveo.model.Cart;
 import com.Craveo.model.CartItem;
+import com.Craveo.model.User;
 import com.Craveo.request.AddCartItemRequest;
 import com.Craveo.request.UpdateCartItemRequest;
 import com.Craveo.service.CartService;
+import com.Craveo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,9 @@ public class CartController {
 
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private UserService userService;
 
     @PutMapping("/cart/add")
     private ResponseEntity<CartItem> addItemToCart(@RequestBody AddCartItemRequest req,
@@ -40,13 +45,15 @@ public class CartController {
 
     @PutMapping("/cart/clear")
     private ResponseEntity<Cart> clearCart( @RequestHeader("Authorization") String jwt) throws Exception {
-        Cart cart= cartService.clearCart(jwt);
+        User user= userService.findUserByJwtToken(jwt);
+        Cart cart= cartService.clearCart(user.getId());
         return new ResponseEntity<>(cart, HttpStatus.OK);
     }
 
     @GetMapping("/cart")
     private ResponseEntity<Cart> findUserCart( @RequestHeader("Authorization") String jwt) throws Exception {
-        Cart cart= cartService.findCartByUserId(jwt);
+        User user= userService.findUserByJwtToken(jwt);
+        Cart cart= cartService.findCartByUserId(user.getId());
         return new ResponseEntity<>(cart, HttpStatus.OK);
     }
 }
