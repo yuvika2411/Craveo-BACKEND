@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImp implements OrderService{
@@ -63,28 +65,54 @@ public class OrderServiceImp implements OrderService{
             OrderItem savedOrderItem= orderItemRepository.save(orderItem);
             orderItems.add(savedOrderItem);
         }
+        Long totalPrice= cartService.calculateCartTotal(cart);
+        createdOrder.setItems(orderItems);
+        createdOrder.setTotalPrice(totalPrice);
 
-
-        return null;
+        Order savedOrder= orderRepository.save(createdOrder);
+        restaurant.getOrders().add(savedOrder);
+        return createdOrder;
     }
 
     @Override
     public Order updateOrder(Long orderId, String orderStatus) throws Exception {
-        return null;
+        Order order= findOrderById(orderId);
+        if(orderStatus.equals("OUT FOR DELIVERY")
+                || orderStatus.equals("DELIVERED")
+                || orderStatus.equals("COMPLETED")
+                || orderStatus.equals("PENDING")){
+            order.setOrderStatus(orderStatus);
+            return orderRepository.save(order);
+        }
+        throw new Exception("PLEASE SELECT A VALID ORDER STATUS");
     }
 
     @Override
     public void cancelOrder(Long orderId) throws Exception {
-
+        Order order= findOrderById(orderId);
+        orderRepository.deleteById(orderId);
     }
 
     @Override
     public List<Order> getUsersOrder(Long UserId) throws Exception {
-        return List.of();
+        return orderRepository.findByCustomerId(UserId);
     }
 
     @Override
-    public List<Order> getRestaurantsOrder(Long restaurantId, String OrderStatus) throws Exception {
-        return List.of();
+    public List<Order> getRestaurantsOrder(Long restaurantId, String orderStatus) throws Exception {
+        List<Order> orders= orderRepository.findByRestaurantId(restaurantId);
+        if(orderStatus!=null){
+            orders= orders.stream().filter(order-> order.getOrderStatus().equals(orderStatus)).collect(Collectors.toList());
+        }
+        return orders;
+    }
+
+    @Override
+    public Order findOrderById(Long orderId) throws Exception {
+        Optional<Order> optionalOrder= orderRepository.findById(orderId);
+        if(optionalOrder.isEmpty()){
+            throw new Exception("Order not found");
+        }
+        return optionalOrder.get();
     }
 }

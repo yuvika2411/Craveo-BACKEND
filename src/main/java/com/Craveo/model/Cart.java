@@ -26,4 +26,7 @@ public class Cart {
     private List<CartItem> items= new ArrayList<>();
 
     private int total;
+
+    public void setTotal(Long aLong) {
+    }
 }
