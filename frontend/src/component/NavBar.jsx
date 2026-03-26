@@ -9,69 +9,45 @@ const Navbar = () => {
 
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between text-white">
 
-        <div className="text-[22px] italic font-semibold tracking-wide cursor-pointer">
+        <div className="text-[22px] font-semibold tracking-wide cursor-pointer ml-4">
           <span className="text-[#ea580c]">Craveo</span>
         </div>
 
-        <div className="hidden md:flex items-center text-[15px] font-medium">
+        <div className="hidden md:flex items-center text-[15px] font-medium gap-10 ml-95">
 
-          <p className="text-[#ea580c] cursor-pointer relative mr-20 ml-50">
+          <p className="text-[#ea580c] cursor-pointer relative">
             Home
-            <span className="absolute left-0 -bottom-1 w-full  bg-[#ea580c]"></span>
           </p>
 
-
-          <p className="cursor-pointer hover:text-[#ea580c] transition relative group  mr-20">
+          <p className="cursor-pointer hover:text-[#ea580c] transition">
             About
-            <span className="absolute left-0 -bottom-1 w-0  bg-[#ea580c] transition-all group-hover:w-full"></span>
           </p>
 
-          <p className="cursor-pointer hover:text-[#ea580c] transition relative group mr-20">
+          <p className="cursor-pointer hover:text-[#ea580c] transition">
             Blogs
-            <span className="absolute left-0 -bottom-1 w-0  bg-[#ea580c] transition-all group-hover:w-full"></span>
           </p>
-    
-          <p className="cursor-pointer hover:text-[#ea580c] transition relative group">
+
+          <p className="cursor-pointer hover:text-[#ea580c] transition">
             Contact Us
-            <span className="absolute left-0 -bottom-1 w-0  bg-[#ea580c] transition-all group-hover:w-full"></span>
           </p>
 
         </div>
 
-        <div className="flex items-center gap-5 lg:gap-8 ">
+        <div className="flex items-center gap-8 mr-5">
 
-          <IconButton className="hover:bg-white/10 transition">
-            <SearchIcon sx={{ color: "white", fontSize: "1.6rem" }} />
+          <IconButton>
+            <SearchIcon sx={{ color: "white" }} />
           </IconButton>
 
-
-          <IconButton className="hover:bg-white/10 transition">
-            <Badge
-              badgeContent={2}
-              sx={{
-                "& .MuiBadge-badge": {
-                  backgroundColor: "#ea580c",
-                  color: "white",
-                  fontSize: "0.65rem",
-                  minWidth: "16px",
-                  height: "16px"
-                }
-              }}
-            >
-              <ShoppingCartIcon sx={{ color: "white", fontSize: "1.6rem" }} />
+          <IconButton>
+            <Badge badgeContent={2} color="error">
+              <ShoppingCartIcon sx={{ color: "white" }} />
             </Badge>
           </IconButton>
 
-          <Avatar 
-            sx={{ 
-              bgcolor: "white",
-              width: 32,
-              height: 32,
-              fontSize: "0.8rem"
-            }} 
-          />
+          <Avatar sx={{ bgcolor: "white", width: 32, height: 32 }} />
 
-          <button className="ml-2 bg-[#d2510b] px-4 py-2 rounded-full text-[14px] font-medium hover:bg-[#c2410c] transition shadow-md shadow-[#ea580c]/20">
+          <button className="bg-[#ea580c] px-4 py-2 rounded-full text-sm hover:bg-[#c2410c] transition">
             Sign Up
           </button>
 
@@ -82,4 +58,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default Navbar;
