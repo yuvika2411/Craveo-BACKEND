@@ -17,23 +17,23 @@ const Navbar = () => {
 
           <p className="text-[#ea580c] cursor-pointer relative mr-20 ml-50">
             Home
-            <span className="absolute left-0 -bottom-1 w-full h-[2px] bg-[#ea580c]"></span>
+            <span className="absolute left-0 -bottom-1 w-full  bg-[#ea580c]"></span>
           </p>
 
 
           <p className="cursor-pointer hover:text-[#ea580c] transition relative group  mr-20">
             About
-            <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#ea580c] transition-all group-hover:w-full"></span>
+            <span className="absolute left-0 -bottom-1 w-0  bg-[#ea580c] transition-all group-hover:w-full"></span>
           </p>
 
           <p className="cursor-pointer hover:text-[#ea580c] transition relative group mr-20">
             Blogs
-            <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#ea580c] transition-all group-hover:w-full"></span>
+            <span className="absolute left-0 -bottom-1 w-0  bg-[#ea580c] transition-all group-hover:w-full"></span>
           </p>
     
           <p className="cursor-pointer hover:text-[#ea580c] transition relative group">
             Contact Us
-            <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#ea580c] transition-all group-hover:w-full"></span>
+            <span className="absolute left-0 -bottom-1 w-0  bg-[#ea580c] transition-all group-hover:w-full"></span>
           </p>
 
         </div>
