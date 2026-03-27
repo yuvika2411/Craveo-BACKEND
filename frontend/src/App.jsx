@@ -13,7 +13,7 @@ const App = () => {
       <CssBaseline />
       <Navbar />
       <Hero />
-      {/* <Carousel /> */}
+      <Carousel />
     </ThemeProvider>
   );
 };
