@@ -2,7 +2,8 @@ import React from "react";
 import "./App.css";
 import Navbar from "./component/NavBar";
 import Hero from "./component/Hero";
-import Carousel from "./component/Carousel";
+import Carousel from "./component/MenuCarousel";
+import Restaurant from "./component/Restaurants";
 
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { darkTheme } from "./Theme/DarkTheme";
@@ -14,6 +15,7 @@ const App = () => {
       <Navbar />
       <Hero />
       <Carousel />
+      <Restaurant />
     </ThemeProvider>
   );
 };

@@ -38,10 +38,9 @@ const Carousel = () => {
     return (
         <section className="w-full bg-[#0f0f0f] text-white py-10 px-4 md:px-8">
             <div className="max-w-7xl mx-auto">
-                {/* Heading */}
+
                 <h2 className="text-2xl font-semibold mb-6 font-[Poppins] ml-4 md:ml-20">Top Meals</h2>
 
-                {/* Custom Arrow Styling */}
                 <style>
                     {`
                         /* Position arrows in the gap created by padding */
@@ -50,13 +49,11 @@ const Carousel = () => {
                     `}
                 </style>
 
-                {/* Container to create space bounded for arrows while squeezing images closer */}
                 <div className="px-10 md:px-14">
                     <SlickSlider {...settings}>
                         {meals.map((meal) => (
                             <div key={meal.id} className="px-2 text-center outline-none">
 
-                                {/* Circle Image */}
                                 <div className="w-32 h-32 md:w-36 md:h-36 lg:w-38 lg:h-38 mx-auto">
                                     <img
                                         src={meal.image}
@@ -65,7 +62,6 @@ const Carousel = () => {
                                     />
                                 </div>
 
-                                {/* Name */}
                                 <p className="mt-4 text-sm text-gray-300 font-medium font-[Poppins]">
                                     {meal.name}
                                 </p>
