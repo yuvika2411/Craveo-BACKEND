@@ -84,7 +84,7 @@ const RestaurantDetails = () => {
                             <span className="text-gray-500 text-xs mt-1">Cost for two: ₹400</span>
                         </div>
                     </div>
-
+                    {/* hii */}
                     <Divider className="bg-white/10 my-8" />
 
                     <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
