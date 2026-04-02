@@ -84,9 +84,8 @@ const RestaurantDetails = () => {
                             <span className="text-gray-500 text-xs mt-1">Cost for two: ₹400</span>
                         </div>
                     </div>
-                    {/* hii */}
-                    <Divider className="bg-white/10 my-8" />
 
+                    <Divider className="bg-white/10 my-8" />
                     <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                         <div className='flex items-center gap-5 bg-[#0f0f0f] hover:bg-[#151515] transition-colors p-5 rounded-xl border border-white/5 group'>
                             <div className="bg-[#ea580c]/10 p-4 rounded-full group-hover:bg-[#ea580c]/20 transition-colors">
@@ -107,6 +106,19 @@ const RestaurantDetails = () => {
                             </div>
                         </div>
                     </div>
+                    <Divider />
+                    {/* hi */}
+                    <section className="pt -[2rem] lg:flex relative">
+                        <div className="space-y-10 lg:w-[20%] filter">
+                            <div className='box space-y-5 lg:sticky top-28'>
+                                <div>
+                                    <Typography varient="h5" sx={{paddingBottom:"1rem"}}></Typography>
+                                </div>
+                            </div> 
+
+                        </div>
+                    </section>
+
                 </div>
 
             </section>
