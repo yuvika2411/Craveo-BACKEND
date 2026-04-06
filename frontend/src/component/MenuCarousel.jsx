@@ -9,12 +9,13 @@ const meals = [
     { id: 1, name: "Cakes", image: "/images/Meals/cakes.jpg" },
     { id: 2, name: "Pizza", image: "/images/Meals/pizza.jpg" },
     { id: 3, name: "Burger", image: "/images/Meals/burger.jpg" },
-    { id: 4, name: "Sandwich", image: "/images/Meals/sandwich.png" },
+    { id: 4, name: "Sandwich", image: "/images/Meals/sandwich.jpg" },
     { id: 5, name: "Pasta", image: "/images/Meals/pasta.jpg" },
     { id: 6, name: "Momos", image: "/images/Meals/momos.jpg" },
     { id: 7, name: "Biryani", image: "/images/Meals/biryani.jpg" },
     { id: 8, name: "Rolls", image: "/images/Meals/rolls.png" },
 ];
+
 
 const Carousel = () => {
     const settings = {
