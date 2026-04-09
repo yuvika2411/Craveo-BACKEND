@@ -65,10 +65,8 @@ const Cart = () => {
         <div className="font-[Poppins] min-h-screen lg:h-screen lg:overflow-hidden bg-[#0f0f0f] pt-24 pb-6 px-5 lg:px-10 xl:px-20 text-white selection:bg-[#ea580c] selection:text-white flex flex-col">
             <div className="flex flex-col lg:flex-row gap-6 xl:gap-12 max-w-[1600px] mx-auto w-full flex-1 lg:h-full lg:min-h-0">
                 
-                {/* LEFT SECTION */}
                 <div className="w-full lg:w-[45%] xl:w-[40%] flex flex-col gap-5 lg:h-full lg:min-h-0">
                     
-                    {/* CART ITEMS CARD */}
                     <div className="flex-1 bg-[#151515] rounded-[2rem] p-5 text-gray-200 md:p-6 border border-white/5 shadow-2xl relative overflow-hidden flex flex-col min-h-0">
                         <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#ea580c] to-yellow-500"></div>
                         <div className="flex items-center justify-between mb-4 shrink-0">
@@ -123,10 +121,8 @@ const Cart = () => {
                         </div>
                     </div>
 
-                    {/* BILL DETAILS CARD */}
                     <div className="shrink-0 bg-gradient-to-br from-[#151515] to-[#111111] rounded-[2rem] p-5 md:p-6 border border-white/5 shadow-2xl relative overflow-hidden">
                         
-                        {/* Decorative background circle */}
                         <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#ea580c]/5 rounded-full blur-2xl pointer-events-none"></div>
 
                         <h3 className="font-bold text-lg mb-4 text-gray-100 border-b border-white/5 pb-3">Bill Details</h3>
@@ -160,7 +156,6 @@ const Cart = () => {
                     </div>
                 </div>
 
-                {/* RIGHT SECTION */}
                 <div className="w-full lg:w-[55%] xl:w-[60%] flex flex-col lg:h-full lg:min-h-0 pt-6 lg:pt-0">
                     <div className="flex items-center justify-between mb-6 shrink-0">
                         <h2 className="text-2xl font-bold text-white tracking-tight">
@@ -196,7 +191,6 @@ const Cart = () => {
                             );
                         })}
 
-                        {/* Add New Address Card */}
                         <div 
                             onClick={() => setIsAddressModalOpen(true)}
                             className="bg-[#0f0f0f] rounded-3xl p-5 md:p-6 flex flex-col items-center justify-center min-h-[180px] border-2 border-dashed border-white/10 hover:border-[#ea580c]/60 transition-all duration-300 cursor-pointer group hover:bg-[#ea580c]/5"

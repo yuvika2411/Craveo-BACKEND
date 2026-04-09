@@ -84,7 +84,7 @@ const MenuCard = ({ item }) => {
                     </div>
                 )}
             </div>
-            
+            {/* hi */}
             <div className="mt-6 flex justify-start border-t border-white/5 pt-4">
                 <Button 
                     variant="contained" 
