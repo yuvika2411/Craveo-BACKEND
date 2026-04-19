@@ -100,8 +100,7 @@ const MenuCard = ({ item }) => {
                         '&:hover': { 
                             backgroundColor: '#c2410c',
                         } 
-                    }}
-                >
+                    }}>
                     ADD TO CART
                 </Button>
             </div>
