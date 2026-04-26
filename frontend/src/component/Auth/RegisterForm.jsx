@@ -30,7 +30,7 @@ export const RegisterForm = () => {
     const handleSubmit = (values) => {
         console.log("register form values", values)
     }
-
+    
     return (
         <div>
             <Typography variant="h5" className="text-center" sx={{mb: 3, fontWeight: "500", fontSize: "1.5rem" }}>
