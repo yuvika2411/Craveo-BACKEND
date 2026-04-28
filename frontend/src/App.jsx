@@ -1,10 +1,10 @@
 import React from "react";
 import "./App.css";
-import Navbar from "./component/NavBar";
-import Hero from "./component/Hero";
-import Carousel from "./component/MenuCarousel";
-import Restaurant from "./component/Restaurants";
-import Cart from "./component/Cart";
+import Navbar from "./component/Navbar/NavBar";
+import Hero from "./component/Home/Hero";
+import Carousel from "./component/Home/MenuCarousel";
+import Restaurant from "./component/Restaurant/Restaurants";
+import Cart from "./component/Cart/Cart";
 import Profile from "./component/Profile/Profile";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { darkTheme } from "./Theme/DarkTheme";

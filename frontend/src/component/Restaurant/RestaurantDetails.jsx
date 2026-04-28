@@ -4,7 +4,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import StarIcon from '@mui/icons-material/Star';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import MenuCard from './MenuCard';
+import MenuCard from '../Home/MenuCard';
 
 const dummyMenu = [
     { id: 1, name: "Margherita Pizza", price: 299, rating: 4.5, type: "veg", category: "Pizza", image: "/images/Meals/pizza.jpg", description: "Classic delight with 100% real mozzarella cheese." },
