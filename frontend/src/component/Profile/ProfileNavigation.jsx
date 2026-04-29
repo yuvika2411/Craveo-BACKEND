@@ -58,13 +58,13 @@ const ProfileNavigation = ({ open, handleClose, activeTab, onTabChange }) => {
           },
         }}
       >
-        <div className="w-[100%] h-[100%] flex flex-col pt-5 gap-3">
+        <div className="w-[100%] flex flex-col pt-5">
           <div className="px-5 pb-2">
             <h2 className="text-2xl font-bold text-white tracking-wide">
               My <span className="text-[#ea580c]">Account</span>
             </h2>
           </div>
-          <Divider sx={{ borderColor: "rgba(255,255,255,0.1)", marginBottom: "1rem" }} />
+          <Divider sx={{ borderColor: "rgba(255,255,255,0.1)", marginBottom: "0.5rem" }} />
           {menu.map((item, i) => (
             <React.Fragment key={i}>
               <div
@@ -80,6 +80,9 @@ const ProfileNavigation = ({ open, handleClose, activeTab, onTabChange }) => {
                 })}
                 <span className="text-lg">{item.title}</span>
               </div>
+              {i !== menu.length - 1 && (
+                <Divider sx={{ borderColor: "rgba(255,255,255,0.05)", marginY: "0.2rem" }} />
+              )}
             </React.Fragment>
           ))}
         </div>
