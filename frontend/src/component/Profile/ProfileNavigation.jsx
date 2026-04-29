@@ -29,7 +29,7 @@ const ProfileNavigation = ({ open, handleClose, activeTab, onTabChange }) => {
   const handleNavigate = (item) => {
     if (item.title === "Logout") {
       dispatch(logout());
-      navigate("/");
+       navigate("/");
     } else {
       onTabChange(item.title);
       if (isSmallScreen) {
