@@ -16,6 +16,7 @@ export const registerUser=(reqData)=> async(dispatch)=>{
         console.log("User Registered Successfully",data)
     }
     catch (error) {
+        dispatch({ type: REGISTER_FAILURE, payload: error })
         console.log("Error: ", error);
     }
 }
@@ -35,6 +36,7 @@ export const loginUser=(reqData)=> async(dispatch)=>{
         console.log("User Logged in Successfully",data)
     }
     catch (error) {
+        dispatch({ type: LOGIN_FAILURE, payload: error })
         console.log("Error: ", error);
     }
 }
@@ -51,6 +53,7 @@ export const getUser=(jwt)=> async(dispatch)=>{
         console.log("User Profile", data);
     }
     catch (error) {
+        dispatch({ type: GET_USER_FAILURE, payload: error })
         console.log("Error: ", error);
     }
 }
@@ -67,15 +70,17 @@ export const addToFavorite=({jwt,restaurantId})=>async(dispatch)=>{
         console.log("Added to Favorite", data);
     }
 
-    catch(error){
+    catch (error) {
+        dispatch({ type: ADD_TO_FAVORITE_FAILURE, payload: error })
         console.log("Error: ", error);
     }
 }
-export const logoutUser=()=> async(dispatch)=>{
+
+export const logout = () => async (dispatch) => {
     dispatch({ type: LOG_OUT })
     try {
+        localStorage.clear()
         dispatch({ type: LOG_OUT_SUCCESS })
-        localStorage.clear();
         console.log("User Logged out Successfully")
     }
     catch (error) {

@@ -24,8 +24,24 @@ export const authReducer = (state = initialState, action) => {
                 favorites:isPresentInFavorites(state.favorites,action.payload.id)?state.favorites.filter(favorite=>favorite.id!==action.payload.id): [...state.favorites, action.payload],
                 success: "Login Success"
             }
-        
+        case REGISTER_FAILURE:
+        case LOGIN_FAILURE:
+        case GET_USER_FAILURE:
+        case ADD_TO_FAVORITE_FAILURE:
+            return {
+                ...state,
+                success: null,
+                isLoading: false,
+                error: action.payload
+            };
+        case LOG_OUT:
+            return {
+                ...state,
+                user:null,
+                jwt:null
+            }
         default:
             return state;
     }
 }
+
