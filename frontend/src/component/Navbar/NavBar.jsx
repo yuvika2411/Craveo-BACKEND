@@ -3,9 +3,20 @@ import React from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Navbar = () => {
+  const {auth}=useSelector(store=>store);
   const navigate = useNavigate();
+
+  const handleAvatarClick = () => {
+    if(auth.user?.role === "ROLE_CUSTOMER"){
+      navigate("/my-account")
+    }
+    else if (auth.user?.role === "ROLE_RESTAURANT_OWNER") {
+      navigate("/admin/restaurant")
+    }
+  }
 
   return (
     <div className="font-[Poppins] w-full fixed top-0 z-50 bg-[#0f0f0f]/95 backdrop-blur-md border-b border-white/5">
@@ -48,8 +59,8 @@ const Navbar = () => {
             </Badge>
           </IconButton>
 
-          <div onClick={() => navigate('/profile')} className="cursor-pointer">
-            <Avatar sx={{ bgcolor: "white", width: 32, height: 32 }} />
+          <div onClick={handleAvatarClick} className="cursor-pointer">
+            {auth.user ? <Avatar sx={{ bgcolor: "white", color: "#ea580c", width: 32, height: 32 }}>{auth.user?.fullName?.[0].toUpperCase()}</Avatar> : <Avatar sx={{ bgcolor: "white", width: 32, height: 32 }} />}
           </div>
 
           <button onClick={() => navigate('/account/register')} className="bg-[#ea580c] px-4 py-2 rounded-full text-sm hover:bg-[#c2410c] transition">

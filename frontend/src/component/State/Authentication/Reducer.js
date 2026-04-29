@@ -33,10 +33,13 @@ export const authReducer = (state = initialState, action) => {
             return { ...state, success: null, loading: true, error: null };
         case REGISTER_SUCCESS:
         case LOGIN_SUCCESS:
+            console.log("login success", action.payload)
             return { ...state, jwt: action.payload, loading: false, success: "Register Success" };
         case GET_USER_SUCCESS:
+            console.log("get user success", action.payload)
             return { ...state, user: action.payload, loading: false, success: "User Load Success" };
         case ADD_TO_FAVORITE_SUCCESS:
+            console.log("add to favorite success", action.payload)
             return {
                 ...state,
                 loading: false,
