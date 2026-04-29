@@ -99,9 +99,9 @@ export const createRestaurant = (reqData) => async (dispatch) => {
     dispatch({ type: CREATE_RESTAURANT_REQUEST });
     try {
         const res = await api.post("/api/restaurants", reqData);
-        dispatch({ type: createRestaurantSuccess, payload: res.data });
+        dispatch({ type: CREATE_RESTAURANT_SUCCESS, payload: res.data });
     } catch (error) {
-        dispatch({ type: createRestaurantFailure, payload: error.response.data });
+        dispatch({ type: CREATE_RESTAURANT_FAILURE, payload: error.response.data });
     }
 }
 

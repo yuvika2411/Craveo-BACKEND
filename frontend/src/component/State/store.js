@@ -5,7 +5,8 @@ import restaurantReducer from "./Restaurant/Reducer";
 
 const rootReducer = combineReducers({
     auth: authReducer,
-    restaurant:restaurantReducer
+    restaurant:restaurantReducer,
+    menu:menuItemReducer
 })
 
 export const store = configureStore({
