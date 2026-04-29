@@ -8,6 +8,8 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import EventIcon from "@mui/icons-material/Event";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../State/Authentication/Action";
 
 const menu = [
   { title: "Profile", icon: <AccountCircleIcon /> },
@@ -22,9 +24,11 @@ const menu = [
 const ProfileNavigation = ({ open, handleClose, activeTab, onTabChange }) => {
   const isSmallScreen = useMediaQuery("(max-width:900px)");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleNavigate = (item) => {
     if (item.title === "Logout") {
+      dispatch(logout());
       navigate("/");
     } else {
       onTabChange(item.title);
