@@ -52,6 +52,7 @@ public class AppConfig {
                 CorsConfiguration cfg= new CorsConfiguration();
                 cfg.setAllowedOrigins(Arrays.asList(
                         "http://localhost:3000",
+                        "http://localhost:5173",
                         "https://craveo.vercel.app"
                 ));
                 cfg.setAllowedMethods(Collections.singletonList("*"));
