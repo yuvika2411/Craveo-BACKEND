@@ -1,7 +1,7 @@
-import axois from "axios"
-export const API_URL = "http://localhost:5173/" 
+import axios from "axios"
+export const API_URL = "http://localhost:5458/" 
 
-export const api = axois.create({
+export const api = axios.create({
     baseURL: API_URL,
     header:{
         'Content-Type':'application/json'

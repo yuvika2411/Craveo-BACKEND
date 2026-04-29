@@ -1,9 +1,11 @@
-import {combineReducers} from "redux";
+import { combineReducers } from "redux";
 import { authReducer } from "./Authentication/Reducer";
+import { configureStore } from "@reduxjs/toolkit";
 
-const rootReducer= combineReducers({
+const rootReducer = combineReducers({
     auth: authReducer
 })
 
-export const store = legacy_createStore(rootReducer, applyMiddleware(thunk));
-
+export const store = configureStore({
+    reducer: rootReducer
+});

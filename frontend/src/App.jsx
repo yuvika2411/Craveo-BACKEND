@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import Navbar from "./component/Navbar/NavBar";
 import Hero from "./component/Home/Hero";
@@ -10,9 +10,18 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 import { darkTheme } from "./Theme/DarkTheme";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "./component/Auth/Auth";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "./component/State/Authentication/Action";
+
 const App = () => {
-  const {auth}= useSelector(store=>store)
+  const dispatch = useDispatch()
+  const jwt = localStorage.getItem("jwt");
+  const {auth}=useSelector(store=>store ) 
+
+  useEffect(() => {
+      dispatch(getUser(auth.jwt || jwt))
+  },[])
+
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />

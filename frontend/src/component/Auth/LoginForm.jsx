@@ -2,6 +2,8 @@ import React from 'react';
 import { Typography, TextField, Button } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../State/Authentication/Action';
 
 const initialValues = {
   email: '',
@@ -24,9 +26,11 @@ const textFieldStyle = {
 
 export const LoginForm = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleSubmit = (values) => {
-        console.log("login form values", values)
+        dispatch(loginUser({userData:values,navigate}));
+        // console.log("login form values", values)
     }
 
     return (
