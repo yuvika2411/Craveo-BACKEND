@@ -10,8 +10,9 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 import { darkTheme } from "./Theme/DarkTheme";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "./component/Auth/Auth";
-
+import { useSelector } from "react-redux";
 const App = () => {
+  const {auth}= useSelector(store=>store)
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
