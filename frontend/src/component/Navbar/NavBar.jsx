@@ -10,11 +10,10 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleAvatarClick = () => {
-    if(auth.user?.role === "ROLE_CUSTOMER"){
-      navigate("/my-account")
-    }
-    else if (auth.user?.role === "ROLE_RESTAURANT_OWNER") {
+    if (auth.user?.role === "ROLE_RESTAURANT_OWNER") {
       navigate("/admin/restaurant")
+    } else {
+      navigate("/my-account")
     }
   }
 
