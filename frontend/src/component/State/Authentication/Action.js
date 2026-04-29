@@ -1,5 +1,6 @@
 import { API_URL, api } from "../../Config/api";
 import axios from "axios";
+//redux code
 import {
     ADD_TO_FAVORITE_FAILURE,
     ADD_TO_FAVORITE_REQUEST,
