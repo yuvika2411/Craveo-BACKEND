@@ -17,19 +17,23 @@ import {
     REGISTER_SUCCESS
 } from "./ActionType";
 
-export const registerUser=(reqData)=> async(dispatch)=>{
+export const registerUser = (reqData) => async (dispatch) => {
     dispatch({ type: REGISTER_REQUEST })
     try {
         const { data } = await axios.post(`${API_URL}auth/signup`, reqData.userData)
-        if (data.jwt) localStorage.setItem("jwt", data.jwt);
-        if(data.role==="ROLE_RESTAURANT_OWNER"){
+
+        console.log("REGISTER RESPONSE:", data);
+        localStorage.setItem("jwt", data.jwt || data.token);
+        dispatch(getUser());
+
+        if (data.role === "ROLE_RESTAURANT_OWNER") {
             reqData.navigate("/admin/restaurant")
         }
         else {
             reqData.navigate("/")
         }
         dispatch({ type: REGISTER_SUCCESS, payload: data.jwt })
-        console.log("User Registered Successfully",data)
+        console.log("User Registered Successfully", data)
     }
     catch (error) {
         dispatch({ type: REGISTER_FAILURE, payload: error.response?.data?.message || error.message })
@@ -37,56 +41,79 @@ export const registerUser=(reqData)=> async(dispatch)=>{
     }
 }
 
-export const loginUser=(reqData)=> async(dispatch)=>{
+export const loginUser = (reqData) => async (dispatch) => {
     dispatch({ type: LOGIN_REQUEST })
     try {
         const { data } = await axios.post(`${API_URL}auth/signin`, reqData.userData)
-        if (data.jwt) localStorage.setItem("jwt", data.jwt);
-        if(data.role==="ROLE_RESTAURANT_OWNER"){
-            reqData.navigate("/admin/restaurant")
-        }
-        else {
+
+        console.log("LOGIN RESPONSE:", data); // 👈 ADD THIS
+
+        localStorage.setItem("jwt", data.jwt || data.token);
+
+        console.log("JWT SAVED:", localStorage.getItem("jwt"));
+
+        dispatch(getUser());
+
+        if (data.role === "ROLE_RESTAURANT_OWNER") {
+            reqData.navigate("/")
+        } else {
             reqData.navigate("/")
         }
+
         dispatch({ type: LOGIN_SUCCESS, payload: data.jwt })
-        console.log("User Logged in Successfully",data)
-    }
-    catch (error) {
+
+    } catch (error) {
         dispatch({ type: LOGIN_FAILURE, payload: error.response?.data?.message || error.message })
         console.log("Error: ", error);
     }
 }
 
-export const getUser=(jwt)=> async(dispatch)=>{
+export const getUser = () => async (dispatch) => {
     dispatch({ type: GET_USER_REQUEST })
     try {
+        const token = localStorage.getItem("jwt");
+
         const { data } = await api.get(`/api/users/profile`, {
             headers: {
-            Authorization:`Bearer ${jwt}`
+                Authorization: `Bearer ${token}`
             }
         })
-        dispatch({ type: GET_USER_SUCCESS, payload: data})
+
+        dispatch({ type: GET_USER_SUCCESS, payload: data })
         console.log("user profile ", data);
-    }
-    catch (error) {
-        dispatch({ type: GET_USER_FAILURE, payload: error.response?.data?.message || error.message })
+
+    } catch (error) {
+        dispatch({
+            type: GET_USER_FAILURE,
+            payload: error.response?.data?.message || error.message
+        })
         console.log("Error: ", error);
     }
 }
 
-export const addToFavorite=({jwt,restaurantId})=>async(dispatch)=>{
+export const addToFavorite = ({ restaurantId }) => async (dispatch) => {
     dispatch({ type: ADD_TO_FAVORITE_REQUEST })
-    try{
-        const {data}=await api.put(`/api/restaurants/${restaurantId}/add-favorites`, {}, {
-            headers: {
-            Authorization:`Bearer ${jwt}`
+    try {
+        const token = localStorage.getItem("jwt");
+
+        const { data } = await api.put(
+            `/api/restaurants/${restaurantId}/add-favorites`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             }
-        })
-        dispatch({ type: ADD_TO_FAVORITE_SUCCESS, payload: data})
+        )
+
+        dispatch({ type: ADD_TO_FAVORITE_SUCCESS, payload: data })
         console.log("Added to Favorite", data);
-    }
-    catch (error) {
-        dispatch({ type: ADD_TO_FAVORITE_FAILURE, payload: error.response?.data?.message || error.message })
+
+    } catch (error) {
+        dispatch({
+            type: ADD_TO_FAVORITE_FAILURE,
+            payload: error.response?.data?.message || error.message
+        })
         console.log("Error: ", error);
     }
 }
