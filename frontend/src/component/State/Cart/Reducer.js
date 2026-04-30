@@ -10,33 +10,60 @@ const initialState = {
 
 const cartReducer = (state = initialState, action) => {
     switch(action.type){
-        case ADD_TO_CART:
+        case actionTypes.FIND_CART_REQUEST:
+        case actionTypes.GET_ALL_CART_ITEMS_REQUEST:
+        case actionTypes.UPDATE_CARTITEM_REQUEST:
+        case actionTypes.REMOVE_CARTITEM_REQUEST: 
             return {
                 ...state,
-                cartItems: [...state.cartItems, action.payload]
+                loading: true,
+                error:null
             }
-        case REMOVE_FROM_CART:
-            return {
+        case actionTypes.FIND_CART_SUCCESS:
+        case actionTypes.CLEAR_CART_SUCCESS:
+            return{
                 ...state,
-                cartItems: state.cartItems.filter((item) => item.id !== action.payload)
+                cart:action.payload,
+                cartItems: action.payload.items,
+                loading: false
             }
-        case UPDATE_CART_ITEM:
-            return {
+        case actionTypes.ADD_ITEM_TO_CART_SUCCESS:
+            return{
                 ...state,
-                cartItems: state.cartItems.map((item) => item.id === action.payload.id ? action.payload : item)
+                cartItems: [...state.cartItems, action.payload],
+                loading: false
             }
-        case CLEAR_CART:
-            return {
+        case actionTypes.UPDATE_CARTITEM_SUCCESS:
+            return{
                 ...state,
-                cartItems: []
+                loading: false,
+                cartItems: state.cartItems.map((item)=>item.id===action.payload.id?action.payload:item)
+            }
+        case actionTypes.REMOVE_CARTITEM_SUCCESS:
+            return{
+                ...state,
+                loading: false,
+                cartItems: state.cartItems.filter((item)=>item.id!==action.payload)
+            }
+        case actionTypes.FIND_CART_FAILURE:
+        case actionTypes.UPDATE_CARTITEM_FAILURE:
+        case actionTypes.REMOVE_CARTITEM_FAILURE:
+            return{
+                ...state,
+                loading: false,
+                error: action.payload
             }
         case LOGOUT:
+            localStorage.removeItem("jwt");
             return {
                 ...state,
                 cart: null,
-                cartItems: []
+                cartItems: [],
+                success: "Logout Success"
             }
         default:
             return state;
     }
 }
+
+export default cartReducer;
