@@ -6,7 +6,9 @@ import restaurantReducer from "./Restaurant/Reducer";
 const rootReducer = combineReducers({
     auth: authReducer,
     restaurant:restaurantReducer,
-    menu:menuItemReducer
+    menu: menuItemReducer,
+    cart: cartReducer,
+    order: orderReducer
 })
 
 export const store = configureStore({
