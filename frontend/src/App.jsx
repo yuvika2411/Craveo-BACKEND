@@ -1,17 +1,16 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import Navbar from "./component/Navbar/NavBar";
-import Hero from "./component/Home/Hero";
-import Carousel from "./component/Home/MenuCarousel";
-import Restaurant from "./component/Restaurant/Restaurants";
-import Cart from "./component/Cart/Cart";
-import Profile from "./component/Profile/Profile";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { darkTheme } from "./Theme/DarkTheme";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "./component/Auth/Auth";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./component/State/Authentication/Action";
+
+import { Home } from "./component/Home/Home";
+import Cart from "./component/Cart/Cart";
+import Profile from "./component/Profile/Profile";
 
 const App = () => {
   const dispatch = useDispatch()
@@ -20,7 +19,7 @@ const App = () => {
 
   useEffect(() => {
       dispatch(getUser(auth.jwt || jwt))
-  },[])
+  }, [dispatch, auth.jwt, jwt])
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -28,29 +27,18 @@ const App = () => {
       <Router>
         <Navbar />
         <Routes>
-          <Route path="/" element={
-            <>
-              {/* Using fragments as Home Page currently */}
-              <Hero />
-              <Carousel />
-              <Restaurant />
-            </>
-          } />
+          <Route path="/" element={<Home />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/my-account" element={<Profile />} />
           <Route path="/account/register" element={
             <>
-              <Hero />
-              <Carousel />
-              <Restaurant />
+              <Home />
               <Auth />
             </>
           } />
           <Route path="/account/login" element={
             <>
-              <Hero />
-              <Carousel />
-              <Restaurant />
+              <Home />
               <Auth />
             </>
           } />
