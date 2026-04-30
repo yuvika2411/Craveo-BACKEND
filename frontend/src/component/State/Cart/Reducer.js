@@ -1,6 +1,5 @@
 import { LOGOUT } from "../Authentication/ActionType";
-import { ADD_TO_CART, REMOVE_FROM_CART, UPDATE_CART_ITEM, CLEAR_CART } from "./ActionType";
-
+import * as actionTypes from "./ActionType";
 const initialState = {
     cart: null,
     cartItems: [],
