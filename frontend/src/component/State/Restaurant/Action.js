@@ -1,4 +1,4 @@
-import { api } from "../../../config/api";
+import { api } from "../../Config/api";
 import {
     CREATE_RESTAURANT_FAILURE,
     CREATE_RESTAURANT_REQUEST,
@@ -51,7 +51,7 @@ export const getAllRestaurantsAction = (token) => {
                 },
             });
             dispatch({ type: GET_ALL_RESTAURANTS_SUCCESS, payload: data })
-            console.log("All Restaurant Data", data);
+            console.log("all restaurant ", data);
         } catch (error) {
             console.log("Error in fetching all restaurant data", error)
             dispatch({ type: GET_ALL_RESTAURANTS_FAILURE, payload: error.response.data })

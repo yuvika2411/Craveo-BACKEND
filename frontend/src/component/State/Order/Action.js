@@ -1,4 +1,4 @@
-import {api} from "../../../config/api";
+import { api } from "../../Config/api";
 import {
     CREATE_ORDER_REQUEST,
     CREATE_ORDER_SUCCESS,
