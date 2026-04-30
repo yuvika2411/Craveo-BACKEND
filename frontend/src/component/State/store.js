@@ -2,6 +2,9 @@ import { combineReducers } from "redux";
 import { authReducer } from "./Authentication/Reducer";
 import { configureStore } from "@reduxjs/toolkit";
 import restaurantReducer from "./Restaurant/Reducer";
+import menuItemReducer from "./Menu/Reducer";
+import cartReducer from "./Cart/Reducer";
+import orderReducer from "./Order/Reducer";
 
 const rootReducer = combineReducers({
     auth: authReducer,
