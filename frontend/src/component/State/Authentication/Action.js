@@ -46,7 +46,7 @@ export const loginUser = (reqData) => async (dispatch) => {
     try {
         const { data } = await axios.post(`${API_URL}auth/signin`, reqData.userData)
 
-        console.log("LOGIN RESPONSE:", data); // 👈 ADD THIS
+        console.log("LOGIN RESPONSE:", data); 
 
         localStorage.setItem("jwt", data.jwt || data.token);
 
