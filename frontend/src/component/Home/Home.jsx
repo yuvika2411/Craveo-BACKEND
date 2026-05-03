@@ -8,7 +8,9 @@ import { getAllRestaurantsAction } from '../State/Restaurant/Action'
 export const Home = () => {
     const dispatch = useDispatch()
     const jwt = localStorage.getItem("jwt")
-    
+    const { restaurant } = useSelector(store => store)
+    console.log("restaurant", restaurant);
+
     useEffect(() => {
         dispatch(getAllRestaurantsAction(jwt))
     }, [dispatch, jwt])
