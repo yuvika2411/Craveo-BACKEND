@@ -1,10 +1,18 @@
 import React from "react";
 import { Button } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../State/Authentication/Action";
+import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
+  const { auth } = useSelector(store => store);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleLogout = () => {
-    console.log("logout");
+    dispatch(logout());
+    navigate("/");
   };
 
   return (
@@ -13,8 +21,8 @@ const UserProfile = () => {
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#ea580c]/10 rounded-full blur-3xl"></div>
       <div className="flex flex-col items-center justify-center relative z-10">
         <AccountCircleIcon sx={{ fontSize: "9rem", color: "#ea580c" }} />
-        <h1 className="py-5 text-3xl font-bold tracking-wider text-white">Craveo User</h1>
-        <p className="text-gray-400 pb-8 text-lg font-medium">user@craveo.com</p>
+        <h1 className="py-5 text-3xl font-bold tracking-wider text-white">{auth.user?.fullName || "Guest User"}</h1>
+        <p className="text-gray-400 pb-8 text-lg font-medium">{auth.user?.email || "Not logged in"}</p>
         <Button
           variant="contained"
           onClick={handleLogout}

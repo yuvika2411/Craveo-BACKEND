@@ -1,4 +1,4 @@
-import { api } from "../../../config/api";
+import { api } from "../../Config/api";
 import {
     DELETE_MENU_ITEM_FAILURE,
     DELETE_MENU_ITEM_REQUEST,
@@ -14,11 +14,7 @@ import {
 export const createMenuItem = ({ reqData }) => async (dispatch) => {
     dispatch({ type: CREATE_MENU_ITEM_REQUEST });
     try {
-        const res = await api.post("/api/restaurants", reqData, {
-            headers:{
-                Authorization:`Bearer ${reqData.jwt}`,
-            },
-        });    
+        const res = await api.post("/api/restaurants", reqData);    
         console.log("create menu item response", res.data);
         dispatch({ type: CREATE_MENU_ITEM_SUCCESS, payload: res.data });
     } catch (error) {
@@ -30,11 +26,7 @@ export const createMenuItem = ({ reqData }) => async (dispatch) => {
 export const getMenuItemsByRestaurantId = ({ restaurantId, jwt }) => async (dispatch) => {
         dispatch({ type: GET_MENU_ITEMS_BY_RESTAURANT_ID_REQUEST });
         try {
-            const res = await api.get(`/api/restaurants/${restaurantId}/menu`, {
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                },
-            });
+            const res = await api.get(`/api/restaurants/${restaurantId}/menu`);
             console.log("get menu items response", res.data);
             dispatch({ type: GET_MENU_ITEMS_BY_RESTAURANT_ID_SUCCESS, payload: res.data });
         } catch (error) {
@@ -46,11 +38,7 @@ export const getMenuItemsByRestaurantId = ({ restaurantId, jwt }) => async (disp
 export const searchMenuItem = ({jwt, searchString}) => async (dispatch) => {
     dispatch({ type: SEARCH_MENU_ITEM_REQUEST });
     try {
-        const res = await api.get(`/api/restaurants/menu/search?query=${searchString}`, {
-            headers: {
-                Authorization: `Bearer ${jwt}`,
-            },
-        });
+        const res = await api.get(`/api/restaurants/menu/search?query=${searchString}`);
         console.log("search menu item response", res.data);
         dispatch({ type: SEARCH_MENU_ITEM_SUCCESS, payload: res.data });
     } catch (error) {
@@ -78,11 +66,7 @@ export const searchMenuItem = ({jwt, searchString}) => async (dispatch) => {
 export const updateMenuItemAvailability = ({jwt, menuItemId}) => async (dispatch) => {
     dispatch({ type: UPDATE_MENU_ITEMS_AVAILABILITY_REQUEST });
     try {
-        const res = await api.put(`/api/restaurants/menu/${menuItemId}/availability`, {}, {
-            headers: {
-                Authorization: `Bearer ${jwt}`,
-            },
-        });
+        const res = await api.put(`/api/restaurants/menu/${menuItemId}/availability`, {});
         console.log("update menu item availability response", res.data);
         dispatch({ type: UPDATE_MENU_ITEMS_AVAILABILITY_SUCCESS, payload: res.data });
     } catch (error) {
@@ -94,11 +78,7 @@ export const updateMenuItemAvailability = ({jwt, menuItemId}) => async (dispatch
 export const deleteFoodItem = ({jwt, menuItemId}) => async (dispatch) => {
     dispatch({ type: DELETE_MENU_ITEM_REQUEST });
     try {
-        const res = await api.delete(`/api/restaurants/menu/${menuItemId}`, {
-            headers: {
-                Authorization: `Bearer ${jwt}`,
-            },
-        });
+        const res = await api.delete(`/api/restaurants/menu/${menuItemId}`);
         console.log("delete food item response", res.data);
         dispatch({ type: DELETE_MENU_ITEM_SUCCESS, payload: res.data });
     } catch (error) {

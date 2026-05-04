@@ -45,11 +45,7 @@ export const getAllRestaurantsAction = (token) => {
     return async (dispatch) => {
         dispatch({ type: GET_ALL_RESTAURANTS_REQUEST });
         try {
-            const { data } = await api.get("/api/restaurants", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const { data } = await api.get("/api/restaurants");
             dispatch({ type: GET_ALL_RESTAURANTS_SUCCESS, payload: data })
             console.log("all restaurant ", data);
         } catch (error) {
@@ -63,13 +59,7 @@ export const getRestaurantById = (reqData) => {
     return async (dispatch) => {
         dispatch({ type: GET_RESTAURANT_BY_ID_REQUEST });
         try {
-            const res = await api.get(`/api/restaurants/${reqData.restaurantId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${reqData.token}`,
-                    },
-                }
-            );
+            const res = await api.get(`/api/restaurants/${reqData.restaurantId}`);
             dispatch({ type: GET_RESTAURANT_BY_ID_SUCCESS, payload: res.data });
         } catch (error) {
             console.log("Error in fetching restaurant by ID data", error)
@@ -81,13 +71,7 @@ export const getRestaurantById = (reqData) => {
 export const getRestaurantsByUserId = (token) => async (dispatch) => {
     dispatch({ type: GET_RESTAURANT_BY_USER_ID_REQUEST });
     try {
-        const res = await api.get("/api/restaurants/user",
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
+        const res = await api.get("/api/restaurants/user");
         dispatch({ type: GET_RESTAURANT_BY_USER_ID_SUCCESS, payload: res.data });
     } catch (error) {
         console.log("Error in fetching restaurant by user ID data", error)
@@ -151,13 +135,7 @@ export const createEventAction = (reqData) => async (dispatch) => {
 export const getAllEvents = (token) => async (dispatch) => {
     dispatch({ type: GET_ALL_EVENTS_REQUEST });
     try {
-        const res = await api.get("/api/events",
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
+        const res = await api.get("/api/events");
         dispatch({ type: GET_ALL_EVENTS_SUCCESS, payload: res.data });
     } catch (error) {
         console.log("Error in fetching all events data", error)
@@ -179,13 +157,7 @@ export const deleteEventAction = (eventId) => async (dispatch) => {
 export const getRestaurantEvents = (restaurantId, token) => async (dispatch) => {
     dispatch({ type: GET_RESTAURANT_EVENTS_REQUEST });
     try {
-        const res = await api.get(`/api/restaurants/${restaurantId}/events`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
+        const res = await api.get(`/api/restaurants/${restaurantId}/events`);
         dispatch({ type: GET_RESTAURANT_EVENTS_SUCCESS, payload: res.data });
     } catch (error) {
         console.log("Error in fetching restaurant events data", error)
@@ -207,13 +179,7 @@ export const createCategoryAction = (reqData) => async (dispatch) => {
 export const getRestaurantCategory = (restaurantId, token) => async (dispatch) => {
     dispatch({ type: GET_RESTAURANT_CATEGORY_REQUEST });
     try {
-        const res = await api.get(`/api/restaurants/${restaurantId}/categories`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
+        const res = await api.get(`/api/restaurants/${restaurantId}/categories`);
         dispatch({ type: GET_RESTAURANT_CATEGORY_SUCCESS, payload: res.data });
     } catch (error) {
         console.log("Error in fetching restaurant category data", error)

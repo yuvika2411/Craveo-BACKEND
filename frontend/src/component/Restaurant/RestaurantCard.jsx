@@ -3,15 +3,29 @@ import { Card, Chip, IconButton } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToFavorite } from '../State/Authentication/Action';
+import { isPresentInFavorites } from '../Config/logic';
 
 export const RestaurantCard = ({ item }) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { auth } = useSelector(store => store);
 
     const handleNavigateToRestaurant = () => {
         if (item.open) {
             navigate(`/restaurant/${item.address?.city}/${item.name}/${item.id}`);
         }
     };
+
+    const handleAddToFavorite = () => {
+        dispatch(addToFavorite({ restaurantId: item.id }));
+    };
+
+    const isFavorited = isPresentInFavorites({
+        favorites: auth.favorites || [],
+        restaurantId: item.id
+    });
 
     return (
         <Card className="w-[18rem]">
@@ -39,9 +53,8 @@ export const RestaurantCard = ({ item }) => {
                     </p>
                 </div>
                 <div>
-                    <IconButton>
-                        {/* We will implement favorite logic here later, keeping it simple for now */}
-                        <FavoriteBorderIcon />
+                    <IconButton onClick={handleAddToFavorite}>
+                        {isFavorited ? <FavoriteIcon sx={{ color: '#ef4444' }} /> : <FavoriteBorderIcon sx={{ color: '#9ca3af' }} />}
                     </IconButton>
                 </div>
             </div>
