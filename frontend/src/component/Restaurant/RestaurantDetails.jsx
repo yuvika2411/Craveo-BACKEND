@@ -25,11 +25,12 @@ const RestaurantDetails = () => {
     const dispatch = useDispatch();
     const { id, city } = useParams();
     const { auth, restaurant, menu } = useSelector(store => store);
+    const jwt = localStorage.getItem("jwt");
 
     useEffect(() => {
         if (id) {
             dispatch(getRestaurantById({ restaurantId: id }));
-            dispatch(getRestaurantCategory({ restaurantId: id }));
+            dispatch(getRestaurantCategory({ jwt, restaurantId: id }));
             dispatch(getMenuItemsByRestaurantId({ restaurantId: id }));
         }
     }, [dispatch, id]);

@@ -168,7 +168,7 @@ export const getRestaurantEvents = (restaurantId, token) => async (dispatch) => 
 export const createCategoryAction = (reqData) => async (dispatch) => {
     dispatch({ type: CREATE_CATEGORY_REQUEST });
     try {
-        const res = await api.post("/api/categories", reqData);
+        const res = await api.post("/api/admin/category", reqData);
         dispatch({ type: CREATE_CATEGORY_SUCCESS, payload: res.data });
     } catch (error) {
         console.log("Error in creating category data", error)
@@ -176,10 +176,10 @@ export const createCategoryAction = (reqData) => async (dispatch) => {
     }
 }
 
-export const getRestaurantCategory = (restaurantId, token) => async (dispatch) => {
+export const getRestaurantCategory = ({jwt, restaurantId}) => async (dispatch) => {
     dispatch({ type: GET_RESTAURANT_CATEGORY_REQUEST });
     try {
-        const res = await api.get(`/api/restaurants/${restaurantId}/categories`);
+        const res = await api.get(`/api/category/restaurant/${restaurantId}`);
         dispatch({ type: GET_RESTAURANT_CATEGORY_SUCCESS, payload: res.data });
     } catch (error) {
         console.log("Error in fetching restaurant category data", error)
