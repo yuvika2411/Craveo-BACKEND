@@ -73,11 +73,7 @@ export const getUser = () => async (dispatch) => {
     try {
         const token = localStorage.getItem("jwt");
 
-        const { data } = await api.get(`/api/users/profile`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        const { data } = await api.get(`/api/users/profile`);
 
         dispatch({ type: GET_USER_SUCCESS, payload: data })
         console.log("user profile ", data);
@@ -98,12 +94,7 @@ export const addToFavorite = ({ restaurantId }) => async (dispatch) => {
 
         const { data } = await api.put(
             `/api/restaurants/${restaurantId}/add-favorites`,
-            {},
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
+            {}
         )
 
         dispatch({ type: ADD_TO_FAVORITE_SUCCESS, payload: data })
