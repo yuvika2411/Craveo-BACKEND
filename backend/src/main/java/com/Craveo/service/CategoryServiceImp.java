@@ -37,6 +37,11 @@ public class CategoryServiceImp implements CategoryService{
     }
 
     @Override
+    public List<FoodCategory> findCategoryByRestaurantIdActual(Long id) throws Exception {
+        return categoryRepository.findByRestaurantId(id);
+    }
+
+    @Override
     public FoodCategory findCategoryById(Long id) throws Exception {
         Optional<FoodCategory> optionalFoodCategory= categoryRepository.findById(id);
 

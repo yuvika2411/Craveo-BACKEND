@@ -21,7 +21,7 @@ public class CategoryController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/admin/category")
+    @PostMapping
     public ResponseEntity<FoodCategory> createCategory(@RequestBody FoodCategory foodCategory,
                                                        @RequestHeader("Authorization") String jwt) throws Exception {
         User user= userService.findUserByJwtToken(jwt);
