@@ -16,10 +16,19 @@ public class UserServiceImp implements UserService{
     private JwtProvider jwtProvider;
 
     @Override
-    public User findUserByJwtToken(String jwt) throws Exception {
+    public User findUserByJwtToken(String jwt) {
+
+        if (jwt == null) {
+            return null;
+        }
+
         String email = jwtProvider.getEmailFromJwtToken(jwt);
-        User user= findUserByEmail(email);
-        return user;
+
+        if (email == null) {
+            return null;
+        }
+
+        return userRepository.findByEmail(email);
     }
 
     @Override
