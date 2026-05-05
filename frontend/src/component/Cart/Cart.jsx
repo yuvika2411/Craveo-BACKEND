@@ -32,7 +32,9 @@ const Cart = () => {
     const jwt = localStorage.getItem("jwt");
 
     const addressesList = auth.user?.addresses || [];
-    const [selectedAddress, setSelectedAddress] = useState(addressesList.length > 0 ? addressesList[0].id : null);
+    const [localAddresses, setLocalAddresses] = useState([]);
+    const allAddresses = [...addressesList, ...localAddresses];
+    const [selectedAddress, setSelectedAddress] = useState(allAddresses.length > 0 ? allAddresses[0].id : null);
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
     const [newAddress, setNewAddress] = useState({ street: '', city: '', state: '', pincode: '' });
 
@@ -161,7 +163,7 @@ const Cart = () => {
 
                     <h3 className="text-lg font-semibold text-gray-300 mb-4 shrink-0">Delivery Address</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 content-start overflow-y-auto pr-2 pb-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-700 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent">
-                        {addressesList.map((address) => {
+                        {allAddresses.map((address) => {
                             const isSelected = selectedAddress === address.id;
                             return (
                                 <div 
@@ -215,7 +217,7 @@ const Cart = () => {
                                     alert("Please select a delivery address");
                                     return;
                                 }
-                                const addressObj = addressesList.find(a => a.id === selectedAddress) || newAddress;
+                                const addressObj = allAddresses.find(a => a.id === selectedAddress) || newAddress;
                                 const restaurantId = cartItems[0]?.food?.restaurant?.id;
                                 dispatch(createOrder({ order: { restaurantId, deliveryAddress: addressObj } }));
                                 alert("Order created successfully!");
@@ -311,7 +313,7 @@ const Cart = () => {
                                     if(!newAddress.street || !newAddress.city || !newAddress.state || !newAddress.pincode) return;
                                     const fullStr = `${newAddress.street}, ${newAddress.city}, ${newAddress.state}, ${newAddress.pincode}`;
                                     const newEntry = { id: Date.now(), title: "Saved Address", address: fullStr };
-                                    setAddressesList([...addressesList, newEntry]);
+                                    setLocalAddresses([...localAddresses, newEntry]);
                                     setSelectedAddress(newEntry.id);
                                     setIsAddressModalOpen(false);
                                     setNewAddress({street: '', city: '', state: '', pincode: ''});
