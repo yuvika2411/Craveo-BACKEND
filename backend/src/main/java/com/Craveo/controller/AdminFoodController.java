@@ -28,37 +28,32 @@ public class AdminFoodController {
 
     @PostMapping
     public ResponseEntity<Food> createFood(@RequestBody CreateFoodRequest req, @RequestHeader("Authorization") String jwt) throws Exception {
-        User user= userService.findUserByJwtToken(jwt);
-        Restaurant restaurant= restaurantService.findRestaurantById(req.getRestaurantId());
-        Food food= foodService.createFood(req, req.getCategory(),restaurant);
-
+        User user = userService.findUserByJwtToken(jwt);
+        Restaurant restaurant = restaurantService.findRestaurantById(req.getRestaurantId());
+        Food food = foodService.createFood(req, req.getCategory(), restaurant);
         return new ResponseEntity<>(food, HttpStatus.CREATED);
     }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<MessageResponse> deleteFood(@PathVariable Long id, @RequestHeader("Authorization") String jwt) throws Exception {
-        User user= userService.findUserByJwtToken(jwt);
-        foodService.deleteFood(id);
 
-        MessageResponse res= new MessageResponse();
-        res.setMessage("Food deleted successfully.");
-        return new ResponseEntity<>(res, HttpStatus.CREATED);
+    @GetMapping("/{id}")
+    public ResponseEntity<Food> getFoodById(@PathVariable Long id, @RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
+        Food food = foodService.findFoodById(id);
+        return new ResponseEntity<>(food, HttpStatus.OK);
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<MessageResponse> searchFood(@PathVariable Long id, @RequestHeader("Authorization") String jwt) throws Exception {
-        User user= userService.findUserByJwtToken(jwt);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<MessageResponse> deleteFood(@PathVariable Long id, @RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
         foodService.deleteFood(id);
-
-        MessageResponse res= new MessageResponse();
+        MessageResponse res = new MessageResponse();
         res.setMessage("Food deleted successfully.");
-        return new ResponseEntity<>(res, HttpStatus.CREATED);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Food> updateFoodAvailabilityStatus(@PathVariable Long id, @RequestHeader("Authorization") String jwt) throws Exception {
-        User user= userService.findUserByJwtToken(jwt);
-        Food food= foodService.updateAvailabilityStatus(id);
-
-        return new ResponseEntity<>(food, HttpStatus.CREATED);
+        User user = userService.findUserByJwtToken(jwt);
+        Food food = foodService.updateAvailabilityStatus(id);
+        return new ResponseEntity<>(food, HttpStatus.OK);
     }
 }

@@ -14,6 +14,10 @@ public class PaymentServiceImp implements PaymentService {
     @Value("${stripe.api.key}")
     private String stripeSecretKey;
 
+    // ✅ Read frontend URL from properties instead of hardcoding localhost
+    @Value("${frontend.url:http://localhost:5173}")
+    private String frontendUrl;
+
     @Override
     public String createPaymentLink(Order order) throws StripeException {
         Stripe.apiKey = stripeSecretKey;
@@ -21,8 +25,8 @@ public class PaymentServiceImp implements PaymentService {
         SessionCreateParams params = SessionCreateParams.builder()
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl("http://localhost:5173/payment/success/" + order.getId())
-                .setCancelUrl("http://localhost:5173/payment/fail")
+                .setSuccessUrl(frontendUrl + "/payment/success/" + order.getId())
+                .setCancelUrl(frontendUrl + "/payment/fail")
                 .addLineItem(SessionCreateParams.LineItem.builder()
                         .setQuantity(1L)
                         .setPriceData(SessionCreateParams.LineItem.PriceData.builder()

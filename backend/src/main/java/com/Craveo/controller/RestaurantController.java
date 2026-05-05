@@ -3,7 +3,6 @@ package com.Craveo.controller;
 import com.Craveo.dto.RestaurantDto;
 import com.Craveo.model.Restaurant;
 import com.Craveo.model.User;
-import com.Craveo.request.CreateRestaurantRequest;
 import com.Craveo.service.RestaurantService;
 import com.Craveo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,28 +27,22 @@ public class RestaurantController {
             @RequestHeader(value = "Authorization", required = false) String jwt,
             @RequestParam String keyword
     ) throws Exception {
-        User user = null;
-
         if (jwt != null && jwt.startsWith("Bearer ")) {
-            user = userService.findUserByJwtToken(jwt);
+            userService.findUserByJwtToken(jwt);
         }
-
-        List<Restaurant> restaurant= restaurantService.searchRestaurant(keyword);
-        return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
+        List<Restaurant> restaurants = restaurantService.searchRestaurant(keyword);
+        return new ResponseEntity<>(restaurants, HttpStatus.OK);  // ✅ was CREATED
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<Restaurant>> getAllRestaurant(
             @RequestHeader(value = "Authorization", required = false) String jwt
     ) throws Exception {
-        User user = null;
-
         if (jwt != null && jwt.startsWith("Bearer ")) {
-            user = userService.findUserByJwtToken(jwt);
+            userService.findUserByJwtToken(jwt);
         }
-
-        List<Restaurant> restaurant= restaurantService.getAllRestaurant();
-        return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
+        List<Restaurant> restaurants = restaurantService.getAllRestaurant();
+        return new ResponseEntity<>(restaurants, HttpStatus.OK);  // ✅ was CREATED
     }
 
     @GetMapping("/{id}")
@@ -57,13 +50,10 @@ public class RestaurantController {
             @RequestHeader(value = "Authorization", required = false) String jwt,
             @PathVariable Long id
     ) throws Exception {
-        User user = null;
-
         if (jwt != null && jwt.startsWith("Bearer ")) {
-            user = userService.findUserByJwtToken(jwt);
+            userService.findUserByJwtToken(jwt);
         }
-
-        Restaurant restaurant= restaurantService.findRestaurantById(id);
+        Restaurant restaurant = restaurantService.findRestaurantById(id);
         return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
 
@@ -73,13 +63,10 @@ public class RestaurantController {
             @PathVariable Long id
     ) throws Exception {
         User user = null;
-
         if (jwt != null && jwt.startsWith("Bearer ")) {
             user = userService.findUserByJwtToken(jwt);
         }
-
-        RestaurantDto restaurant= restaurantService.addToFavorites(id,user);
+        RestaurantDto restaurant = restaurantService.addToFavorites(id, user);
         return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
-
 }
