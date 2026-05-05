@@ -55,7 +55,7 @@ export const loginUser = (reqData) => async (dispatch) => {
         dispatch(getUser());
 
         if (data.role === "ROLE_RESTAURANT_OWNER") {
-            reqData.navigate("/")
+            reqData.navigate("/admin/restaurant")
         } else {
             reqData.navigate("/")
         }
