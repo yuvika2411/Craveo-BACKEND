@@ -1,0 +1,1 @@
+export const GET_FOOD_SUCCESS = "GET_FOOD_SUCCESS";

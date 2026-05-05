@@ -3,7 +3,6 @@ import { Route, Routes } from 'react-router-dom';
 import { AdminSidebar } from './AdminSidebar';
 import { Dashboard } from './Dashboard/Dashboard';
 import { Orders } from './Orders/Orders';
-import { Menu } from './Menu/Menu';
 import { FoodCategory } from './FoodCategory/FoodCategory';
 import { Ingredients } from './Ingredients/Ingredients';
 import { Events } from './Events/Events';
@@ -12,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getRestaurantsByUserId } from '../State/Restaurant/Action';
 import { useEffect } from 'react';
 import { CreateRestaurant } from './CreateRestaurant';
-
+import { FoodItem } from './Food/FoodItem'; 
 export const Admin = () => {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
@@ -35,7 +34,7 @@ export const Admin = () => {
                         <Route path='/' element={<Dashboard />} />
                         <Route path='/dashboard' element={<Dashboard />} />
                         <Route path='/orders' element={<Orders />} />
-                        <Route path='/menu' element={<Menu />} />
+                        <Route path='/food' element={<FoodItem />} />
                         <Route path='/category' element={<FoodCategory />} />
                         <Route path='/ingredients' element={<Ingredients />} />
                         <Route path='/events' element={<Events />} />

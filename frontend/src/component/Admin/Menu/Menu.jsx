@@ -26,9 +26,6 @@ export const Menu = () => {
         <div className="bg-[#1a1a1a] p-8 rounded-xl border border-white/5 shadow-xl">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold text-white">Restaurant Menu</h1>
-                <Button variant="contained" sx={{ backgroundColor: '#ea580c', '&:hover': { backgroundColor: '#c2410c' } }}>
-                    Add New Item
-                </Button>
             </div>
             
             <TableContainer component={Paper} sx={{ backgroundColor: 'transparent', border: '1px solid rgba(255,255,255,0.1)' }}>

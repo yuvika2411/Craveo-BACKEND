@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, TextField, Button } from '@mui/material';
+import { Typography, TextField, Button, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -39,7 +39,8 @@ export const LoginForm = () => {
                 Login
             </Typography>
 
-            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+            <Formik initialValues={{ email: '', password: '', role: 'ROLE_CUSTOMER' }} onSubmit={handleSubmit}>
+                {({ values, handleChange }) => (
                 <Form className="flex flex-col gap-4">
                     <Field 
                         as={TextField}
@@ -58,10 +59,25 @@ export const LoginForm = () => {
                         variant="outlined"
                         sx={textFieldStyle}
                     />
+                    <FormControl fullWidth sx={textFieldStyle}>
+                        <InputLabel id="role-select-label">Login As</InputLabel>
+                        <Select
+                            labelId="role-select-label"
+                            id="role-select"
+                            name="role"
+                            value={values.role}
+                            label="Login As"
+                            onChange={handleChange}
+                        >
+                            <MenuItem value={"ROLE_CUSTOMER"}>Customer</MenuItem>
+                            <MenuItem value={"ROLE_RESTAURANT_OWNER"}>Restaurant Owner</MenuItem>
+                        </Select>
+                    </FormControl>
                     <Button sx={{ mt: 2, padding: "1rem", backgroundColor: "#ea580c", color: "white", "&:hover": { backgroundColor: "#c2410c" }, borderRadius: "8px" }} fullWidth type="submit" variant="contained">
                         LOGIN
                     </Button>
                 </Form>
+                )}
             </Formik>
 
             <div className="flex items-center my-4">

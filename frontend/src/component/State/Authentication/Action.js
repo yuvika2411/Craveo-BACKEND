@@ -1,4 +1,4 @@
-import { API_URL, api } from "../../Config/api";
+import { api } from "../../Config/api";
 import axios from "axios";
 //redux code
 import {

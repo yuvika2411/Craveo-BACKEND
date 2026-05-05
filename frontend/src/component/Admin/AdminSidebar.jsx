@@ -7,7 +7,10 @@ import { logout } from '../State/Authentication/Action';
 const menu = [
     { title: "Dashboard", icon: <Dashboard />, path: "/" },
     { title: "Orders", icon: <ShoppingBag />, path: "/orders" },
-    { title: "Menu", icon: <RestaurantMenu />, path: "/menu" },
+
+    // ✅ NEW
+    { title: "Food Items", icon: <RestaurantMenu />, path: "/food" },
+
     { title: "Food Category", icon: <Category />, path: "/category" },
     { title: "Ingredients", icon: <Category />, path: "/ingredients" },
     { title: "Events", icon: <EmojiEvents />, path: "/events" },
@@ -39,17 +42,26 @@ export const AdminSidebar = () => {
 
             <div className="flex flex-col flex-1 gap-2 px-4">
                 {menu.map((item, i) => {
-                    const isActive = location.pathname === `/admin/restaurant${item.path}` || (item.path === '/' && location.pathname === '/admin/restaurant');
+                    const isActive =
+                        location.pathname === `/admin/restaurant${item.path}` ||
+                        (item.path === '/' && location.pathname === '/admin/restaurant');
+
                     return (
-                        <div 
+                        <div
                             key={i}
                             onClick={() => handleNavigate(item)}
-                            className={`flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer transition-all duration-300 ${isActive ? 'bg-[#ea580c] text-white shadow-lg shadow-[#ea580c]/30' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
+                            className={`flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer transition-all duration-300 ${
+                                isActive
+                                    ? 'bg-[#ea580c] text-white shadow-lg shadow-[#ea580c]/30'
+                                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                            }`}
                         >
-                            {React.cloneElement(item.icon, { sx: { color: isActive ? 'white' : 'inherit' } })}
+                            {React.cloneElement(item.icon, {
+                                sx: { color: isActive ? 'white' : 'inherit' }
+                            })}
                             <span className="font-semibold text-[15px]">{item.title}</span>
                         </div>
-                    )
+                    );
                 })}
             </div>
         </div>

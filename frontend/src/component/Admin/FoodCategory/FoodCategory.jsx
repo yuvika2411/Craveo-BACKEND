@@ -9,24 +9,34 @@ export const FoodCategory = () => {
     const { restaurant } = useSelector(store => store);
     const [newCategory, setNewCategory] = useState("");
 
+    // useEffect(() => {
+    //     if (restaurant.usersRestaurant?.id) {
+    //         dispatch(getRestaurantCategory({ restaurantId: restaurant.usersRestaurant.id, jwt }));
+    //     }
+    // }, [dispatch, jwt, restaurant.usersRestaurant]);
     useEffect(() => {
-        if (restaurant.usersRestaurant?.id) {
-            dispatch(getRestaurantCategory({ restaurantId: restaurant.usersRestaurant.id, jwt }));
-        }
-    }, [dispatch, jwt, restaurant.usersRestaurant]);
+    if (restaurant.usersRestaurant?.id) {
+        dispatch(getRestaurantCategory());
+    }
+}, [restaurant.usersRestaurant?.id]);
 
-    const handleCreateCategory = (e) => {
-        e.preventDefault();
-        if (newCategory.trim() && restaurant.usersRestaurant?.id) {
-            const reqData = {
-                name: newCategory.trim(),
-                restaurantId: restaurant.usersRestaurant.id
-            };
-            dispatch(createCategoryAction({ reqData, jwt }));
-            setNewCategory("");
-        }
-    };
+   const handleCreateCategory = async (e) => {
+    e.preventDefault();
 
+    if (newCategory.trim() && restaurant.usersRestaurant?.id) {
+        const reqData = {
+            name: newCategory.trim(),
+            restaurantId: restaurant.usersRestaurant.id
+        };
+
+        await dispatch(createCategoryAction({ reqData, jwt }));
+
+        // 🔥 refetch categories
+        dispatch(getRestaurantCategory());
+
+        setNewCategory("");
+    }
+};
     const inputStyle = {
         '& .MuiOutlinedInput-root': {
             color: 'white',

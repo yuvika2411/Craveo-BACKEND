@@ -9,7 +9,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRestaurantById, getRestaurantCategory } from '../State/Restaurant/Action';
 import { getMenuItemsByRestaurantId } from '../State/Menu/Action';
-
+// const { auth, restaurant, food } = useSelector(store => store);
+import { getFoodByRestaurant } from '../State/Food/Action';
 
 const foodTypes = [
     { label: "All", value: "all" },
@@ -24,16 +25,24 @@ const RestaurantDetails = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { id, city } = useParams();
-    const { auth, restaurant, menu } = useSelector(store => store);
+    const { auth, restaurant, menu, food } = useSelector(store => store);
     const jwt = localStorage.getItem("jwt");
-
+    
+    // useEffect(() => {
+    //     if (id) {
+    //         dispatch(getRestaurantById({ restaurantId: id }));
+    //         dispatch(getRestaurantCategory({ jwt, restaurantId: id }));
+    //         dispatch(getMenuItemsByRestaurantId({ restaurantId: id }));
+    //     }
+    // }, [dispatch, id]);
     useEffect(() => {
         if (id) {
-            dispatch(getRestaurantById({ restaurantId: id }));
-            dispatch(getRestaurantCategory({ jwt, restaurantId: id }));
-            dispatch(getMenuItemsByRestaurantId({ restaurantId: id }));
-        }
-    }, [dispatch, id]);
+        dispatch(getRestaurantById({ restaurantId: id }));
+        dispatch(getRestaurantCategory());
+        dispatch(getMenuItemsByRestaurantId({ restaurantId: id }));
+        dispatch(getFoodByRestaurant({ restaurantId: id }));
+    }
+}, [id]);
 
     const handleFilterChange = (event) => {
         if (event.target.name === "foodType") {
@@ -43,11 +52,32 @@ const RestaurantDetails = () => {
         }
     };
 
-    const filteredMenu = menu.menuItems?.filter((item) => {
-        const typeMatch = foodType === "all" || (foodType === "veg" ? item.vegetarian : foodType === "non-veg" ? !item.vegetarian : item.seasonal === true);
-        const categoryMatch = foodCategory === "all" || item.foodCategory?.name === foodCategory;
-        return typeMatch && categoryMatch;
-    }) || [];
+    const filteredMenu = food.foods?.filter((item) => {
+    const typeMatch =
+        foodType === "all" ||
+        (foodType === "veg"
+            ? item.isVegetarian
+            : foodType === "non-veg"
+            ? !item.isVegetarian
+            : item.isSeasonal === true);
+
+    const categoryMatch =
+        foodCategory === "all" ||
+        item.foodCategory?.name === foodCategory;
+
+    return typeMatch && categoryMatch;
+}) || [];
+
+    const categoryOptions = restaurant.categories?.length > 0
+        ? restaurant.categories
+        : Array.from(
+            new Map(
+                (food.foods || [])
+                    .filter((item) => item.foodCategory?.name)
+                    .map((item) => [item.foodCategory.name, item.foodCategory])
+            ).values()
+        );
+
     return (
         <div className='font-[Poppins] px-5 lg:px-20 pt-28 pb-10 min-h-screen bg-[#0f0f0f] text-white'>
             {/* Breadcrumb & Navigation */}
@@ -188,7 +218,7 @@ const RestaurantDetails = () => {
                                             control={<Radio sx={{ color: "gray", '&.Mui-checked': { color: '#ea580c' } }} />}
                                             label={<span className="font-[Poppins] text-gray-300">All</span>}
                                         />
-                                        {restaurant.categories?.map((item) => (
+                                        {categoryOptions?.map((item) => (
                                             <FormControlLabel
                                                 key={item.id || item.name}
                                                 value={item.name}
