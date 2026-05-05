@@ -20,7 +20,7 @@ import {
 export const registerUser = (reqData) => async (dispatch) => {
     dispatch({ type: REGISTER_REQUEST })
     try {
-        const { data } = await axios.post(`${API_URL}/auth/signup`, reqData.userData)
+        const { data } = await api.post(`/api/auth/signup`, reqData.userData)
 
         console.log("REGISTER RESPONSE:", data);
         localStorage.setItem("jwt", data.jwt || data.token);
@@ -44,8 +44,8 @@ export const registerUser = (reqData) => async (dispatch) => {
 export const loginUser = (reqData) => async (dispatch) => {
     dispatch({ type: LOGIN_REQUEST })
     try {
-        const { data } = await axios.post(`${API_URL}/auth/signin`, reqData.userData)
-
+        const { data } = await api.post(`/api/auth/signin`, reqData.userData)
+        
         console.log("LOGIN RESPONSE:", data); 
 
         localStorage.setItem("jwt", data.jwt || data.token);

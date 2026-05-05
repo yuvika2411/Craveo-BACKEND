@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/food")
 public class FoodController {
     @Autowired
     private FoodService foodService;
@@ -32,7 +32,7 @@ public class FoodController {
 
         List<Food> foods = foodService.searchFood(name);
 
-        return new ResponseEntity<>(foods, HttpStatus.CREATED);
+        return new ResponseEntity<>(foods, HttpStatus.OK);
     }
 
     @GetMapping("/restaurant/{restaurantId}")

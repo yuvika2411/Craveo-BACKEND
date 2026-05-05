@@ -16,7 +16,7 @@ import {
 export const getIngredientsOfRestaurant = (reqData) => async (dispatch) => {
     dispatch({ type: GET_INGREDIENTS });
     try {
-        const res = await api.get(`/api/admin/ingredients?restaurantId=${reqData.restaurantId}`);
+        const res = await api.get(`/api/admin/ingredients/restaurant/${reqData.restaurantId}`);
         dispatch({ type: GET_INGREDIENTS, payload: res.data });
     } catch (error) {
         dispatch({ type: GET_INGREDIENTS, payload: error.response.data });
@@ -56,7 +56,7 @@ export const getIngredientCategory = () => async (dispatch) => {
 export const updateStockOfIngredient = (ingredientData) => async (dispatch) => {
     dispatch({ type: UPDATE_STOCK });
     try {
-        const res = await api.put("/api/admin/ingredients/stock", ingredientData);
+        const res = await api.put(`/api/admin/ingredients/${ingredientData.id}/stock`); 
         dispatch({ type: UPDATE_STOCK, payload: res.data });
     } catch (error) {
         dispatch({ type: UPDATE_STOCK, payload: error.response.data });

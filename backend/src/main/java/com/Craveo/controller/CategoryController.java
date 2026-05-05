@@ -29,10 +29,10 @@ public class CategoryController {
         return new ResponseEntity<>(createdFoodCategory, HttpStatus.CREATED);
     }
 
-    @GetMapping("/category/restaurant")
+    @GetMapping("/restaurant")
     public ResponseEntity<List<FoodCategory>> getRestaurantCategory(@RequestHeader("Authorization") String jwt) throws Exception {
         User user= userService.findUserByJwtToken(jwt);
         List<FoodCategory> categories= categoryService.findCategoryByRestaurantId(user.getId());
-        return new ResponseEntity<>(categories, HttpStatus.CREATED);
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 }

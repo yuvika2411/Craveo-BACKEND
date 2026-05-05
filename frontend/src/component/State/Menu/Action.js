@@ -32,7 +32,8 @@ export const createMenuItem = ({ reqData }) => async (dispatch) => {
 export const getMenuItemsByRestaurantId = ({ restaurantId, jwt }) => async (dispatch) => {
         dispatch({ type: GET_MENU_ITEMS_BY_RESTAURANT_ID_REQUEST });
         try {
-            const res = await api.get(`/api/restaurant/${restaurantId}?vegetarian=false&nonVegetarian=false&seasonal=false&foodCategory=`);
+            const res = await api.get(`/api/food/restaurant/${restaurantId}?vegetarian=false&nonVegetarian=false&seasonal=false`);
+
             console.log("get menu items response", res.data);
             dispatch({ type: GET_MENU_ITEMS_BY_RESTAURANT_ID_SUCCESS, payload: res.data });
         } catch (error) {
@@ -44,7 +45,7 @@ export const getMenuItemsByRestaurantId = ({ restaurantId, jwt }) => async (disp
 export const searchMenuItem = ({jwt, searchString}) => async (dispatch) => {
     dispatch({ type: SEARCH_MENU_ITEM_REQUEST });
     try {
-        const res = await api.get(`/api/search?name=${searchString}`);
+        const res = await api.get(`/api/food/search?name=${searchString}`);
         console.log("search menu item response", res.data);
         dispatch({ type: SEARCH_MENU_ITEM_SUCCESS, payload: res.data });
     } catch (error) {
