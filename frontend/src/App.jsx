@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./component/State/Authentication/Action";
 
 import { CustomerRoute } from "./Routers/CustomerRoute";
+import { AdminRoute } from "./Routers/AdminRoute";
 
 const App = () => {
   const dispatch = useDispatch()
@@ -24,6 +25,7 @@ const App = () => {
       <CssBaseline />
       <Router>
         <Routes>
+          <Route path="/admin/restaurant/*" element={<AdminRoute />} />
           <Route path="/*" element={<CustomerRoute />} />
         </Routes>
       </Router>

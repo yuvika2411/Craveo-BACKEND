@@ -25,10 +25,14 @@ public class RestaurantController {
 
     @GetMapping("/search")
     public ResponseEntity<List<Restaurant>> searchRestaurant(
-            @RequestHeader("Authorization") String jwt,
+            @RequestHeader(value = "Authorization", required = false) String jwt,
             @RequestParam String keyword
     ) throws Exception {
-        User user= userService.findUserByJwtToken(jwt);
+        User user = null;
+
+        if (jwt != null && jwt.startsWith("Bearer ")) {
+            user = userService.findUserByJwtToken(jwt);
+        }
 
         List<Restaurant> restaurant= restaurantService.searchRestaurant(keyword);
         return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
@@ -36,9 +40,13 @@ public class RestaurantController {
 
     @GetMapping()
     public ResponseEntity<List<Restaurant>> getAllRestaurant(
-            @RequestHeader("Authorization") String jwt
+            @RequestHeader(value = "Authorization", required = false) String jwt
     ) throws Exception {
-        User user= userService.findUserByJwtToken(jwt);
+        User user = null;
+
+        if (jwt != null && jwt.startsWith("Bearer ")) {
+            user = userService.findUserByJwtToken(jwt);
+        }
 
         List<Restaurant> restaurant= restaurantService.getAllRestaurant();
         return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
@@ -46,10 +54,14 @@ public class RestaurantController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Restaurant> findRestaurantById(
-            @RequestHeader("Authorization") String jwt,
+            @RequestHeader(value = "Authorization", required = false) String jwt,
             @PathVariable Long id
     ) throws Exception {
-        User user= userService.findUserByJwtToken(jwt);
+        User user = null;
+
+        if (jwt != null && jwt.startsWith("Bearer ")) {
+            user = userService.findUserByJwtToken(jwt);
+        }
 
         Restaurant restaurant= restaurantService.findRestaurantById(id);
         return new ResponseEntity<>(restaurant, HttpStatus.OK);
@@ -57,10 +69,14 @@ public class RestaurantController {
 
     @PutMapping("/{id}/add-favorites")
     public ResponseEntity<RestaurantDto> addToFavorites(
-            @RequestHeader("Authorization") String jwt,
+            @RequestHeader(value = "Authorization", required = false) String jwt,
             @PathVariable Long id
     ) throws Exception {
-        User user= userService.findUserByJwtToken(jwt);
+        User user = null;
+
+        if (jwt != null && jwt.startsWith("Bearer ")) {
+            user = userService.findUserByJwtToken(jwt);
+        }
 
         RestaurantDto restaurant= restaurantService.addToFavorites(id,user);
         return new ResponseEntity<>(restaurant, HttpStatus.OK);

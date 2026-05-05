@@ -61,23 +61,19 @@ export const addItemToCart = (reqData) => {
     };
 };
 
-// export const updateCartItem = (reqData) => {
-//     return async (dispatch) => {
-//         dispatch({ type: UPDATE_CARTITEM_REQUEST });
-//         try {
-//             const { data } = await api.put(`/api/cart-item/update`, reqData.data, {
-//                 headers: {
-//                     Authorization: `Bearer ${reqData.jwt}`,
-//                 },
-//             });
-//             console.log("update cart item", data);
-//             dispatch({ type: UPDATE_CARTITEM_SUCCESS, payload: data });
-//         } catch (error) {
-//             console.log("update cart item error", error);
-//             dispatch({ type: UPDATE_CARTITEM_FAILURE, payload: error.message });
-//         }
-//     };
-// };
+export const updateCartItem = (reqData) => {
+    return async (dispatch) => {
+        dispatch({ type: UPDATE_CARTITEM_REQUEST });
+        try {
+            const { data } = await api.put(`/api/cart-item/update`, reqData.data);
+            console.log("update cart item", data);
+            dispatch({ type: UPDATE_CARTITEM_SUCCESS, payload: data });
+        } catch (error) {
+            console.log("update cart item error", error);
+            dispatch({ type: UPDATE_CARTITEM_FAILURE, payload: error.message });
+        }
+    };
+};
 
 export const removeCartItem = ({ cartItemId, jwt }) => {
     return async (dispatch) => {

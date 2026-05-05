@@ -2,18 +2,19 @@ import { Avatar, IconButton, Badge } from '@mui/material'
 import React from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import PersonIcon from '@mui/icons-material/Person';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const Navbar = () => {
-  const {auth}=useSelector(store=>store);
+  const {auth, cart} = useSelector(store => store);
   const navigate = useNavigate();
 
   const handleAvatarClick = () => {
     if (auth.user?.role === "ROLE_RESTAURANT_OWNER") {
-      navigate("/admin/restaurant")
+      navigate("/admin/restaurant");
     } else {
-      navigate("/my-profile")
+      navigate("/my-profile");
     }
   }
 
@@ -32,42 +33,48 @@ const Navbar = () => {
             Home
           </p>
 
-          <p className="cursor-pointer hover:text-[#ea580c] transition">
+          <p onClick={() => navigate('/about')} className="cursor-pointer hover:text-[#ea580c] transition">
             About
           </p>
 
-          <p className="cursor-pointer hover:text-[#ea580c] transition">
-            Blogs
-          </p>
-
-          <p className="cursor-pointer hover:text-[#ea580c] transition">
-            Contact Us
-          </p>
 
         </div>
 
         <div className="flex items-center gap-8 mr-5">
 
-          <IconButton>
-            <SearchIcon sx={{ color: "white" }} />
-          </IconButton>
-
-          <IconButton onClick={() => navigate('/cart')}>
-            <Badge badgeContent={2} color="error">
-              <ShoppingCartIcon sx={{ color: "white" }} />
-            </Badge>
-          </IconButton>
-
-          <div onClick={handleAvatarClick} className="cursor-pointer">
-            {auth.user ? <Avatar sx={{ bgcolor: "white", color: "#ea580c", width: 32, height: 32 }}>{auth.user?.fullName?.[0].toUpperCase()}</Avatar> : <Avatar sx={{ bgcolor: "white", width: 32, height: 32 }} />}
+          <div className="flex items-center bg-white/10 rounded-full px-3 py-1.5 focus-within:ring-2 ring-[#ea580c] transition-all">
+            <SearchIcon sx={{ color: "white", fontSize: 20 }} />
+            <input 
+              type="text" 
+              placeholder="Search..." 
+              className="bg-transparent border-none outline-none text-white text-sm ml-2 w-24 md:w-40 placeholder-gray-400"
+              onKeyDown={(e) => {
+                if(e.key === 'Enter') navigate(`/search?q=${e.target.value}`);
+              }}
+            />
           </div>
 
-          <button onClick={() => navigate('/account/register')} className="bg-[#ea580c] px-4 py-2 rounded-full text-sm hover:bg-[#c2410c] transition">
-            Sign Up
-          </button>
+          {auth.user && (
+            <IconButton onClick={() => navigate('/cart')}>
+              <Badge badgeContent={cart.cartItems?.length || 0} color="error">
+                <ShoppingCartIcon sx={{ color: "white" }} />
+              </Badge>
+            </IconButton>
+          )}
 
-        </div>
+          {auth.user ? (
+            <div onClick={handleAvatarClick} className="cursor-pointer">
+              <Avatar sx={{ bgcolor: "white", color: "#ea580c", width: 32, height: 32 }}>{auth.user?.fullName?.[0].toUpperCase()}</Avatar>
+            </div>
+          ) : (
+            <div onClick={() => navigate('/account/login')} className="cursor-pointer">
+              <Avatar sx={{ bgcolor: "white", color: "gray", width: 32, height: 32 }}>
+                <PersonIcon />
+              </Avatar>
+            </div>
+          )}
 
+      </div>
       </div>
     </div>
   )

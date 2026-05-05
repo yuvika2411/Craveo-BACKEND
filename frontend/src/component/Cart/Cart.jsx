@@ -6,24 +6,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-const initialCart = [
-    {
-        id: 1,
-        name: "Chicken Biryani",
-        price: 349,
-        quantity: 1,
-        image: "/images/Meals/biryani.jpg",
-        ingredients: ["Extra Raita", "Salad"]
-    },
-    {
-        id: 2,
-        name: "Paneer Tikka Masala",
-        price: 299,
-        quantity: 2,
-        image: "https://www.cookwithmanali.com/wp-content/uploads/2014/04/Paneer-Tikka-Masala-500x500.jpg",
-        ingredients: ["Butter Naan", "Mint Chutney"]
-    }
-];
+
 
 const initialAddresses = [
     {
@@ -38,24 +21,37 @@ const initialAddresses = [
     }
 ];
 
+import { useDispatch, useSelector } from 'react-redux';
+import { findCart, updateCartItem, removeCartItem } from '../State/Cart/Action';
+import { createOrder } from '../State/Order/Action';
+import { useEffect } from 'react';
+
 const Cart = () => {
-    const [cartItems, setCartItems] = useState(initialCart);
-    const [addressesList, setAddressesList] = useState(initialAddresses);
-    const [selectedAddress, setSelectedAddress] = useState(initialAddresses[0].id);
+    const { cart, auth } = useSelector(store => store);
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt");
+
+    const addressesList = auth.user?.addresses || [];
+    const [selectedAddress, setSelectedAddress] = useState(addressesList.length > 0 ? addressesList[0].id : null);
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
     const [newAddress, setNewAddress] = useState({ street: '', city: '', state: '', pincode: '' });
 
-    const handleQuantityChange = (id, delta) => {
-        setCartItems(prev => prev.map(item => {
-            if (item.id === id) {
-                const newQuantity = item.quantity + delta;
-                return { ...item, quantity: newQuantity > 0 ? newQuantity : 0 };
-            }
-            return item;
-        }).filter(item => item.quantity > 0)); 
+    useEffect(() => {
+        if (jwt) {
+            dispatch(findCart(jwt));
+        }
+    }, [dispatch, jwt]);
+
+    const handleQuantityChange = (item, delta) => {
+        if (item.quantity + delta === 0) {
+            dispatch(removeCartItem({ cartItemId: item.id, jwt }));
+        } else {
+            dispatch(updateCartItem({ cartItemId: item.id, data: { quantity: item.quantity + delta } }));
+        }
     };
 
-    const itemTotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    const cartItems = cart.cartItems || [];
+    const itemTotal = cart.cart?.total || 0;
     const deliverFee = itemTotal > 0 ? 40 : 0;
     const platformFee = itemTotal > 0 ? 5 : 0;
     const gstAndRestaurantCharges = itemTotal > 0 ? Math.round(itemTotal * 0.05) : 0;
@@ -86,17 +82,17 @@ const Cart = () => {
                             ) : cartItems.map(item => (
                                 <div key={item.id} className="flex gap-4 group">
                                     <div className="w-20 h-20 rounded-xl overflow-hidden shadow-inner shrink-0 relative border border-white/10">
-                                        <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                        <img src={item.food?.images?.[0] || ""} alt={item.food?.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                         <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500"></div>
                                     </div>
                                     <div className="flex flex-col justify-between flex-1 py-0.5">
                                         <div>
                                             <div className="flex justify-between items-start gap-2">
-                                                <h3 className="font-bold text-base text-gray-50 leading-tight group-hover:text-[#ea580c] transition-colors">{item.name}</h3>
-                                                <span className="font-bold text-lg text-white tracking-tight">₹{item.price * item.quantity}</span>
+                                                <h3 className="font-bold text-base text-gray-50 leading-tight group-hover:text-[#ea580c] transition-colors">{item.food?.name}</h3>
+                                                <span className="font-bold text-lg text-white tracking-tight">₹{item.totalPrice}</span>
                                             </div>
                                             <div className="flex flex-wrap gap-1.5 mt-1.5">
-                                                {item.ingredients.map((ing, idx) => (
+                                                {item.ingredients?.map((ing, idx) => (
                                                     <span key={idx} className="bg-white/5 border border-white/10 text-gray-400 text-[9px] uppercase font-medium tracking-wider px-1.5 py-0.5 rounded-md">
                                                         {ing}
                                                     </span>
@@ -106,11 +102,11 @@ const Cart = () => {
                                         
                                         <div className="flex items-center mt-2">
                                             <div className="flex items-center bg-[#0f0f0f] rounded-full border border-white/10 shadow-inner px-1 py-1">
-                                                <IconButton onClick={() => handleQuantityChange(item.id, -1)} size="small" sx={{ color: '#ea580c', '&:hover': { bgcolor: 'rgba(234, 88, 12, 0.1)' } }}>
+                                                <IconButton onClick={() => handleQuantityChange(item, -1)} size="small" sx={{ color: '#ea580c', '&:hover': { bgcolor: 'rgba(234, 88, 12, 0.1)' } }}>
                                                     <RemoveCircleOutlineIcon fontSize="small" />
                                                 </IconButton>
                                                 <span className="text-sm font-bold w-7 text-center">{item.quantity}</span>
-                                                <IconButton onClick={() => handleQuantityChange(item.id, 1)} size="small" sx={{ color: '#ea580c', '&:hover': { bgcolor: 'rgba(234, 88, 12, 0.1)' } }}>
+                                                <IconButton onClick={() => handleQuantityChange(item, 1)} size="small" sx={{ color: '#ea580c', '&:hover': { bgcolor: 'rgba(234, 88, 12, 0.1)' } }}>
                                                     <AddCircleOutlineIcon fontSize="small" />
                                                 </IconButton>
                                             </div>
@@ -185,7 +181,7 @@ const Cart = () => {
                                         <h4 className={`font-bold text-base tracking-wide ${isSelected ? 'text-white' : 'text-gray-300'}`}>{address.title}</h4>
                                     </div>
                                     <p className="text-gray-400 text-sm leading-relaxed flex-1 pr-4">
-                                        {address.address}
+                                        {address.street}, {address.city}, {address.state}, {address.pincode}
                                     </p>
                                 </div>
                             );
@@ -210,6 +206,20 @@ const Cart = () => {
                         <Button 
                             variant="contained" 
                             size="large"
+                            onClick={() => {
+                                if (cartItems.length === 0) {
+                                    alert("Cart is empty");
+                                    return;
+                                }
+                                if (!selectedAddress) {
+                                    alert("Please select a delivery address");
+                                    return;
+                                }
+                                const addressObj = addressesList.find(a => a.id === selectedAddress) || newAddress;
+                                const restaurantId = cartItems[0]?.food?.restaurant?.id;
+                                dispatch(createOrder({ order: { restaurantId, deliveryAddress: addressObj } }));
+                                alert("Order created successfully!");
+                            }}
                             sx={{ 
                                 background: 'linear-gradient(45deg, #ea580c 30%, #f97316 90%)',
                                 color: 'white',

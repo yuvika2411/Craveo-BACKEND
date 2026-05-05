@@ -63,6 +63,30 @@ export const LoginForm = () => {
                     </Button>
                 </Form>
             </Formik>
+
+            <div className="flex items-center my-4">
+                <div className="flex-1 border-t border-gray-600"></div>
+                <span className="px-3 text-gray-500 text-sm">OR</span>
+                <div className="flex-1 border-t border-gray-600"></div>
+            </div>
+
+            <Button 
+                fullWidth 
+                variant="outlined" 
+                sx={{ 
+                    padding: "0.8rem", 
+                    color: "white", 
+                    borderColor: "gray", 
+                    "&:hover": { borderColor: "white", backgroundColor: "rgba(255,255,255,0.05)" }, 
+                    borderRadius: "8px",
+                    display: "flex",
+                    gap: "10px"
+                }}
+                onClick={() => alert("Google Authentication will be enabled after configuring OAuth Client ID.")}
+            >
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="google" className="w-5 h-5" />
+                Sign in with Google
+            </Button>
             <Typography variant="body2" align="center" sx={{ mt: 3, color: "gray" }}>
                 Don't have an account? 
                 <Button size="small" onClick={() => navigate('/account/register')} sx={{ ml: 1, color: "#ea580c", fontWeight: 'bold' }}>
