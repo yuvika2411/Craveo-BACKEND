@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "./component/Auth/Auth";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./component/State/Authentication/Action";
+import ProtectedRoute from "./Routers/ProtectedRoute";
 
 import { CustomerRoute } from "./Routers/CustomerRoute";
 import { AdminRoute } from "./Routers/AdminRoute";

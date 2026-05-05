@@ -9,6 +9,10 @@ import { useSelector } from 'react-redux';
 const Navbar = () => {
   const {auth, cart} = useSelector(store => store);
   const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("jwt");
+    window.location.reload();
+  };
 
   const handleAvatarClick = () => {
     if (auth.user?.role === "ROLE_RESTAURANT_OWNER") {
@@ -63,8 +67,23 @@ const Navbar = () => {
           )}
 
           {auth.user ? (
-            <div onClick={handleAvatarClick} className="cursor-pointer">
-              <Avatar sx={{ bgcolor: "white", color: "#ea580c", width: 32, height: 32 }}>{auth.user?.fullName?.[0].toUpperCase()}</Avatar>
+            <div className="flex items-center gap-3">
+
+              {/* Avatar */}
+              <div onClick={handleAvatarClick} className="cursor-pointer">
+                <Avatar sx={{ bgcolor: "white", color: "#ea580c", width: 32, height: 32 }}>
+                  {auth.user?.fullName?.[0].toUpperCase()}
+                </Avatar>
+              </div>
+
+              {/* Logout Button */}
+              <button
+                onClick={handleLogout}
+                className="text-sm text-white border border-white/20 px-3 py-1 rounded-md hover:bg-[#ea580c] transition"
+              >
+                Logout
+              </button>
+
             </div>
           ) : (
             <div onClick={() => navigate('/account/login')} className="cursor-pointer">
