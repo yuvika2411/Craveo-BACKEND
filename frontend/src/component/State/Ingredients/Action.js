@@ -13,6 +13,7 @@ import {
     UPDATE_STOCK,
 } from "./ActionType";
 
+//action ingredient
 export const getIngredientsOfRestaurant = (reqData) => async (dispatch) => {
     dispatch({ type: GET_INGREDIENTS });
     try {
