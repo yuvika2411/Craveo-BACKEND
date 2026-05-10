@@ -6,7 +6,6 @@ import com.Craveo.request.CreateRestaurantRequest;
 import com.Craveo.response.MessageResponse;
 import com.Craveo.service.RestaurantService;
 import com.Craveo.service.UserService;
-import org.aspectj.bridge.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,15 +21,14 @@ public class AdminRestaurantController {
     @Autowired
     private UserService userService;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Restaurant> createRestaurant(
             @RequestBody CreateRestaurantRequest req,
             @RequestHeader("Authorization") String jwt
-            ) throws Exception {
-        User user= userService.findUserByJwtToken(jwt);
-
-        Restaurant restaurant= restaurantService.createRestaurant(req,user);
-        return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
+    ) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
+        Restaurant restaurant = restaurantService.createRestaurant(req, user);
+        return new ResponseEntity<>(restaurant, HttpStatus.CREATED);  // ✅ CREATED is correct for POST
     }
 
     @PutMapping("/{id}")
@@ -39,49 +37,39 @@ public class AdminRestaurantController {
             @RequestHeader("Authorization") String jwt,
             @PathVariable Long id
     ) throws Exception {
-        User user= userService.findUserByJwtToken(jwt);
-
-        Restaurant restaurant= restaurantService.updateRestaurant(id,req);
-        return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
+        userService.findUserByJwtToken(jwt);
+        Restaurant restaurant = restaurantService.updateRestaurant(id, req);
+        return new ResponseEntity<>(restaurant, HttpStatus.OK);  // ✅ was CREATED, PUT should return OK
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<MessageResponse> deleteRestaurant(
-            @RequestBody CreateRestaurantRequest req,
-            @RequestHeader("Authorization") String jwt,
+            @RequestHeader("Authorization") String jwt,  // ✅ removed wrong @RequestBody
             @PathVariable Long id
     ) throws Exception {
-        User user= userService.findUserByJwtToken(jwt);
+        userService.findUserByJwtToken(jwt);
         restaurantService.deleteRestaurant(id);
-        MessageResponse res= new MessageResponse();
-        res.setMessage("Restaurant deleted successfully");
+        MessageResponse res = new MessageResponse();
+        res.setMessage("Restaurant deleted successfully.");
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @PutMapping("/{id}/status")
     public ResponseEntity<Restaurant> updateRestaurantStatus(
-
             @RequestHeader("Authorization") String jwt,
             @PathVariable Long id
     ) throws Exception {
-        User user= userService.findUserByJwtToken(jwt);
-        Restaurant restaurant= restaurantService.updateRestaurantStatus(id);
-
+        userService.findUserByJwtToken(jwt);
+        Restaurant restaurant = restaurantService.updateRestaurantStatus(id);
         return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
 
     @GetMapping("/user")
     public ResponseEntity<Restaurant> findRestaurantByUserId(
-            @RequestBody CreateRestaurantRequest req,
             @RequestHeader("Authorization") String jwt
-
     ) throws Exception {
-        User user= userService.findUserByJwtToken(jwt);
-        Restaurant restaurant= restaurantService.getRestaurantByUserId(user.getId());
-        MessageResponse res= new MessageResponse();
-        res.setMessage("Restaurant deleted successfully");
+        User user = userService.findUserByJwtToken(jwt);
+        Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
         return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
-
-
 }

@@ -1,19 +1,23 @@
 import axios from "axios";
 
-export const API_URL = "http://localhost:5458/";
+// export const BASE_URL = "VITE";
+
+ // ✅ fixed backend port
 
 export const api = axios.create({
-    baseURL: API_URL,
+    baseURL: import.meta.env.VITE_API_URL ,
+    headers: {
+        "Content-Type": "application/json",
+    },
 });
 
-// interceptor
-api.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem("jwt");
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => Promise.reject(error)
-);
+// ✅ AUTO TOKEN ATTACH
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem("jwt");
+
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+});

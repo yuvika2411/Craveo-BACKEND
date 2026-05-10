@@ -8,16 +8,18 @@ import orderReducer from "./Order/Reducer";
 import restaurantOrderReducer from "./Restaurant Order/Reducer";
 import ingredientReducer from "./Ingredients/Reducer";
 
+import { foodReducer } from "./Food/Reducer";
+
 const rootReducer = combineReducers({
     auth: authReducer,
-    restaurant:restaurantReducer,
+    restaurant: restaurantReducer,
     menu: menuItemReducer,
     cart: cartReducer,
     order: orderReducer,
     restaurantOrder: restaurantOrderReducer,
-    ingredient: ingredientReducer
-
-})
+    ingredient: ingredientReducer,
+    food: foodReducer
+});
 
 export const store = configureStore({
     reducer: rootReducer

@@ -1,11 +1,11 @@
 package com.Craveo.controller;
 
-import com.Craveo.model.CartItem;
 import com.Craveo.model.Order;
 import com.Craveo.model.User;
-import com.Craveo.request.AddCartItemRequest;
 import com.Craveo.request.OrderRequest;
+import com.Craveo.response.PaymentResponse;
 import com.Craveo.service.OrderService;
+import com.Craveo.service.PaymentService;
 import com.Craveo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,16 +24,35 @@ public class OrderController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PaymentService paymentService;
+
     @PostMapping("/order")
-    private ResponseEntity<Order> creatOrder(@RequestBody OrderRequest req,
-                                             @RequestHeader("Authorization") String jwt) throws Exception {
-        User user= userService.findUserByJwtToken(jwt);
-        Order order = orderService.createOrder(req,user);
+    public ResponseEntity<PaymentResponse> createOrder(@RequestBody OrderRequest req,
+                                                       @RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
+        Order order = orderService.createOrder(req, user);
+
+        String paymentUrl = paymentService.createPaymentLink(order);
+        PaymentResponse res = new PaymentResponse();
+        res.setPayment_url(paymentUrl);
+
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    // ✅ NEW — called by frontend after Stripe redirects to /payment/success/{orderId}
+    // Marks the order as COMPLETED so it doesn't stay PENDING forever
+    @GetMapping("/order/{orderId}/confirm-payment")
+    public ResponseEntity<Order> confirmPayment(@PathVariable Long orderId,
+                                                @RequestHeader("Authorization") String jwt) throws Exception {
+        userService.findUserByJwtToken(jwt);
+        Order order = orderService.updateOrder(orderId, "COMPLETED");
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
+
     @GetMapping("/order/user")
-    private ResponseEntity<List<Order>> getOrderHistory(@RequestHeader("Authorization") String jwt) throws Exception {
-        User user= userService.findUserByJwtToken(jwt);
+    public ResponseEntity<List<Order>> getOrderHistory(@RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
         List<Order> orders = orderService.getUsersOrder(user.getId());
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }

@@ -17,8 +17,11 @@ public class UserServiceImp implements UserService{
 
     @Override
     public User findUserByJwtToken(String jwt) throws Exception {
+        if (jwt == null || jwt.isBlank()) throw new Exception("JWT token is missing");
         String email = jwtProvider.getEmailFromJwtToken(jwt);
-        User user= findUserByEmail(email);
+        if (email == null) throw new Exception("Invalid or expired token");
+        User user = userRepository.findByEmail(email);
+        if (user == null) throw new Exception("User not found for this token");
         return user;
     }
 

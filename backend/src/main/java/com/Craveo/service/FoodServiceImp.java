@@ -64,7 +64,7 @@ public class FoodServiceImp implements FoodService{
             foods = filterByFoodCategory(foods, foodCategory);
         }
 
-        return null;
+        return foods;
     }
 
     private List<Food> filterByFoodCategory(List<Food> foods, String foodCategory) {
