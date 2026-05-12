@@ -43,14 +43,10 @@ public class IngredientController {
         return new ResponseEntity<>(items, HttpStatus.OK);
     }
 
-//    @GetMapping("/restaurant/{id}")
-//    private ResponseEntity<IngredientCategory> getIngredientCategoryById(@PathVariable Long id) throws Exception{
-//        IngredientCategory category= ingredientService.findIngredientCategoryById(id);
-//        return new ResponseEntity<>(category, HttpStatus.OK);
-//    }
 
-    @GetMapping("/restaurant/{id}/category")
-    private ResponseEntity<List<IngredientCategory>> getRestaurantIngredientCategory(@PathVariable Long restaurantId) throws Exception{
+    @GetMapping("/restaurant/{restaurantId}/category")
+    private ResponseEntity<List<IngredientCategory>> getRestaurantIngredientCategory(
+            @PathVariable Long restaurantId)throws Exception{
         List<IngredientCategory> category= ingredientService.findIngredientCategoryByRestaurantId(restaurantId);
         return new ResponseEntity<>(category, HttpStatus.OK);
     }

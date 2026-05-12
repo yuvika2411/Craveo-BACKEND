@@ -38,26 +38,7 @@ const ProfileNavigation = ({ open, handleClose, activeTab, onTabChange }) => {
     }
   };
 
-  return (
-    <React.Fragment>
-      <Drawer
-        variant={isSmallScreen ? "temporary" : "permanent"}
-        onClose={handleClose}
-        open={isSmallScreen ? open : true}
-        anchor="left"
-        sx={{
-          zIndex: 1,
-          position: "sticky",
-          "& .MuiDrawer-paper": {
-            width: "20vw",
-            minWidth: "250px",
-            height: "90vh",
-            position: "relative",
-            border: "none",
-            backgroundColor: "transparent",
-          },
-        }}
-      >
+  const navContent = (
         <div className="w-[100%] flex flex-col pt-5">
           <div className="px-5 pb-2">
             <h2 className="text-2xl font-bold text-white tracking-wide">
@@ -86,7 +67,33 @@ const ProfileNavigation = ({ open, handleClose, activeTab, onTabChange }) => {
             </React.Fragment>
           ))}
         </div>
-      </Drawer>
+  );
+
+  return (
+    <React.Fragment>
+      {isSmallScreen ? (
+        <Drawer
+          variant="temporary"
+          onClose={handleClose}
+          open={open}
+          anchor="left"
+          sx={{
+            zIndex: 100,
+            "& .MuiDrawer-paper": {
+              width: "70vw",
+              minWidth: "250px",
+              backgroundColor: "#101010",
+              borderRight: "1px solid rgba(255,255,255,0.1)"
+            },
+          }}
+        >
+          {navContent}
+        </Drawer>
+      ) : (
+        <div className="w-full h-full bg-transparent">
+          {navContent}
+        </div>
+      )}
     </React.Fragment>
   );
 };

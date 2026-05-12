@@ -19,7 +19,7 @@ const cartReducer = (state = initialState, action) => {
                 error:null
             }
         case actionTypes.FIND_CART_SUCCESS:
-        case actionTypes.CLEAR_CART_SUCCESS:
+        case actionTypes.CLEARE_CART_SUCCESS:
             return{
                 ...state,
                 cart:action.payload,

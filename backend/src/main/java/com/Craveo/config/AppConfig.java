@@ -1,9 +1,5 @@
 package com.Craveo.config;
 
-//Spring Security ko enable karna
-//Authentication & authorization ke rules define karna
-//Default security ko customize karna
-
 import jakarta.servlet.http.HttpServletRequest;
 import org.jspecify.annotations.Nullable;
 import org.springframework.context.annotation.Bean;
@@ -22,52 +18,78 @@ import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
-//Batata hai ki ye class Spring ke configuration (rules) define karti hai
 @EnableWebSecurity
-//Spring Security ko activate (ON) karta hai application m
-
-
 public class AppConfig {
 
     @Bean
-    // Method ke return object ko Spring container me manage krne ke liye use hota hai
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(Authorize -> Authorize
-                        .requestMatchers("/api/admin/**").hasAnyRole("RESTAURANT_OWNER","ADMIN")
-                        .requestMatchers("/api/**").authenticated()
+        http
+                // ✅ Stateless session (JWT)
+                .sessionManagement(management ->
+                        management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+
+                // ✅ Authorization rules
+                .authorizeHttpRequests(auth -> auth
+
+                        // 🔓 PUBLIC APIs
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/restaurants/**").permitAll()
+                        .requestMatchers("/api/events/**").permitAll()
+                        .requestMatchers("/api/category/**").permitAll()
+                        .requestMatchers("/api/test").permitAll()
+
+                        // 🔐 ADMIN APIs
+                        .requestMatchers("/api/admin/**")
+                        .hasAnyRole("RESTAURANT_OWNER", "ADMIN")
+
+                        // 🔐 USER APIs (login required)
+                        .requestMatchers("/api/cart/**").authenticated()
+                        .requestMatchers("/api/cart-item/**").authenticated()
+                        .requestMatchers("/api/orders/**").authenticated()
+
+                        // 🔓 Others allowed
                         .anyRequest().permitAll()
-                ).addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
-                .csrf(csrf-> csrf.disable())
-                .cors(cors-> cors.configurationSource(corsConfigurationSource()));
+                )
+
+                // ✅ JWT FILTER
+                .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
+
+                // ❌ Disable CSRF (for APIs)
+                .csrf(csrf -> csrf.disable())
+
+                // ✅ CORS CONFIG
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
     }
 
-    private CorsConfigurationSource corsConfigurationSource(){
-        return new CorsConfigurationSource() {
-            @Override
-            public @Nullable CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                CorsConfiguration cfg= new CorsConfiguration();
-                cfg.setAllowedOrigins(Arrays.asList(
-                        "http://localhost:3000",
-                        "http://localhost:5173",
-                        "http://localhost:5174",
-                        "https://craveo.vercel.app"
-                ));
-                cfg.setAllowedMethods(Collections.singletonList("*"));
-                cfg.setAllowCredentials(true);
-                cfg.setAllowedHeaders(Collections.singletonList("*"));
-                cfg.setExposedHeaders(Arrays.asList("Authorization"));
-                cfg.setMaxAge(3600L);
+    // ✅ CORS CONFIGURATION
+    private CorsConfigurationSource corsConfigurationSource() {
+        return request -> {
+            CorsConfiguration cfg = new CorsConfiguration();
+
+            cfg.setAllowedOrigins(Arrays.asList(
+                    "http://localhost:5174",
+                    "https://9t14rxjr-5174.inc1.devtunnels.ms/"
+                    // ✅ your frontend
+            ));
+
+            cfg.setAllowedMethods(Collections.singletonList("*"));
+            cfg.setAllowedHeaders(Collections.singletonList("*"));
+            cfg.setAllowCredentials(true);
+
+            cfg.setExposedHeaders(Arrays.asList("Authorization"));
+            cfg.setMaxAge(3600L);
+
             return cfg;
-            }
         };
     }
 
+    // ✅ PASSWORD ENCODER
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

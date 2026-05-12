@@ -21,7 +21,7 @@ const Hero = () => {
                     </p>
 
                     <div className="flex gap-4">
-                        <button className="bg-[#ea580c] px-6 py-3 rounded-full font-medium hover:bg-[#c2410c] transition shadow-lg shadow-[#ea580c]/30">
+                        <button onClick={() => document.getElementById('restaurants')?.scrollIntoView({ behavior: 'smooth' })} className="bg-[#ea580c] px-6 py-3 rounded-full font-medium hover:bg-[#c2410c] transition shadow-lg shadow-[#ea580c]/30">
                             View All Restaurants
                         </button>
                     </div>

@@ -1,4 +1,4 @@
-import { API_URL, api } from "../../Config/api";
+import { api } from "../../Config/api";
 import axios from "axios";
 //redux code
 import {
@@ -20,7 +20,7 @@ import {
 export const registerUser = (reqData) => async (dispatch) => {
     dispatch({ type: REGISTER_REQUEST })
     try {
-        const { data } = await axios.post(`${API_URL}auth/signup`, reqData.userData)
+        const { data } = await api.post(`/api/auth/signup`, reqData.userData)
 
         console.log("REGISTER RESPONSE:", data);
         localStorage.setItem("jwt", data.jwt || data.token);
@@ -44,8 +44,8 @@ export const registerUser = (reqData) => async (dispatch) => {
 export const loginUser = (reqData) => async (dispatch) => {
     dispatch({ type: LOGIN_REQUEST })
     try {
-        const { data } = await axios.post(`${API_URL}auth/signin`, reqData.userData)
-
+        const { data } = await api.post(`/api/auth/signin`, reqData.userData)
+        
         console.log("LOGIN RESPONSE:", data); 
 
         localStorage.setItem("jwt", data.jwt || data.token);
@@ -55,7 +55,7 @@ export const loginUser = (reqData) => async (dispatch) => {
         dispatch(getUser());
 
         if (data.role === "ROLE_RESTAURANT_OWNER") {
-            reqData.navigate("/")
+            reqData.navigate("/admin/restaurant")
         } else {
             reqData.navigate("/")
         }
@@ -73,11 +73,7 @@ export const getUser = () => async (dispatch) => {
     try {
         const token = localStorage.getItem("jwt");
 
-        const { data } = await api.get(`/api/users/profile`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        const { data } = await api.get(`/api/users/profile`);
 
         dispatch({ type: GET_USER_SUCCESS, payload: data })
         console.log("user profile ", data);
@@ -98,12 +94,7 @@ export const addToFavorite = ({ restaurantId }) => async (dispatch) => {
 
         const { data } = await api.put(
             `/api/restaurants/${restaurantId}/add-favorites`,
-            {},
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
+            {}
         )
 
         dispatch({ type: ADD_TO_FAVORITE_SUCCESS, payload: data })

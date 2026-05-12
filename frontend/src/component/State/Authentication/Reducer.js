@@ -35,13 +35,23 @@ export const authReducer = (state = initialState, action) => {
         case LOGIN_SUCCESS:
             return { ...state, jwt: action.payload, loading: false, success: "Register Success" };
         case GET_USER_SUCCESS:
-            return { ...state, user: action.payload, loading: false, success: "User Load Success" };
+            return { 
+                ...state, 
+                user: action.payload, 
+                favorites: action.payload.favorites || [],
+                loading: false, 
+                success: "User Load Success" 
+            };
         case ADD_TO_FAVORITE_SUCCESS:
+            const payloadRestaurantId = action.payload.restaurant ? action.payload.restaurant.id : action.payload.id;
             return {
                 ...state,
                 loading: false,
-                favorites: isPresentInFavorites({favorites: state.favorites, restaurantId: action.payload.id})
-                    ? state.favorites.filter(favorite => favorite.id !== action.payload.id)
+                favorites: isPresentInFavorites({favorites: state.favorites, restaurantId: payloadRestaurantId})
+                    ? state.favorites.filter(favorite => {
+                        const favoriteRestaurantId = favorite.restaurant ? favorite.restaurant.id : favorite.id;
+                        return favoriteRestaurantId !== payloadRestaurantId;
+                    })
                     : [...state.favorites, action.payload],
                 success: "Added to Favorites"
             }
