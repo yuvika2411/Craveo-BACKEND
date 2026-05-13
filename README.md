@@ -101,18 +101,6 @@ Stripe is integrated for secure payment processing.
 
 ---
 
-## 📸 Screenshots
-
-Add your project screenshots inside the `screenshots` folder and update them here.
-
-Example:
-
-```md
-![Home Page](screenshots/home.png)
-```
-
----
-
 ## 🌟 Future Enhancements
 
 * Real-time Order Tracking
@@ -121,24 +109,6 @@ Example:
 * Ratings & Reviews
 * Push Notifications
 * Delivery Partner Module
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome.
-
-1. Fork the repository
-2. Create a new branch
-3. Commit your changes
-4. Push to your branch
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
 
 ---
 
