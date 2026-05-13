@@ -117,7 +117,7 @@ Stripe is integrated for secure payment processing.
 **Yuvika Jindal**
 
 * GitHub:  https://github.com/yuvika2411
-* LinkedIn: urlYuvika Jindal LinkedIn[https://www.linkedin.com/in/yuvikajindal](https://www.linkedin.com/in/yuvikajindal)
+* LinkedIn: https://www.linkedin.com/in/yuvika-jindal-6b3181328/
 
 ---
 
