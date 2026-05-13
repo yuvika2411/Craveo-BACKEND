@@ -5,6 +5,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useDispatch } from "react-redux";
 import { addItemToCart } from "../State/Cart/Action";
 
+//menu card component
 const defaultIngredients = [
     { category: "Nuts & Seeds", ingredients: "Cashews" },
     { category: "Protein", ingredients: "Ground beef" },
