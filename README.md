@@ -79,7 +79,6 @@ Craveo-Ordering-Website/
 ├── frontend/          # React Frontend
 ├── backend/           # Spring Boot Backend
 ├── docker/            # Docker Configuration
-├── screenshots/       # Project Screenshots
 └── README.md
 ```
 
