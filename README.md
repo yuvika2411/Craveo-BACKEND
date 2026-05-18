@@ -5,7 +5,6 @@ Craveo is a full-stack multi-restaurant online food ordering platform built to p
 The platform allows users to browse restaurants, explore menus, manage carts, place orders, and complete secure payments through a responsive and modern interface.
 
 Craveo is being developed using React.js, Spring Boot, MySQL, and Docker with a focus on clean UI/UX, secure JWT authentication, RESTful APIs, and scalable architecture.
-
 The project aims to replicate the workflow of real-world food delivery platforms while showcasing strong frontend, backend, database, and DevOps development skills.
 
 The project focuses on responsive UI, secure authentication, role-based access control, cart management, and scalable backend APIs.
