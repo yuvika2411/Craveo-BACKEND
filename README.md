@@ -7,7 +7,7 @@ The platform allows users to browse restaurants, explore menus, manage carts, pl
 Craveo is being developed using React.js, Spring Boot, MySQL, and Docker with a focus on clean UI/UX, secure JWT authentication, RESTful APIs, and scalable architecture.
 The project aims to replicate the workflow of real-world food delivery platforms while showcasing strong frontend, backend, database, and DevOps development skills.
 
-The project focuses on responsive UI, secure authentication, role-based access control, cart management, and scalable backend APIs.
+The project focuses on responsive UI, secure authentication, role-based access control, cart management, & scalable backend APIs.
 
 ---
 
