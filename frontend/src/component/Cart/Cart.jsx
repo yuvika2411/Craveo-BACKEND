@@ -9,7 +9,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useDispatch, useSelector } from 'react-redux';
 import { findCart, updateCartItem, removeCartItem } from '../State/Cart/Action';
 import { createOrder } from '../State/Order/Action';
-
+//cart component l
 const modalStyle = {
   position: 'absolute',
   top: '50%',
