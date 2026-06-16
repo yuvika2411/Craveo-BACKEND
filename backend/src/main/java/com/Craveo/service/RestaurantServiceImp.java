@@ -29,35 +29,96 @@ public class RestaurantServiceImp implements RestaurantService{
     private UserRepository userRepository;
 
     @Override
-    public Restaurant createRestaurant(CreateRestaurantRequest req, User user) {
-        Address address= addressRepository.save(req.getAddress());
-        Restaurant restaurant= new Restaurant();
+    public Restaurant createRestaurant(
+            CreateRestaurantRequest req,
+            User user
+    ) throws Exception {
+
+        Restaurant existing =
+                restaurantRepository
+                        .findByNameIgnoreCase(
+                                req.getName()
+                        );
+
+        if (existing != null) {
+            throw new Exception(
+                    "Restaurant with this name already exists"
+            );
+        }
+
+        Address address =
+                addressRepository.save(
+                        req.getAddress()
+                );
+
+        Restaurant restaurant =
+                new Restaurant();
 
         restaurant.setAddress(address);
-        restaurant.setContactInformation(req.getContactInformation());
-        restaurant.setCuisineType(req.getCuisineType());
-        restaurant.setDescription(req.getDescription());
-        restaurant.setImages(req.getImages());
-        restaurant.setName(req.getName());
-        restaurant.setOpeningHrs(req.getOpeningHrs());
-        restaurant.setRegistrationDate(LocalDateTime.now());
+        restaurant.setContactInformation(
+                req.getContactInformation()
+        );
+        restaurant.setCuisineType(
+                req.getCuisineType()
+        );
+        restaurant.setDescription(
+                req.getDescription()
+        );
+        restaurant.setImages(
+                req.getImages()
+        );
+        restaurant.setName(
+                req.getName()
+        );
+        restaurant.setOpeningHrs(
+                req.getOpeningHrs()
+        );
+        restaurant.setRegistrationDate(
+                LocalDateTime.now()
+        );
         restaurant.setOwner(user);
 
-        return restaurantRepository.save(restaurant);
+        return restaurantRepository.save(
+                restaurant
+        );
     }
 
     @Override
     public Restaurant updateRestaurant(Long restaurandId, CreateRestaurantRequest updateRestaurant) throws Exception {
         Restaurant restaurant= findRestaurantById(restaurandId);
 
-        if(restaurant.getCuisineType()!=null){
+        if(updateRestaurant.getCuisineType()!=null){
             restaurant.setCuisineType(updateRestaurant.getCuisineType());
         }
-        if(restaurant.getDescription()!=null){
+        if(updateRestaurant.getDescription()!=null){
             restaurant.setDescription(updateRestaurant.getDescription());
         }
-        if(restaurant.getName()!=null){
+        if(updateRestaurant.getName()!=null){
             restaurant.setName(updateRestaurant.getName());
+        }
+        if(updateRestaurant.getOpeningHrs()!=null){
+            restaurant.setOpeningHrs(updateRestaurant.getOpeningHrs());
+        }
+        if(updateRestaurant.getImages()!=null){
+            restaurant.setImages(updateRestaurant.getImages());
+        }
+        if(updateRestaurant.getContactInformation()!=null){
+            restaurant.setContactInformation(updateRestaurant.getContactInformation());
+        }
+        if(updateRestaurant.getAddress()!=null){
+            Address newAddress = updateRestaurant.getAddress();
+            Address existingAddress = restaurant.getAddress();
+            if (existingAddress != null) {
+                if (newAddress.getStreet() != null) existingAddress.setStreet(newAddress.getStreet());
+                if (newAddress.getCity() != null) existingAddress.setCity(newAddress.getCity());
+                if (newAddress.getState() != null) existingAddress.setState(newAddress.getState());
+                if (newAddress.getPincode() != null) existingAddress.setPincode(newAddress.getPincode());
+                if (newAddress.getCountry() != null) existingAddress.setCountry(newAddress.getCountry());
+                addressRepository.save(existingAddress);
+            } else {
+                Address savedAddress = addressRepository.save(newAddress);
+                restaurant.setAddress(savedAddress);
+            }
         }
         return restaurantRepository.save(restaurant);
     }

@@ -103,6 +103,18 @@ public class AuthController {
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
+    @PostMapping("/reset-test-password")
+    public ResponseEntity<String> resetPassword() {
+
+        User user = userRepository.findByEmail("pizzapalace.demo@gmail.com");
+        user.setPassword( passwordEncoder.encode("pp123")
+        );
+
+        userRepository.save(user);
+        return ResponseEntity.ok(
+                "Password Updated"
+        );
+    }
     private Authentication authenticate(String username, String password) {
         UserDetails userDetails = customerUserDetailsService.loadUserByUsername(username);
 

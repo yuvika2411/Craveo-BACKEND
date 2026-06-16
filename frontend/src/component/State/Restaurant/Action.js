@@ -80,14 +80,34 @@ export const getRestaurantsByUserId = (token) => async (dispatch) => {
 }
 
 export const createRestaurant = (reqData) => async (dispatch) => {
-    dispatch({ type: CREATE_RESTAURANT_REQUEST });
+
+    dispatch({
+        type: CREATE_RESTAURANT_REQUEST
+    });
+
     try {
-        const res = await api.post("/api/admin/restaurants", reqData);
-        dispatch({ type: CREATE_RESTAURANT_SUCCESS, payload: res.data });
+        const res = await api.post(  "/api/admin/restaurants",
+            reqData.data,
+            {
+                headers: {
+                    Authorization: `Bearer ${reqData.token}`,
+                    "Content-Type": "multipart/form-data"
+                }
+            }
+        );
+        dispatch({
+            type: CREATE_RESTAURANT_SUCCESS,
+            payload: res.data
+        });
+
     } catch (error) {
-        dispatch({ type: CREATE_RESTAURANT_FAILURE, payload: error.response.data });
+        console.log("Restaurant create error:", error);
+        dispatch({
+            type: CREATE_RESTAURANT_FAILURE,
+            payload: error
+        });
     }
-}
+};
 
 export const updateRestaurant = (reqData) => async (dispatch) => {
     dispatch({ type: UPDATE_RESTAURANT_REQUEST });

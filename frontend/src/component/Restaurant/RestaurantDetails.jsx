@@ -28,13 +28,6 @@ const RestaurantDetails = () => {
     const { auth, restaurant, menu, food } = useSelector(store => store);
     const jwt = localStorage.getItem("jwt");
     
-    // useEffect(() => {
-    //     if (id) {
-    //         dispatch(getRestaurantById({ restaurantId: id }));
-    //         dispatch(getRestaurantCategory({ jwt, restaurantId: id }));
-    //         dispatch(getMenuItemsByRestaurantId({ restaurantId: id }));
-    //     }
-    // }, [dispatch, id]);
     useEffect(() => {
         if (id) {
         dispatch(getRestaurantById({ restaurantId: id }));
@@ -78,6 +71,11 @@ const RestaurantDetails = () => {
             ).values()
         );
 
+    const getImageUrl = (imagePath) => {
+        if (!imagePath) return "";
+        return imagePath.startsWith("http") ? imagePath : `http://localhost:8081${imagePath}`;
+    };
+
     return (
         <div className='font-[Poppins] px-5 lg:px-20 pt-28 pb-10 min-h-screen bg-[#0f0f0f] text-white'>
             {/* Breadcrumb & Navigation */}
@@ -101,7 +99,7 @@ const RestaurantDetails = () => {
                         <div className="w-2/3 relative group overflow-hidden rounded-xl">
                             <img
                                 className='w-full h-full object-cover hover:scale-105 transition-transform duration-700 cursor-pointer'
-                                src={restaurant.restaurant?.images && restaurant.restaurant.images.length > 0 ? restaurant.restaurant.images[0] : ""}
+                                src={restaurant.restaurant?.images && restaurant.restaurant.images.length > 0 ? getImageUrl(restaurant.restaurant.images[0]) : ""}
                                 alt={restaurant.restaurant?.name}
                             />
                             <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
@@ -119,14 +117,14 @@ const RestaurantDetails = () => {
                             <div className="h-1/2 overflow-hidden w-full group relative rounded-xl">
                                 <img
                                     className='w-full h-full object-cover hover:scale-110 transition-transform duration-700 cursor-pointer filter brightness-90 hover:brightness-100'
-                                    src={restaurant.restaurant?.images && restaurant.restaurant.images.length > 1 ? restaurant.restaurant.images[1] : ""}
+                                    src={restaurant.restaurant?.images && restaurant.restaurant.images.length > 1 ? getImageUrl(restaurant.restaurant.images[1]) : ""}
                                     alt="Dish 1"
                                 />
                             </div>
                             <div className="h-1/2 overflow-hidden w-full group relative rounded-xl">
                                 <img
                                     className='w-full h-full object-cover hover:scale-110 transition-transform duration-700 cursor-pointer filter brightness-90 hover:brightness-100'
-                                    src={restaurant.restaurant?.images && restaurant.restaurant.images.length > 2 ? restaurant.restaurant.images[2] : ""}
+                                    src={restaurant.restaurant?.images && restaurant.restaurant.images.length > 2 ? getImageUrl(restaurant.restaurant.images[2]) : ""}
                                     alt="Dish 2"
                                 />
                                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
@@ -167,7 +165,11 @@ const RestaurantDetails = () => {
                             </div>
                             <div>
                                 <h4 className="font-semibold text-lg text-white mb-1">Outlet Location</h4>
-                                <span className="text-gray-400 text-sm">{restaurant.restaurant?.address ? `${restaurant.restaurant.address.streetAddress}, ${restaurant.restaurant.address.city}, ${restaurant.restaurant.address.stateProvince}` : "Address not available"}</span>
+                                <span className="text-gray-400 text-sm">
+                                    {restaurant.restaurant?.address
+                                        ? [restaurant.restaurant.address.street, restaurant.restaurant.address.city, restaurant.restaurant.address.state].filter(Boolean).join(", ") || "Address not available"
+                                        : "Address not available"}
+                                </span>
                             </div>
                         </div>
                         <div className='flex items-center gap-5 bg-[#0f0f0f] hover:bg-[#151515] transition-colors p-5 rounded-xl border border-white/5 group'>
@@ -176,7 +178,7 @@ const RestaurantDetails = () => {
                             </div>
                             <div>
                                 <h4 className="font-semibold text-lg text-white mb-1">Opening Hours</h4>
-                                <span className="text-gray-400 text-sm">{restaurant.restaurant?.openingHours || "Mon - Sun (11:00 AM - 11:30 PM)"} </span>
+                                <span className="text-gray-400 text-sm">{restaurant.restaurant?.openingHrs || "Mon - Sun (11:00 AM - 11:30 PM)"} </span>
                             </div>
                         </div>
                     </div>

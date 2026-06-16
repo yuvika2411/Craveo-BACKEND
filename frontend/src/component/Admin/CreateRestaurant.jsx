@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createRestaurant } from '../State/Restaurant/Action';
 import { Button, TextField } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { GET_RESTAURANT_BY_USER_ID_SUCCESS } from '../State/Restaurant/ActionType';
 
 export const CreateRestaurant = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { restaurant } = useSelector(store => store);
     const jwt = localStorage.getItem("jwt");
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const getImageUrl = (imagePath) => {
+        if (!imagePath) return "";
+        return imagePath.startsWith("http") ? imagePath : `http://localhost:8081${imagePath}`;
+    };
     const [formData, setFormData] = useState({
         name: "",
         description: "",
@@ -19,20 +28,30 @@ export const CreateRestaurant = () => {
         },
         contactInformation: {
             email: "",
-            mobile: "",
-            twitter: "",
-            instagram: ""
+            mobileNo: ""
         },
         openingHrs: "Mon-Sun: 9:00 AM - 10:00 PM",
         images: []
     });
-    const [imageInput, setImageInput] = useState("");
 
-    const handleAddImage = () => {
-        if (imageInput.trim()) {
-            setFormData({ ...formData, images: [...formData.images, imageInput.trim()] });
-            setImageInput("");
-        }
+    const [selectedImage, setSelectedImage] = useState([]);
+
+    const handleImageUpload = (e) => {
+        const files = Array.from(e.target.files);
+
+        if (!files.length) return;
+        setSelectedImage(files);
+
+        const previews =
+            files.map(
+                file =>
+                    URL.createObjectURL(file)
+            );
+
+        setFormData({
+            ...formData,
+            images: previews
+        });
     };
 
     const handleRemoveImage = (index) => {
@@ -43,8 +62,32 @@ export const CreateRestaurant = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(createRestaurant({ data: formData, token: jwt }));
-    };
+        setIsSubmitted(true);
+
+        const restaurantData = new FormData();
+
+        restaurantData.append(
+            "restaurant",
+            JSON.stringify({
+                ...formData,
+                images: []
+            })
+        );
+
+        selectedImage.forEach((img) => {
+            restaurantData.append(
+                "image",
+                img
+            );
+        });
+
+        dispatch(
+            createRestaurant({
+                data: restaurantData,
+                token: jwt
+            })
+        );
+    };  
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -53,7 +96,7 @@ export const CreateRestaurant = () => {
             [name]: value
         });
     };
-
+        
     const handleAddressChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -86,6 +129,82 @@ export const CreateRestaurant = () => {
         '& .MuiInputLabel-root': { color: 'gray' },
         '& .MuiInputLabel-root.Mui-focused': { color: '#ea580c' },
     };
+
+    if (isSubmitted && restaurant.restaurant && !restaurant.loading && !restaurant.error) {
+        const createdRest = restaurant.restaurant;
+        return (
+            <div className="max-w-2xl mx-auto bg-[#1a1a1a] rounded-3xl p-8 border border-white/10 shadow-2xl relative overflow-hidden text-center">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[#ea580c]/10 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div className="w-20 h-20 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-500/20 shadow-lg shadow-green-500/5">
+                    <span className="text-4xl">🎉</span>
+                </div>
+
+                <h1 className="text-3xl font-bold text-white mb-2">Restaurant Created!</h1>
+                <p className="text-gray-400 mb-8">Your restaurant has been successfully registered on Craveo.</p>
+
+                <div className="bg-[#151515] rounded-2xl p-6 border border-white/5 text-left mb-8 space-y-4">
+                    {createdRest.images && createdRest.images.length > 0 && (
+                        <div className="w-full h-48 rounded-xl overflow-hidden mb-4 border border-white/10">
+                            <img src={getImageUrl(createdRest.images[0])} alt={createdRest.name} className="w-full h-full object-cover" />
+                        </div>
+                    )}
+                    <div>
+                        <h3 className="text-2xl font-bold text-[#ea580c]">{createdRest.name}</h3>
+                        <p className="text-gray-300 text-sm mt-1">{createdRest.description}</p>
+                    </div>
+                    
+                    <div className="border-t border-white/5 pt-4 space-y-2 text-sm text-gray-400">
+                        <p><span className="text-gray-500">Cuisine:</span> {createdRest.cuisineType}</p>
+                        <p><span className="text-gray-500">Opening Hours:</span> {createdRest.openingHrs}</p>
+                        <p><span className="text-gray-500">Address:</span> {createdRest.address ? `${createdRest.address.street}, ${createdRest.address.city}, ${createdRest.address.state} - ${createdRest.address.pincode}` : "N/A"}</p>
+                    </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Button
+                        onClick={() => {
+                            dispatch({ type: GET_RESTAURANT_BY_USER_ID_SUCCESS, payload: createdRest });
+                            navigate("/admin/restaurant/details");
+                        }}
+                        variant="outlined"
+                        size="large"
+                        sx={{
+                            flex: 1,
+                            py: 1.5,
+                            borderColor: "rgba(255,255,255,0.2)",
+                            color: "white",
+                            fontWeight: "bold",
+                            borderRadius: "12px",
+                            textTransform: "none",
+                            "&:hover": { borderColor: "#ea580c", backgroundColor: "rgba(234, 88, 12, 0.05)" }
+                        }}
+                    >
+                        Edit Details
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            dispatch({ type: GET_RESTAURANT_BY_USER_ID_SUCCESS, payload: createdRest });
+                            navigate("/admin/restaurant");
+                        }}
+                        variant="contained"
+                        size="large"
+                        sx={{
+                            flex: 1,
+                            py: 1.5,
+                            backgroundColor: "#ea580c",
+                            fontWeight: "bold",
+                            borderRadius: "12px",
+                            textTransform: "none",
+                            "&:hover": { backgroundColor: "#c2410c" }
+                        }}
+                    >
+                        Go to Dashboard
+                    </Button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="max-w-4xl mx-auto bg-[#1a1a1a] rounded-3xl p-8 border border-white/10 shadow-2xl relative overflow-hidden">
@@ -127,7 +246,20 @@ export const CreateRestaurant = () => {
                     multiline 
                     rows={3} 
                     required 
-                    sx={inputStyle} 
+                    sx={{
+                        ...inputStyle,
+                        mb: 3
+                    }}
+                />
+                
+                <TextField
+                    label="Opening Hours"
+                    name="openingHrs"
+                    value={formData.openingHrs}
+                    onChange={handleChange}
+                    fullWidth
+                    required
+                    sx={inputStyle}
                 />
 
                 <h3 className="text-xl font-bold text-gray-200 mt-8 mb-4 border-b border-white/10 pb-2">Location Details</h3>
@@ -141,22 +273,53 @@ export const CreateRestaurant = () => {
                 <h3 className="text-xl font-bold text-gray-200 mt-8 mb-4 border-b border-white/10 pb-2">Contact Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <TextField label="Email" name="email" value={formData.contactInformation.email} onChange={handleContactChange} fullWidth required sx={inputStyle} />
-                    <TextField label="Mobile Number" name="mobile" value={formData.contactInformation.mobile} onChange={handleContactChange} fullWidth required sx={inputStyle} />
-                    <TextField label="Instagram URL (optional)" name="instagram" value={formData.contactInformation.instagram} onChange={handleContactChange} fullWidth sx={inputStyle} />
-                    <TextField label="Twitter URL (optional)" name="twitter" value={formData.contactInformation.twitter} onChange={handleContactChange} fullWidth sx={inputStyle} />
+                    <TextField label="Mobile Number" name="mobileNo" value={formData.contactInformation.mobileNo} onChange={handleContactChange} fullWidth required sx={inputStyle} />
                 </div>
 
-                <h3 className="text-xl font-bold text-gray-200 mt-8 mb-4 border-b border-white/10 pb-2">Restaurant Images</h3>
-                <div className="flex gap-4 mb-4">
-                    <TextField 
-                        label="Image URL" 
-                        value={imageInput} 
-                        onChange={(e) => setImageInput(e.target.value)} 
-                        fullWidth 
-                        sx={inputStyle} 
-                    />
-                    <Button variant="outlined" onClick={handleAddImage} sx={{ color: '#ea580c', borderColor: '#ea580c', '&:hover': { borderColor: 'white' } }}>Add</Button>
+                <div className="mb-6">
+
+                <label
+                className=" w-full h-44 border-2 border-dashed
+                border-[#ea580c]
+                rounded-2xl
+                flex
+                flex-col    
+                items-center
+                justify-center
+                cursor-pointer
+                bg-[#151515]
+                hover:bg-[#1c1c1c]
+                transition
+                "
+                >
+
+                <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    hidden
+                    onChange={handleImageUpload}
+                />
+
+                <div className="text-center">
+
+                <div className="text-5xl mb-3">
+                📷
                 </div>
+
+                <h3 className="text-white text-lg font-semibold">
+                Upload Restaurant Image
+                </h3>
+
+                <p className="text-gray-400 text-sm">
+                Click to select image
+                </p>
+
+                </div>
+
+                </label>
+
+                </div>      
                 <div className="flex flex-wrap gap-4 mb-6">
                     {formData.images.map((img, idx) => (
                         <div key={idx} className="relative w-24 h-24 rounded-xl overflow-hidden border border-white/20">
@@ -166,11 +329,18 @@ export const CreateRestaurant = () => {
                     ))}
                 </div>
 
+                {restaurant.error && (
+                    <div className="mb-4 bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-xl text-center text-sm font-semibold">
+                        {restaurant.error?.message || "Failed to create restaurant. Please try again."}
+                    </div>
+                )}
+
                 <Button 
                     type="submit" 
                     variant="contained" 
                     size="large" 
                     fullWidth 
+                    disabled={restaurant.loading}
                     sx={{ 
                         mt: 4, 
                         py: 1.5, 
@@ -182,7 +352,7 @@ export const CreateRestaurant = () => {
                         "&:hover": { backgroundColor: "#c2410c" }
                     }}
                 >
-                    Create Restaurant
+                    {restaurant.loading ? "Creating..." : "Create Restaurant"}
                 </Button>
             </form>
         </div>
