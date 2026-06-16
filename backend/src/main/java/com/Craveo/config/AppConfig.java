@@ -35,6 +35,7 @@ public class AppConfig {
 
                         // 🔓 PUBLIC APIs
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/restaurants").permitAll()
                         .requestMatchers("/api/restaurants/**").permitAll()
                         .requestMatchers("/api/events/**").permitAll()
                         .requestMatchers("/api/category/**").permitAll()

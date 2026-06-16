@@ -22,35 +22,95 @@ import java.util.List;
 public class JwtTokenValidator extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
+    protected void doFilterInternal(
+            HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
+            FilterChain filterChain
+    ) throws ServletException, IOException {
 
-        String jwt = request.getHeader(JwtConstant.JWT_HEADER);
+        String path = request.getServletPath();
 
-        // Bearer token
+        // public routes skip
+        if (
+                path.startsWith("/api/auth")
+        ) {
 
-        if (jwt != null) {
+            filterChain.doFilter(
+                    request,
+                    response
+            );
+
+            return;
+        }
+
+        String jwt =
+                request.getHeader(
+                        JwtConstant.JWT_HEADER
+                );
+
+        if (
+                jwt != null &&
+                        jwt.startsWith("Bearer ")
+        ) {
+
             jwt = jwt.substring(7);
+
             try {
-                SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
-                Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
 
-                String email = String.valueOf(claims.get("email"));
-                String authorities = String.valueOf((claims.get("authorities")));
+                SecretKey key =
+                        Keys.hmacShaKeyFor(
+                                JwtConstant.SECRET_KEY.getBytes()
+                        );
 
-                List<GrantedAuthority> auth = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
-                Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, auth);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                Claims claims =
+                        Jwts.parserBuilder()
+                                .setSigningKey(key)
+                                .build()
+                                .parseClaimsJws(jwt)
+                                .getBody();
+
+                String email =
+                        String.valueOf(
+                                claims.get("email")
+                        );
+
+                String authorities =
+                        String.valueOf(
+                                claims.get("authorities")
+                        );
+
+                List<GrantedAuthority> auth =
+                        AuthorityUtils
+                                .commaSeparatedStringToAuthorityList(
+                                        authorities
+                                );
+
+                Authentication authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                email,
+                                null,
+                                auth
+                        );
+
+                SecurityContextHolder
+                        .getContext()
+                        .setAuthentication(
+                                authentication
+                        );
+
             } catch (Exception e) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setContentType("application/json");
-                response.getWriter().write("{\"message\": \"Invalid or expired token\", \"status\": 401}");
-                return;
 
+                response.setStatus(
+                        HttpServletResponse.SC_UNAUTHORIZED
+                );
+
+                return;
             }
         }
 
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(
+                request,
+                response
+        );
     }
 }

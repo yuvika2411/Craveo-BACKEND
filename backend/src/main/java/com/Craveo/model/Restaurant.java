@@ -21,11 +21,12 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     private User owner;
 
     private String name;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     private String cuisineType;

@@ -1,23 +1,34 @@
 import axios from "axios";
 
-// export const BASE_URL = "VITE";
-
- // ✅ fixed backend port
-
 export const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL ,
+    baseURL: import.meta.env.VITE_API_URL,
     headers: {
         "Content-Type": "application/json",
     },
 });
 
-// ✅ AUTO TOKEN ATTACH
+// AUTO TOKEN ATTACH
 api.interceptors.request.use((config) => {
+
     const token = localStorage.getItem("jwt");
 
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+    // public routes → token mat bhejo
+    const publicRoutes = [
+        "/api/restaurants",
+        "/api/users/profile"
+    ];
+
+    const isPublic =
+        publicRoutes.some(
+            route =>
+                config.url?.startsWith(route)
+        );
+
+    if (token && !isPublic) {
+        config.headers.Authorization =
+            `Bearer ${token}`;
     }
 
     return config;
+
 });

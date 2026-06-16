@@ -10,6 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import tools.jackson.databind.ObjectMapper;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/restaurants")
@@ -21,14 +29,64 @@ public class AdminRestaurantController {
     @Autowired
     private UserService userService;
 
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Restaurant> createRestaurant(
-            @RequestBody CreateRestaurantRequest req,
+            @RequestPart("restaurant") String restaurantJson,
+            @RequestPart(value = "image", required = false)
+            List<MultipartFile> images,
             @RequestHeader("Authorization") String jwt
+
     ) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+
+        CreateRestaurantRequest req =
+                mapper.readValue(
+                        restaurantJson,
+                        CreateRestaurantRequest.class
+                );
+
+        if (images != null && !images.isEmpty()) {
+
+            List<String> imagePaths =
+                    new ArrayList<>();
+
+            Files.createDirectories(
+                    Paths.get("uploads")
+            );
+
+            for (MultipartFile img : images) {
+
+                String fileName =
+                        System.currentTimeMillis()
+                                + "_"
+                                + img.getOriginalFilename();
+
+                Path path =
+                        Paths.get(
+                                "uploads",
+                                fileName
+                        );
+
+                Files.copy(
+                        img.getInputStream(),
+                        path
+                );
+
+                imagePaths.add(
+                        "/uploads/" + fileName
+                );
+            }
+
+            req.setImages(
+                    imagePaths
+            );
+        }
         User user = userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.createRestaurant(req, user);
-        return new ResponseEntity<>(restaurant, HttpStatus.CREATED);  // ✅ CREATED is correct for POST
+
+        return new ResponseEntity<>(
+                restaurant, HttpStatus.CREATED
+        );
     }
 
     @PutMapping("/{id}")

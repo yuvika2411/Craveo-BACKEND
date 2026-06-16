@@ -13,9 +13,7 @@ export const RestaurantCard = ({ item }) => {
     const { auth } = useSelector(store => store);
 
     const handleNavigateToRestaurant = () => {
-        if (item.open) {
-            navigate(`/restaurant/${item.address?.city}/${item.name}/${item.id}`);
-        }
+        navigate(`/restaurant/${item.address?.city || 'city'}/${item.name}/${item.id}`);
     };
 
     const handleAddToFavorite = () => {
@@ -30,12 +28,12 @@ export const RestaurantCard = ({ item }) => {
     return (
         <Card className="w-[18rem]">
             <div 
-                className={`${item.open ? "cursor-pointer" : "cursor-not-allowed"} relative`}
+                className="cursor-pointer relative"
                 onClick={handleNavigateToRestaurant}
             >
                 <img 
                     className="w-full h-[10rem] rounded-t-md object-cover"
-                    src={item.images && item.images.length > 0 ? item.images[0] : ''}
+                    src={`http://localhost:8081${item.images?.[0]}`}
                     alt={item.name}
                 />
                 <Chip
@@ -48,9 +46,6 @@ export const RestaurantCard = ({ item }) => {
             <div className="p-4 textPart lg:flex w-full justify-between">
                 <div className="space-y-1">
                     <p onClick={handleNavigateToRestaurant} className="font-semibold text-lg cursor-pointer">{item.name}</p>
-                    <p className="text-gray-500 text-sm">
-                        {item.description}
-                    </p>
                 </div>
                 <div>
                     <IconButton onClick={handleAddToFavorite}>

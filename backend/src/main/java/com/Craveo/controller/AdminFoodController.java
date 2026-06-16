@@ -1,10 +1,14 @@
 package com.Craveo.controller;
 
 import com.Craveo.model.Food;
+import com.Craveo.model.FoodCategory;
+import com.Craveo.model.IngredientsItem;
 import com.Craveo.model.Restaurant;
 import com.Craveo.model.User;
 import com.Craveo.request.CreateFoodRequest;
 import com.Craveo.response.MessageResponse;
+import com.Craveo.Repository.IngredientItemRepository;
+import com.Craveo.service.CategoryService;
 import com.Craveo.service.FoodService;
 import com.Craveo.service.RestaurantService;
 import com.Craveo.service.UserService;
@@ -12,6 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import tools.jackson.databind.ObjectMapper;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/food")
@@ -26,11 +37,68 @@ public class AdminFoodController {
     @Autowired
     private RestaurantService restaurantService;
 
-    @PostMapping
-    public ResponseEntity<Food> createFood(@RequestBody CreateFoodRequest req, @RequestHeader("Authorization") String jwt) throws Exception {
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private IngredientItemRepository ingredientItemRepository;
+
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<Food> createFood(
+            @RequestPart("food") String foodJson,
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestHeader("Authorization") String jwt
+    ) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        CreateFoodRequest req = mapper.readValue(foodJson, CreateFoodRequest.class);
+
+        if (image != null && !image.isEmpty()) {
+            Files.createDirectories(Paths.get("uploads"));
+            String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+            Path path = Paths.get("uploads", fileName);
+            Files.copy(image.getInputStream(), path);
+            req.setImages(List.of("/uploads/" + fileName));
+        } else {
+            req.setImages(new ArrayList<>());
+        }
+
         User user = userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.findRestaurantById(req.getRestaurantId());
-        Food food = foodService.createFood(req, req.getCategory(), restaurant);
+
+        // Resolve ingredients (match by name or create a new persistent entity)
+        List<IngredientsItem> resolvedIngredients = new ArrayList<>();
+        if (req.getIngredients() != null) {
+            List<IngredientsItem> existingIngredients = ingredientItemRepository.findByRestaurantId(restaurant.getId());
+            for (IngredientsItem reqIng : req.getIngredients()) {
+                if (reqIng == null || reqIng.getName() == null) continue;
+                String ingName = reqIng.getName().trim();
+                if (ingName.isEmpty()) continue;
+
+                IngredientsItem matched = existingIngredients.stream()
+                        .filter(ei -> ei.getName().equalsIgnoreCase(ingName))
+                        .findFirst()
+                        .orElse(null);
+
+                if (matched != null) {
+                    resolvedIngredients.add(matched);
+                } else {
+                    IngredientsItem newItem = new IngredientsItem();
+                    newItem.setName(ingName);
+                    newItem.setRestaurant(restaurant);
+                    newItem.setInStock(true);
+                    IngredientsItem saved = ingredientItemRepository.save(newItem);
+                    resolvedIngredients.add(saved);
+                }
+            }
+        }
+        req.setIngredients(resolvedIngredients);
+
+        FoodCategory category = req.getCategory();
+        if (category == null && req.getCategoryId() != null) {
+            category = categoryService.findCategoryById(req.getCategoryId());
+        }
+
+        Food food = foodService.createFood(req, category, restaurant);
         return new ResponseEntity<>(food, HttpStatus.CREATED);
     }
 
