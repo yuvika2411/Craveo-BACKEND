@@ -2,7 +2,6 @@ package com.Craveo.request;
 
 import com.Craveo.model.FoodCategory;
 import com.Craveo.model.IngredientsItem;
-import jdk.jfr.Category;
 import lombok.Data;
 
 import java.util.List;
