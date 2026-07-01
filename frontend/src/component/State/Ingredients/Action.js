@@ -45,10 +45,10 @@ export const createIngredientCategory = (ingredientCategoryData) => async (dispa
     }
 }
 
-export const getIngredientCategory = () => async (dispatch) => {
+export const getIngredientCategory = ({ restaurantId }) => async (dispatch) => {
     dispatch({ type: GET_INGREDIENT_CATEGORY_REQUEST });
     try {
-        const res = await api.get("/api/admin/ingredients/category");
+        const res = await api.get(`/api/admin/ingredients/restaurant/${restaurantId}/category`);
         dispatch({ type: GET_INGREDIENT_CATEGORY_SUCCESS, payload: res.data });
     } catch (error) {
         dispatch({ type: GET_INGREDIENT_CATEGORY_FAILURE, payload: error.response.data });

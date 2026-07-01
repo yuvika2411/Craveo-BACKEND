@@ -160,7 +160,7 @@ export const CreateRestaurant = () => {
                         <p><span className="text-gray-500">Address:</span> {createdRest.address ? `${createdRest.address.street}, ${createdRest.address.city}, ${createdRest.address.state} - ${createdRest.address.pincode}` : "N/A"}</p>
                     </div>
                 </div>
-
+                
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Button
                         onClick={() => {

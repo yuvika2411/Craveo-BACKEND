@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getRestaurantsByUserId } from '../State/Restaurant/Action';
 import { useEffect } from 'react';
 import { CreateRestaurant } from './CreateRestaurant';
-import { FoodItem } from './Food/FoodItem'; 
+import { FoodManagement } from './Food/FoodManagement'; 
 export const Admin = () => {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
@@ -34,7 +34,7 @@ export const Admin = () => {
                         <Route path='/' element={<Dashboard />} />
                         <Route path='/dashboard' element={<Dashboard />} />
                         <Route path='/orders' element={<Orders />} />
-                        <Route path='/food' element={<FoodItem />} />
+                        <Route path='/food' element={<FoodManagement />} />
                         <Route path='/category' element={<FoodCategory />} />
                         <Route path='/ingredients' element={<Ingredients />} />
                         <Route path='/events' element={<Events />} />

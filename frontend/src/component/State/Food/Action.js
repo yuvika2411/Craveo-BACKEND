@@ -1,12 +1,10 @@
-import axios from "axios";
+import { api } from "../../Config/api";
 import { GET_FOOD_SUCCESS } from "./ActionType";
-
-const API = import.meta.env.VITE_API_URL;
 
 export const getFoodByRestaurant = ({ restaurantId }) => async (dispatch) => {
     try {
-        const { data } = await axios.get(
-            `${API}/api/food/restaurant/${restaurantId}`
+        const { data } = await api.get(
+            `/api/food/restaurant/${restaurantId}?vegetarian=false&nonVegetarian=false&seasonal=false`
         );
 
         dispatch({

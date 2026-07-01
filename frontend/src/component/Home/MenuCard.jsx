@@ -24,6 +24,11 @@ const MenuCard = ({ item }) => {
     const displayIngredients = item?.ingredients || defaultIngredients;
     const [isExpanded, setIsExpanded] = useState(false);
 
+    const getImageUrl = (imagePath) => {
+        if (!imagePath) return "https://b.zmtcdn.com/data/dish_photos/4fd/3f7e6e5ced71aabec7ee0b938f3cb4fd.jpg";
+        return imagePath.startsWith("http") ? imagePath : `http://localhost:8081${imagePath}`;
+    };
+
     const groupedIngredients = displayIngredients.reduce((acc, current) => {
         const category = current.category || "Other";
         if (!acc[category]) {
@@ -49,7 +54,7 @@ const MenuCard = ({ item }) => {
             <div className="flex gap-4">
                 <div className="w-[120px] h-[120px] md:w-[150px] md:h-[150px] shrink-0 relative rounded-lg overflow-hidden group">
                     <img
-                        src={item?.image || "https://b.zmtcdn.com/data/dish_photos/4fd/3f7e6e5ced71aabec7ee0b938f3cb4fd.jpg"}
+                        src={getImageUrl(item?.images?.[0])}
                         alt={item?.name || "Dish"}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />

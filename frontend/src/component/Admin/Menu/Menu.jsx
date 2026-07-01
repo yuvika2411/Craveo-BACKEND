@@ -44,7 +44,13 @@ export const Menu = () => {
                         {menu.menuItems?.map((item) => (
                             <TableRow key={item.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                 <TableCell>
-                                    <img src={item.images?.[0]} alt={item.name} className="w-16 h-16 object-cover rounded-lg" />
+                                    <img 
+                                        src={item.images && item.images.length > 0 
+                                            ? (item.images[0].startsWith("http") ? item.images[0] : `http://localhost:8081${item.images[0]}`) 
+                                            : "https://b.zmtcdn.com/data/dish_photos/4fd/3f7e6e5ced71aabec7ee0b938f3cb4fd.jpg"} 
+                                        alt={item.name} 
+                                        className="w-16 h-16 object-cover rounded-lg" 
+                                    />
                                 </TableCell>
                                 <TableCell sx={{ color: 'white' }}>{item.name}</TableCell>
                                 <TableCell sx={{ color: 'gray' }}>{item.foodCategory?.name}</TableCell>

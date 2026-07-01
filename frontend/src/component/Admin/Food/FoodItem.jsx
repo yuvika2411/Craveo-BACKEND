@@ -8,8 +8,9 @@ import {
   Checkbox
 } from '@mui/material';
 
-import { createMenuItem } from '../../State/Menu/Action';
+import {createMenuItem, getMenuItemsByRestaurantId} from '../../State/Menu/Action';
 import { getRestaurantCategory } from '../../State/Restaurant/Action';
+
 
 export const FoodItem = () => {
   const dispatch = useDispatch();
@@ -31,10 +32,17 @@ export const FoodItem = () => {
   const [imagePreview, setImagePreview] = useState("");
 
   useEffect(() => {
-    if (restaurant.usersRestaurant?.id) {
-      dispatch(getRestaurantCategory());
-    }
-  }, [restaurant.usersRestaurant?.id]);
+  if (restaurant.usersRestaurant?.id) {
+    dispatch(getRestaurantCategory());
+
+    dispatch(
+      getMenuItemsByRestaurantId({
+        restaurantId: restaurant.usersRestaurant.id,
+        jwt
+      })
+    );
+  }
+  }, [dispatch, restaurant.usersRestaurant?.id, jwt]);
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
@@ -77,6 +85,12 @@ export const FoodItem = () => {
     }
 
     await dispatch(createMenuItem({ reqData, jwt }));
+    dispatch(
+      getMenuItemsByRestaurantId({
+        restaurantId: restaurant.usersRestaurant.id,
+        jwt
+      })
+    );
 
     setFoodData({
       name: "",
