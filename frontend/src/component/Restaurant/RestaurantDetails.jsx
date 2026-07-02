@@ -27,15 +27,15 @@ const RestaurantDetails = () => {
     const { id, city } = useParams();
     const { auth, restaurant, menu, food } = useSelector(store => store);
     const jwt = localStorage.getItem("jwt");
-    
+
     useEffect(() => {
         if (id) {
-        dispatch(getRestaurantById({ restaurantId: id }));
-        dispatch(getRestaurantCategory());
-        dispatch(getMenuItemsByRestaurantId({ restaurantId: id }));
-        dispatch(getFoodByRestaurant({ restaurantId: id }));
-    }
-}, [id]);
+            dispatch(getRestaurantById({ restaurantId: id }));
+            dispatch(getRestaurantCategory());
+            dispatch(getMenuItemsByRestaurantId({ restaurantId: id }));
+            dispatch(getFoodByRestaurant({ restaurantId: id }));
+        }
+    }, [id]);
 
     const handleFilterChange = (event) => {
         if (event.target.name === "foodType") {
@@ -46,20 +46,20 @@ const RestaurantDetails = () => {
     };
 
     const filteredMenu = food.foods?.filter((item) => {
-    const typeMatch =
-        foodType === "all" ||
-        (foodType === "veg"
-            ? item.isVegetarian
-            : foodType === "non-veg"
-            ? !item.isVegetarian
-            : item.isSeasonal === true);
+        const typeMatch =
+            foodType === "all" ||
+            (foodType === "veg"
+                ? item.isVegetarian
+                : foodType === "non-veg"
+                    ? !item.isVegetarian
+                    : item.isSeasonal === true);
 
-    const categoryMatch =
-        foodCategory === "all" ||
-        item.foodCategory?.name === foodCategory;
+        const categoryMatch =
+            foodCategory === "all" ||
+            item.foodCategory?.name === foodCategory;
 
-    return typeMatch && categoryMatch;
-}) || [];
+        return typeMatch && categoryMatch;
+    }) || [];
 
     const categoryOptions = restaurant.categories?.length > 0
         ? restaurant.categories

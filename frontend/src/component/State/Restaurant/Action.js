@@ -86,7 +86,7 @@ export const createRestaurant = (reqData) => async (dispatch) => {
     });
 
     try {
-        const res = await api.post(  "/api/admin/restaurants",
+        const res = await api.post("/api/admin/restaurants",
             reqData.data,
             {
                 headers: {

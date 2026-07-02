@@ -8,7 +8,7 @@ import {
   Checkbox
 } from '@mui/material';
 
-import {createMenuItem, getMenuItemsByRestaurantId} from '../../State/Menu/Action';
+import { createMenuItem, getMenuItemsByRestaurantId } from '../../State/Menu/Action';
 import { getRestaurantCategory } from '../../State/Restaurant/Action';
 
 
@@ -31,16 +31,16 @@ export const FoodItem = () => {
   const [imagePreview, setImagePreview] = useState("");
 
   useEffect(() => {
-  if (restaurant.usersRestaurant?.id) {
-    dispatch(getRestaurantCategory());
+    if (restaurant.usersRestaurant?.id) {
+      dispatch(getRestaurantCategory());
 
-    dispatch(
-      getMenuItemsByRestaurantId({
-        restaurantId: restaurant.usersRestaurant.id,
-        jwt
-      })
-    );
-  }
+      dispatch(
+        getMenuItemsByRestaurantId({
+          restaurantId: restaurant.usersRestaurant.id,
+          jwt
+        })
+      );
+    }
   }, [dispatch, restaurant.usersRestaurant?.id, jwt]);
 
   const handleChange = (e) => {
@@ -136,8 +136,8 @@ export const FoodItem = () => {
           {imagePreview ? (
             <div className="relative w-full h-44 rounded-2xl overflow-hidden border border-white/20">
               <img src={imagePreview} alt="food preview" className="w-full h-full object-cover" />
-              <div 
-                onClick={handleRemoveImage} 
+              <div
+                onClick={handleRemoveImage}
                 className="absolute top-2 right-2 bg-red-500 rounded-full w-8 h-8 flex items-center justify-center cursor-pointer text-white font-bold hover:bg-red-700 shadow-md transition"
               >
                 X

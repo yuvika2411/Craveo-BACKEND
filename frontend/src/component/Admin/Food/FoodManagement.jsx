@@ -46,7 +46,7 @@ export const FoodManagement = () => {
     };
 
   return (
-    <div className="bg-[#1a1a1a] rounded-2xl p-8">
+    <div className="font-[Poppins] bg-[#1a1a1a] rounded-2xl p-8">
 
       <div className="flex justify-between items-center mb-6">
 
@@ -79,7 +79,7 @@ export const FoodManagement = () => {
         value={tab}
         onChange={(e, value) => setTab(value)}
         textColor="inherit"
-        indicatorColor="secondary"
+        indicatorColor="primary"
       >
         <Tab label="Food Items" />
       </Tabs>

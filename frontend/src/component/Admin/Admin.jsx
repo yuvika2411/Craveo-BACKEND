@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getRestaurantsByUserId } from '../State/Restaurant/Action';
 import { useEffect } from 'react';
 import { CreateRestaurant } from './CreateRestaurant';
-import { FoodManagement } from './Food/FoodManagement'; 
+import { FoodManagement } from './Food/FoodManagement';
 export const Admin = () => {
     const dispatch = useDispatch();
     const { restaurant, auth } = useSelector(store => store);
