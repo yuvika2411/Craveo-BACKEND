@@ -4,7 +4,6 @@ import { AdminSidebar } from './AdminSidebar';
 import { Dashboard } from './Dashboard/Dashboard';
 import { Orders } from './Orders/Orders';
 import { FoodCategory } from './FoodCategory/FoodCategory';
-import { Ingredients } from './Ingredients/Ingredients';
 import { Events } from './Events/Events';
 import { Details } from './Details/Details';
 import { useDispatch, useSelector } from 'react-redux';
@@ -36,7 +35,6 @@ export const Admin = () => {
                         <Route path='/orders' element={<Orders />} />
                         <Route path='/food' element={<FoodManagement />} />
                         <Route path='/category' element={<FoodCategory />} />
-                        <Route path='/ingredients' element={<Ingredients />} />
                         <Route path='/events' element={<Events />} />
                         <Route path='/details' element={<Details />} />
                     </Routes>

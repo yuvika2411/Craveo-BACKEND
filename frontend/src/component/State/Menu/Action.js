@@ -58,21 +58,6 @@ export const searchMenuItem = ({jwt, searchString}) => async (dispatch) => {
     }
 }
 
-// export const getAllIngredientsofMenuItem = ({jwt, menuItemId}) => async (dispatch) => {
-//     dispatch({ type: GET_ALL_INGREDIENTS_OF_MENU_ITEM_REQUEST });
-//     try {
-//         const res = await api.get(`/api/ingredients/menu/${menuItemId}`, {
-//             headers: {
-//                 Authorization: `Bearer ${jwt}`,
-//             },
-//         });
-//         console.log("get all ingredients of menu item response", res.data);
-//         dispatch({ type: GET_ALL_INGREDIENTS_OF_MENU_ITEM_SUCCESS, payload: res.data });
-//     } catch (error) {
-//         console.log("get all ingredients of menu item error", error);
-//         dispatch({ type: GET_ALL_INGREDIENTS_OF_MENU_ITEM_FAILURE, payload: error.response.data });
-//     }
-// }
 
 export const updateMenuItemAvailability = ({jwt, menuItemId}) => async (dispatch) => {
     dispatch({ type: UPDATE_MENU_ITEMS_AVAILABILITY_REQUEST });

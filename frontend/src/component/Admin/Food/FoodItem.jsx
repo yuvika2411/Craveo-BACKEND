@@ -24,8 +24,7 @@ export const FoodItem = () => {
     categoryId: "",
     isVegetarian: false,
     isSeasonal: false,
-    available: true,
-    ingredients: ""
+    available: true
   });
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -73,7 +72,6 @@ export const FoodItem = () => {
       description: foodData.description,
       price: Number(foodData.price),
       categoryId: foodData.categoryId,
-      ingredients: foodData.ingredients.split(",").map(i => i.trim()).filter(Boolean).map(name => ({ name })),
       restaurantId: restaurant.usersRestaurant.id,
       isVegetarian: foodData.isVegetarian,
       isSeasonal: foodData.isSeasonal,
@@ -99,8 +97,7 @@ export const FoodItem = () => {
       categoryId: "",
       isVegetarian: false,
       isSeasonal: false,
-      available: true,
-      ingredients: ""
+      available: true
     });
     setSelectedImage(null);
     setImagePreview("");
@@ -163,7 +160,7 @@ export const FoodItem = () => {
           )}
         </div>
 
-        <TextField label="Ingredients (comma separated)" name="ingredients" value={foodData.ingredients} onChange={handleChange} fullWidth sx={inputStyle} />
+
 
         <div className="flex flex-wrap gap-4 col-span-2">
           <FormControlLabel control={<Checkbox checked={foodData.isVegetarian} onChange={handleChange} name="isVegetarian" />} label="Vegetarian" />

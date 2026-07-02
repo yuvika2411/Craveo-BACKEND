@@ -73,7 +73,7 @@ const RestaurantDetails = () => {
 
     const getImageUrl = (imagePath) => {
         if (!imagePath) return "";
-        return imagePath.startsWith("http") ? imagePath : `http://localhost:8081${imagePath}`;
+        return imagePath.startsWith("http") ? imagePath : `${import.meta.env.VITE_API_URL}${imagePath}`;
     };
 
     return (

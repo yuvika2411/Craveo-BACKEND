@@ -12,7 +12,6 @@ const menu = [
     { title: "Food Items", icon: <RestaurantMenu />, path: "/food" },
 
     { title: "Food Category", icon: <Category />, path: "/category" },
-    { title: "Ingredients", icon: <Category />, path: "/ingredients" },
     { title: "Events", icon: <EmojiEvents />, path: "/events" },
     { title: "Details", icon: <Settings />, path: "/details" },
     { title: "Logout", icon: <Logout />, path: "/" }

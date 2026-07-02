@@ -33,7 +33,7 @@ export const RestaurantCard = ({ item }) => {
             >
                 <img 
                     className="w-full h-[10rem] rounded-t-md object-cover"
-                    src={`http://localhost:8081${item.images?.[0]}`}
+                    src={item.images?.[0] ? (item.images[0].startsWith("http") ? item.images[0] : `${import.meta.env.VITE_API_URL}${item.images[0]}`) : ""}
                     alt={item.name}
                 />
                 <Chip

@@ -13,7 +13,7 @@ export const CreateRestaurant = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const getImageUrl = (imagePath) => {
         if (!imagePath) return "";
-        return imagePath.startsWith("http") ? imagePath : `http://localhost:8081${imagePath}`;
+        return imagePath.startsWith("http") ? imagePath : `${import.meta.env.VITE_API_URL}${imagePath}`;
     };
     const [formData, setFormData] = useState({
         name: "",

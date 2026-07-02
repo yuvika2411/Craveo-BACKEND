@@ -1,7 +1,6 @@
 package com.Craveo.request;
 
 import com.Craveo.model.FoodCategory;
-import com.Craveo.model.IngredientsItem;
 import lombok.Data;
 
 import java.util.List;
@@ -20,5 +19,4 @@ public class CreateFoodRequest {
     private Long categoryId;
     private boolean vegetarian;
     private boolean seasonal;
-    private List<IngredientsItem> ingredients;
 }

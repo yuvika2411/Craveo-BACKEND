@@ -2,12 +2,10 @@ package com.Craveo.controller;
 
 import com.Craveo.model.Food;
 import com.Craveo.model.FoodCategory;
-import com.Craveo.model.IngredientsItem;
 import com.Craveo.model.Restaurant;
 import com.Craveo.model.User;
 import com.Craveo.request.CreateFoodRequest;
 import com.Craveo.response.MessageResponse;
-import com.Craveo.Repository.IngredientItemRepository;
 import com.Craveo.service.CategoryService;
 import com.Craveo.service.FoodService;
 import com.Craveo.service.RestaurantService;
@@ -40,9 +38,6 @@ public class AdminFoodController {
     @Autowired
     private CategoryService categoryService;
 
-    @Autowired
-    private IngredientItemRepository ingredientItemRepository;
-
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Food> createFood(
             @RequestPart("food") String foodJson,
@@ -64,34 +59,6 @@ public class AdminFoodController {
 
         User user = userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.findRestaurantById(req.getRestaurantId());
-
-        // Resolve ingredients (match by name or create a new persistent entity)
-        List<IngredientsItem> resolvedIngredients = new ArrayList<>();
-        if (req.getIngredients() != null) {
-            List<IngredientsItem> existingIngredients = ingredientItemRepository.findByRestaurantId(restaurant.getId());
-            for (IngredientsItem reqIng : req.getIngredients()) {
-                if (reqIng == null || reqIng.getName() == null) continue;
-                String ingName = reqIng.getName().trim();
-                if (ingName.isEmpty()) continue;
-
-                IngredientsItem matched = existingIngredients.stream()
-                        .filter(ei -> ei.getName().equalsIgnoreCase(ingName))
-                        .findFirst()
-                        .orElse(null);
-
-                if (matched != null) {
-                    resolvedIngredients.add(matched);
-                } else {
-                    IngredientsItem newItem = new IngredientsItem();
-                    newItem.setName(ingName);
-                    newItem.setRestaurant(restaurant);
-                    newItem.setInStock(true);
-                    IngredientsItem saved = ingredientItemRepository.save(newItem);
-                    resolvedIngredients.add(saved);
-                }
-            }
-        }
-        req.setIngredients(resolvedIngredients);
 
         FoodCategory category = req.getCategory();
         if (category == null && req.getCategoryId() != null) {

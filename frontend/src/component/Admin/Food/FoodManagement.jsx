@@ -42,7 +42,7 @@ export const FoodManagement = () => {
     if (!path) return "";
     return path.startsWith("http")
         ? path
-        : `http://localhost:8081${path}`;
+        : `${import.meta.env.VITE_API_URL}${path}`;
     };
 
   return (
