@@ -17,6 +17,7 @@ public class CreateFoodRequest {
 
     private Long restaurantId;
     private Long categoryId;
-    private boolean vegetarian;
-    private boolean seasonal;
+    private boolean isVegetarian;
+    private boolean isSeasonal;
+    private boolean available;
 }
