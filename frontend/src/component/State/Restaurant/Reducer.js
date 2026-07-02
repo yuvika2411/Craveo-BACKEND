@@ -8,6 +8,7 @@ const initialState = {
     categories: [],
     restaurantsEvents: [],
     loading: false,
+    usersRestaurantLoading: false,
     error: null
 };
 
@@ -20,10 +21,15 @@ export const restaurantReducer = (state = initialState, action) => {
         case ActionTypes.GET_RESTAURANT_BY_ID_REQUEST:
         case ActionTypes.CREATE_CATEGORY_REQUEST:
         case ActionTypes.GET_RESTAURANT_CATEGORY_REQUEST:
-        case ActionTypes.GET_RESTAURANT_BY_USER_ID_REQUEST:
             return {
                 ...state,
                 loading: true,
+                error: null
+            };
+        case ActionTypes.GET_RESTAURANT_BY_USER_ID_REQUEST:
+            return {
+                ...state,
+                usersRestaurantLoading: true,
                 error: null
             };
         case ActionTypes.CREATE_RESTAURANT_SUCCESS:
@@ -50,6 +56,7 @@ export const restaurantReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
+                usersRestaurantLoading: false,
                 usersRestaurant: action.payload
             };
         case ActionTypes.DELETE_RESTAURANT_SUCCESS:
@@ -106,12 +113,17 @@ export const restaurantReducer = (state = initialState, action) => {
         case ActionTypes.CREATE_EVENT_FAILURE:
         case ActionTypes.CREATE_CATEGORY_FAILURE:
         case ActionTypes.GET_RESTAURANT_CATEGORY_FAILURE:
-        case ActionTypes.GET_RESTAURANT_BY_USER_ID_FAILURE:
             return {
                 ...state,
                 loading: false,
                 error: action.payload,
             }
+        case ActionTypes.GET_RESTAURANT_BY_USER_ID_FAILURE:
+            return {
+                ...state,
+                usersRestaurantLoading: false,
+                error: action.payload,
+            };
         default:
             return state;
     }
