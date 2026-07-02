@@ -14,8 +14,7 @@ api.interceptors.request.use((config) => {
 
     // public routes → token mat bhejo
     const publicRoutes = [
-        "/api/restaurants",
-        "/api/users/profile"
+        "/api/restaurants"
     ];
 
     const isPublic =

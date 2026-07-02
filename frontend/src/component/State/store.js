@@ -9,7 +9,7 @@ import restaurantOrderReducer from "./Restaurant Order/Reducer";
 
 import { foodReducer } from "./Food/Reducer";
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
     auth: authReducer,
     restaurant: restaurantReducer,
     menu: menuItemReducer,
@@ -18,6 +18,13 @@ const rootReducer = combineReducers({
     restaurantOrder: restaurantOrderReducer,
     food: foodReducer
 });
+
+const rootReducer = (state, action) => {
+    if (action.type === "LOGOUT") {
+        state = undefined;
+    }
+    return appReducer(state, action);
+};
 
 export const store = configureStore({
     reducer: rootReducer

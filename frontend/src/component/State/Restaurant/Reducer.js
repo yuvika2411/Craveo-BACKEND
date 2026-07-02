@@ -20,6 +20,7 @@ export const restaurantReducer = (state = initialState, action) => {
         case ActionTypes.GET_RESTAURANT_BY_ID_REQUEST:
         case ActionTypes.CREATE_CATEGORY_REQUEST:
         case ActionTypes.GET_RESTAURANT_CATEGORY_REQUEST:
+        case ActionTypes.GET_RESTAURANT_BY_USER_ID_REQUEST:
             return {
                 ...state,
                 loading: true,
@@ -105,6 +106,7 @@ export const restaurantReducer = (state = initialState, action) => {
         case ActionTypes.CREATE_EVENT_FAILURE:
         case ActionTypes.CREATE_CATEGORY_FAILURE:
         case ActionTypes.GET_RESTAURANT_CATEGORY_FAILURE:
+        case ActionTypes.GET_RESTAURANT_BY_USER_ID_FAILURE:
             return {
                 ...state,
                 loading: false,

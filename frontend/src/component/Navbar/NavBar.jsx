@@ -5,6 +5,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PersonIcon from '@mui/icons-material/Person';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../State/Authentication/Action';
 
 const Navbar = () => {
   const { auth, cart } = useSelector(store => store);
@@ -15,11 +16,7 @@ const Navbar = () => {
 
   // ✅ FIXED LOGOUT
   const handleLogout = () => {
-    localStorage.removeItem("jwt");
-
-    // optional: clear redux state if you have logout action
-    // dispatch(logout());
-
+    dispatch(logout());
     navigate("/"); // instead of reload
   };
 

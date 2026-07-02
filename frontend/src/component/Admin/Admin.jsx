@@ -13,8 +13,8 @@ import { CreateRestaurant } from './CreateRestaurant';
 import { FoodManagement } from './Food/FoodManagement'; 
 export const Admin = () => {
     const dispatch = useDispatch();
-    const jwt = localStorage.getItem("jwt");
-    const { restaurant } = useSelector(store => store);
+    const { restaurant, auth } = useSelector(store => store);
+    const jwt = localStorage.getItem("jwt") || auth.jwt;
 
     useEffect(() => {
         if (jwt) {
@@ -28,7 +28,11 @@ export const Admin = () => {
                 <AdminSidebar />
             </div>
             <div className="w-[80%] p-8">
-                {restaurant.usersRestaurant ? (
+                {!jwt || restaurant.loading ? (
+                    <div className="flex justify-center items-center h-full">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#ea580c]"></div>
+                    </div>
+                ) : restaurant.usersRestaurant ? (
                     <Routes>
                         <Route path='/' element={<Dashboard />} />
                         <Route path='/dashboard' element={<Dashboard />} />
