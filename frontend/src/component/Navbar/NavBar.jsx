@@ -14,10 +14,9 @@ const Navbar = () => {
 
   const isLoggedIn = Boolean(auth.user);
 
-  // ✅ FIXED LOGOUT
   const handleLogout = () => {
     dispatch(logout());
-    navigate("/"); // instead of reload
+    navigate("/");
   };
 
   const handleAvatarClick = () => {
@@ -28,46 +27,90 @@ const Navbar = () => {
     }
   };
 
+  const handleHomeClick = () => {
+    const element = document.getElementById('hero-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate('/');
+      setTimeout(() => {
+        const el = document.getElementById('hero-section');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  };
+
+  const handleRestaurantsClick = () => {
+    const element = document.getElementById('restaurants-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate('/');
+      setTimeout(() => {
+        const el = document.getElementById('restaurants-section');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  };
+
   return (
-    <div className="w-full fixed top-0 z-50 bg-[#0f0f0f]/95 backdrop-blur-md border-b border-white/5">
-
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between text-white">
-
+    <div className="w-full fixed top-0 z-50 bg-[#0f0f0f]/95 backdrop-blur-md border-b border-white/5 font-[Poppins]">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6 text-white">
+        
         {/* LOGO */}
-        <div onClick={() => navigate('/')} className="text-[22px] font-semibold cursor-pointer">
-          <span className="text-[#ea580c]">Craveo</span>
+        <div onClick={() => navigate('/')} className="text-2xl font-extrabold text-[#ea580c] tracking-wide cursor-pointer shrink-0 pl-23">
+          Craveo
         </div>
 
         {/* NAV LINKS */}
-        <div className="hidden md:flex items-center gap-10">
-          <p onClick={() => navigate('/')} className="cursor-pointer text-[#ea580c]">
+        <div className="hidden lg:flex items-center gap-8 shrink-0">
+          <p onClick={handleHomeClick} className="cursor-pointer hover:text-[#ea580c] transition-colors font-medium text-md pl-20">
             Home
           </p>
-
-          <p onClick={() => navigate('/about')} className="cursor-pointer hover:text-[#ea580c]">
-            About
+          <p onClick={handleRestaurantsClick} className="cursor-pointer hover:text-[#ea580c] transition-colors font-medium text-md pl-5">
+            Restaurants
           </p>
         </div>
 
-        {/* RIGHT SIDE */}
-        <div className="flex items-center gap-6">
-
-          {/* SEARCH */}
-          <div className="flex items-center bg-white/10 rounded-full px-3 py-1.5">
-            <SearchIcon sx={{ color: "white", fontSize: 20 }} />
+        {/* LONG SEARCH BAR */}
+        <div className="flex-1 max-w-md mx-4 hidden md:block">
+          <div className="flex items-center bg-white/5 border border-white/10 hover:border-white/20 focus-within:border-[#ea580c] focus-within:bg-[#000]/30 rounded-full px-4 py-2 transition-all duration-300">
+            <SearchIcon sx={{ color: "gray", fontSize: 20, mr: 1.5 }} />
             <input
               type="text"
-              placeholder="Search..."
-              className="bg-transparent outline-none text-white text-sm ml-2 w-24 md:w-40"
+              placeholder="Search restaurants, cuisines, or dishes..."
+              className="bg-transparent w-full outline-none text-white text-sm placeholder-gray-500"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') navigate(`/search?q=${e.target.value}`);
               }}
             />
           </div>
+        </div>
 
-          {/* ✅ CART ICON (ONLY WHEN LOGGED IN) */}
+        {/* RIGHT SIDE */}
+        <div className="flex items-center gap-4 shrink-0">
+          {/* Mobile search toggle / icon if screen size is small */}
+          <div className="block md:hidden">
+            <div className="flex items-center bg-white/10 rounded-full px-3 py-1.5">
+              <SearchIcon sx={{ color: "white", fontSize: 20 }} />
+              <input
+                type="text"
+                placeholder="Search..."
+                className="bg-transparent outline-none text-white text-sm ml-2 w-20"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') navigate(`/search?q=${e.target.value}`);
+                }}
+              />
+            </div>
+          </div>
+
+          {/* CART ICON */}
           {isLoggedIn && (
-            <IconButton onClick={() => navigate('/cart')}>
+            <IconButton onClick={() => navigate('/cart')} className="hover:bg-white/5">
               <Badge badgeContent={cart.cartItems?.length || 0} color="error">
                 <ShoppingCartIcon sx={{ color: "white" }} />
               </Badge>
@@ -77,29 +120,33 @@ const Navbar = () => {
           {/* USER SECTION */}
           {isLoggedIn ? (
             <div className="flex items-center gap-3">
-
-              <div onClick={handleAvatarClick} className="cursor-pointer">
-                <Avatar sx={{ bgcolor: "white", color: "#ea580c", width: 32, height: 32 }}>
+              <div onClick={handleAvatarClick} className="cursor-pointer border-2 border-transparent hover:border-[#ea580c] rounded-full transition-all">
+                <Avatar sx={{ bgcolor: "white", color: "#ea580c", width: 32, height: 32, fontWeight: 'bold' }}>
                   {auth.user?.fullName?.[0]?.toUpperCase()}
                 </Avatar>
               </div>
-
               <button
                 onClick={handleLogout}
-                className="text-sm border px-3 py-1 rounded-md hover:bg-[#ea580c]"
+                className="text-sm font-semibold border border-white/10 hover:border-[#ea580c] hover:bg-[#ea580c] px-4 py-1.5 rounded-lg transition-all duration-300"
               >
                 Logout
               </button>
-
             </div>
           ) : (
-            <div onClick={() => navigate('/account/login')} className="cursor-pointer">
-              <Avatar sx={{ bgcolor: "white", color: "gray", width: 32, height: 32 }}>
-                <PersonIcon />
-              </Avatar>
+            <div className="flex items-center gap-3">
+              <div onClick={() => navigate('/account/login')} className="cursor-pointer border-2 border-transparent hover:border-[#ea580c] rounded-full transition-all">
+                <Avatar sx={{ bgcolor: "white", color: "gray", width: 32, height: 32 }}>
+                  <PersonIcon />
+                </Avatar>
+              </div>
+              <button 
+                onClick={() => navigate('/account/register')} 
+                className="bg-[#ea580c] hover:bg-[#c2410c] px-4 py-1.5 rounded-lg text-sm font-bold text-white transition-all duration-300 shadow-md shadow-[#ea580c]/20"
+              >
+                Sign Up
+              </button>
             </div>
           )}
-
         </div>
       </div>
     </div>

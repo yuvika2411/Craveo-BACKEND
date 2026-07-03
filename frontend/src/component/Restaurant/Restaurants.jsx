@@ -8,7 +8,7 @@ const Restaurant = () => {
         useSelector(store => store.restaurant);
 
     return (
-        <section className="bg-[#0f0f0f] text-white px-6 py-10 min-h-screen">
+        <section id="restaurants-section" className="bg-[#0f0f0f] text-white px-6 py-10 min-h-screen">
 
             <h2 className="text-2xl font-semibold mb-6 ml-4 md:ml-20">
                 Order From Our Handpicked Favorites

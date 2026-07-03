@@ -2,14 +2,14 @@ import React from "react";
 
 const Hero = () => {
     return (
-        <section className="font-[Poppins] w-full min-h-screen pt-24 bg-[#0f0f0f] text-white flex items-center relative overflow-hidden">
+        <section id="hero-section" className="font-[Poppins] w-full min-h-screen pt-24 bg-[#0f0f0f] text-white flex items-center relative overflow-hidden">
 
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(0, 0, 0, 0.05),transparent_60%)]"></div>
 
             <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
 
                 <div className="z-10">
-                
+
                     <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6 ">
                         Delicious Food <br />
                         <span className="text-[#ea580c]">Near Your Town</span>
@@ -21,7 +21,7 @@ const Hero = () => {
                     </p>
 
                     <div className="flex gap-4">
-                        <button onClick={() => document.getElementById('restaurants')?.scrollIntoView({ behavior: 'smooth' })} className="bg-[#ea580c] px-6 py-3 rounded-full font-medium hover:bg-[#c2410c] transition shadow-lg shadow-[#ea580c]/30">
+                        <button onClick={() => document.getElementById('restaurants-section')?.scrollIntoView({ behavior: 'smooth' })} className="bg-[#ea580c] px-6 py-3 rounded-full font-medium hover:bg-[#c2410c] transition shadow-lg shadow-[#ea580c]/30">
                             View All Restaurants
                         </button>
                     </div>
