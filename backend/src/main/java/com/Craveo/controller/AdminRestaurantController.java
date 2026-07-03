@@ -12,12 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import com.Craveo.service.CloudinaryService;
 
 @RestController
 @RequestMapping("/api/admin/restaurants")
@@ -25,6 +25,9 @@ public class AdminRestaurantController {
 
     @Autowired
     private RestaurantService restaurantService;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @Autowired
     private UserService userService;
@@ -46,41 +49,14 @@ public class AdminRestaurantController {
                 );
 
         if (images != null && !images.isEmpty()) {
-
-            List<String> imagePaths =
-                    new ArrayList<>();
-
-            Files.createDirectories(
-                    Paths.get("uploads")
-            );
-
+            List<String> imagePaths = new ArrayList<>();
             for (MultipartFile img : images) {
-
-                String fileName =
-                        System.currentTimeMillis()
-                                + "_"
-                                + img.getOriginalFilename();
-
-                Path path =
-                        Paths.get(
-                                "uploads",
-                                fileName
-                        );
-
-                Files.copy(
-                        img.getInputStream(),
-                        path
-                );
-
-                imagePaths.add(
-                        "/uploads/" + fileName
-                );
+                String imageUrl = cloudinaryService.uploadImage(img);
+                imagePaths.add(imageUrl);
             }
-
-            req.setImages(
-                    imagePaths
-            );
+            req.setImages(imagePaths);
         }
+
         User user = userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.createRestaurant(req, user);
 
