@@ -16,12 +16,19 @@ public class CloudinaryService {
 
     public String uploadImage(MultipartFile file) throws Exception {
 
-        @SuppressWarnings("rawtypes")
+        System.out.println("===== CLOUDINARY UPLOAD START =====");
+
         Map uploadResult = cloudinary.uploader().upload(
                 file.getBytes(),
                 ObjectUtils.emptyMap()
         );
 
-        return uploadResult.get("secure_url").toString();
+        System.out.println(uploadResult);
+
+        String url = uploadResult.get("secure_url").toString();
+
+        System.out.println("Cloudinary URL = " + url);
+
+        return url;
     }
 }

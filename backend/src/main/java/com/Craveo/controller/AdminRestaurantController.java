@@ -52,6 +52,7 @@ public class AdminRestaurantController {
             List<String> imagePaths = new ArrayList<>();
             for (MultipartFile img : images) {
                 String imageUrl = cloudinaryService.uploadImage(img);
+                System.out.println("Returned URL = " + imageUrl);
                 imagePaths.add(imageUrl);
             }
             req.setImages(imagePaths);
