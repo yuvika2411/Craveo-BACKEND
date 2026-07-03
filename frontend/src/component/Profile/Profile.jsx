@@ -32,7 +32,7 @@ const Profile = () => {
 
   return (
     <div className="lg:flex justify-between mt-24 max-w-7xl mx-auto px-6 gap-8 pb-10">
-      <div className="sticky h-[80vh] lg:w-[25%] rounded-xl overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.5)] bg-[#101010] py-4 border border-white/5">
+      <div className="sticky top-28 h-fit lg:w-[25%] rounded-xl overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.5)] bg-[#101010] py-4 border border-white/5">
         <ProfileNavigation 
           open={openSideBar} 
           handleClose={() => setOpenSideBar(false)} 

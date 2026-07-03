@@ -25,7 +25,7 @@ const dummyEvents = [
 
 const Events = () => {
   return (
-    <div className="min-h-[80vh] bg-[#0f0f0f] flex flex-col">
+    <div className="h-full bg-[#0f0f0f] flex flex-col">
         <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-white">Your Events</h1>
             <Button 

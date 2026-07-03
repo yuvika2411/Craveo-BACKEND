@@ -15,7 +15,7 @@ const Orders = () => {
     }, [dispatch, jwt]);
     
   return (
-    <div className="min-h-[80vh] bg-[#0f0f0f] flex flex-col">
+    <div className="h-full bg-[#0f0f0f] flex flex-col">
         <h1 className="text-2xl font-bold text-white mb-6">Your Past Orders</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5">
