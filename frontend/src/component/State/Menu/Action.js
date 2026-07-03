@@ -17,12 +17,12 @@ import {
     GET_MENU_ITEMS_BY_RESTAURANT_ID_FAILURE
 } from "./ActionType";
 
-export const createMenuItem = ({ reqData }) => async (dispatch) => {
+export const createMenuItem = ({ reqData, jwt }) => async (dispatch) => {
     dispatch({ type: CREATE_MENU_ITEM_REQUEST });
     try {
         const res = await api.post("/api/admin/food", reqData, {
             headers: {
-                "Content-Type": "multipart/form-data"
+                Authorization: `Bearer ${jwt}`
             }
         });
         console.log("create menu item response", res.data);

@@ -31,7 +31,7 @@ const RestaurantDetails = () => {
     useEffect(() => {
         if (id) {
             dispatch(getRestaurantById({ restaurantId: id }));
-            dispatch(getRestaurantCategory());
+            dispatch(getRestaurantCategory({ restaurantId: id }));
             dispatch(getMenuItemsByRestaurantId({ restaurantId: id }));
             dispatch(getFoodByRestaurant({ restaurantId: id }));
         }

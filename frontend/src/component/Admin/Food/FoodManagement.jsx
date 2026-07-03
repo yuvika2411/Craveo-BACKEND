@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { FoodItem } from "./FoodItem";
-import { getMenuItemsByRestaurantId } from "../../State/Menu/Action";
+import { getMenuItemsByRestaurantId, updateMenuItemAvailability } from "../../State/Menu/Action";
 
 export const FoodManagement = () => {
 
@@ -26,6 +26,10 @@ export const FoodManagement = () => {
   const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
     const { restaurant, menu } = useSelector(store => store);
+
+    const handleUpdateAvailability = (id) => {
+      dispatch(updateMenuItemAvailability({ menuItemId: id, jwt }));
+    };
 
     useEffect(() => {
     if (restaurant.usersRestaurant?.id) {
@@ -151,6 +155,8 @@ export const FoodManagement = () => {
                     <Chip
                         label={item.available ? "Available" : "Unavailable"}
                         color={item.available ? "success" : "default"}
+                        onClick={() => handleUpdateAvailability(item.id)}
+                        sx={{ cursor: "pointer" }}
                     />
 
                     </TableCell>

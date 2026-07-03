@@ -90,8 +90,7 @@ export const createRestaurant = (reqData) => async (dispatch) => {
             reqData.data,
             {
                 headers: {
-                    Authorization: `Bearer ${reqData.token}`,
-                    "Content-Type": "multipart/form-data"
+                    Authorization: `Bearer ${reqData.token}`
                 }
             }
         );
@@ -196,10 +195,13 @@ export const createCategoryAction = ({ reqData, jwt }) => async (dispatch) => {
     }
 }
 
-export const getRestaurantCategory = () => async (dispatch) => {
+export const getRestaurantCategory = ({ restaurantId } = {}) => async (dispatch) => {
     dispatch({ type: GET_RESTAURANT_CATEGORY_REQUEST });
     try {
-        const res = await api.get("/api/admin/category/restaurant");
+        const url = restaurantId 
+            ? `/api/category/restaurant/${restaurantId}`
+            : `/api/admin/category/restaurant`;
+        const res = await api.get(url);
         dispatch({ type: GET_RESTAURANT_CATEGORY_SUCCESS, payload: res.data });
     } catch (error) {
         console.log("Error in fetching restaurant category data", error)
