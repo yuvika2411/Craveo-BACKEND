@@ -27,9 +27,12 @@ export const createMenuItem = ({ reqData, jwt }) => async (dispatch) => {
         });
         console.log("create menu item response", res.data);
         dispatch({ type: CREATE_MENU_ITEM_SUCCESS, payload: res.data });
+        return res.data;
     } catch (error) {
         console.log("create menu item error", error);
-        dispatch({ type: CREATE_MENU_ITEM_FAILURE, payload: error.response?.data || error.message });
+        const errMsg = error.response?.data?.message || error.response?.data || error.message;
+        dispatch({ type: CREATE_MENU_ITEM_FAILURE, payload: errMsg });
+        throw error;
     }
 }
 

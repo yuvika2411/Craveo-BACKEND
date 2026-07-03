@@ -40,31 +40,39 @@ public class AdminFoodController {
     private CloudinaryService cloudinaryService;
 
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<Food> createFood(
+    public ResponseEntity<?> createFood(
             @RequestPart("food") String foodJson,
             @RequestPart(value = "image", required = false) MultipartFile image,
             @RequestHeader("Authorization") String jwt
-    ) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        CreateFoodRequest req = mapper.readValue(foodJson, CreateFoodRequest.class);
+    ) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            CreateFoodRequest req = mapper.readValue(foodJson, CreateFoodRequest.class);
 
-        if (image != null && !image.isEmpty()) {
-            String imageUrl = cloudinaryService.uploadImage(image);
-            req.setImages(List.of(imageUrl));
-        } else {
-            req.setImages(new ArrayList<>());
+            if (image != null && !image.isEmpty()) {
+                String imageUrl = cloudinaryService.uploadImage(image);
+                req.setImages(List.of(imageUrl));
+            } else {
+                req.setImages(new ArrayList<>());
+            }
+
+            User user = userService.findUserByJwtToken(jwt);
+            Restaurant restaurant = restaurantService.findRestaurantById(req.getRestaurantId());
+
+            FoodCategory category = req.getCategory();
+            if (category == null && req.getCategoryId() != null) {
+                category = categoryService.findCategoryById(req.getCategoryId());
+            }
+
+            Food food = foodService.createFood(req, category, restaurant);
+            return new ResponseEntity<>(food, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error in createFood: " + e.getMessage());
+            MessageResponse res = new MessageResponse();
+            res.setMessage("Error creating food: " + e.getMessage());
+            return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        User user = userService.findUserByJwtToken(jwt);
-        Restaurant restaurant = restaurantService.findRestaurantById(req.getRestaurantId());
-
-        FoodCategory category = req.getCategory();
-        if (category == null && req.getCategoryId() != null) {
-            category = categoryService.findCategoryById(req.getCategoryId());
-        }
-
-        Food food = foodService.createFood(req, category, restaurant);
-        return new ResponseEntity<>(food, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

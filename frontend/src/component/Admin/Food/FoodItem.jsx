@@ -82,26 +82,30 @@ export const FoodItem = ({ onSuccess }) => {
       reqData.append("image", selectedImage);
     }
 
-    await dispatch(createMenuItem({ reqData, jwt }));
-    dispatch(
-      getMenuItemsByRestaurantId({
-        restaurantId: restaurant.usersRestaurant.id,
-        jwt
-      })
-    );
+    try {
+      await dispatch(createMenuItem({ reqData, jwt }));
+      dispatch(
+        getMenuItemsByRestaurantId({
+          restaurantId: restaurant.usersRestaurant.id,
+          jwt
+        })
+      );
 
-    setFoodData({
-      name: "",
-      description: "",
-      price: "",
-      categoryId: "",
-      isVegetarian: false,
-      isSeasonal: false,
-      available: true
-    });
-    setSelectedImage(null);
-    setImagePreview("");
-    if (onSuccess) onSuccess();
+      setFoodData({
+        name: "",
+        description: "",
+        price: "",
+        categoryId: "",
+        isVegetarian: false,
+        isSeasonal: false,
+        available: true
+      });
+      setSelectedImage(null);
+      setImagePreview("");
+      if (onSuccess) onSuccess();
+    } catch (err) {
+      console.error("Failed to create menu item:", err);
+    }
   };
 
   const inputStyle = {
