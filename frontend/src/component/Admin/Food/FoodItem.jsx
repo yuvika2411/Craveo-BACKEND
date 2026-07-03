@@ -8,11 +8,11 @@ import {
   Checkbox
 } from '@mui/material';
 
-import { createMenuItem, getMenuItemsByRestaurantId } from '../../State/Menu/Action';
+import { createMenuItem, getMenuItemsByRestaurantId, updateMenuItem } from '../../State/Menu/Action';
 import { getRestaurantCategory } from '../../State/Restaurant/Action';
 
 
-export const FoodItem = ({ onSuccess }) => {
+export const FoodItem = ({ foodItem, onSuccess }) => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
   const { restaurant, menu } = useSelector(store => store);
@@ -42,6 +42,37 @@ export const FoodItem = ({ onSuccess }) => {
       );
     }
   }, [dispatch, restaurant.usersRestaurant?.id, jwt]);
+
+  useEffect(() => {
+    if (foodItem) {
+      setFoodData({
+        name: foodItem.name || "",
+        description: foodItem.description || "",
+        price: foodItem.price || "",
+        categoryId: foodItem.foodCategory?.id || "",
+        isVegetarian: foodItem.vegetarian ?? foodItem.isVegetarian ?? false,
+        isSeasonal: foodItem.seasonal ?? foodItem.isSeasonal ?? false,
+        available: foodItem.available ?? true
+      });
+      if (foodItem.images && foodItem.images.length > 0) {
+        setImagePreview(foodItem.images[0].startsWith("http") ? foodItem.images[0] : `${import.meta.env.VITE_API_URL}${foodItem.images[0]}`);
+      } else {
+        setImagePreview("");
+      }
+    } else {
+      setFoodData({
+        name: "",
+        description: "",
+        price: "",
+        categoryId: "",
+        isVegetarian: false,
+        isSeasonal: false,
+        available: true
+      });
+      setSelectedImage(null);
+      setImagePreview("");
+    }
+  }, [foodItem]);
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
@@ -73,17 +104,34 @@ export const FoodItem = ({ onSuccess }) => {
       price: Number(foodData.price),
       categoryId: foodData.categoryId,
       restaurantId: restaurant.usersRestaurant.id,
-      isVegetarian: foodData.isVegetarian,
-      isSeasonal: foodData.isSeasonal,
+      vegetarian: foodData.isVegetarian,
+      seasonal: foodData.isSeasonal,
       available: foodData.available
     }));
 
     if (selectedImage) {
       reqData.append("image", selectedImage);
+    } else if (foodItem && foodItem.images && foodItem.images.length > 0) {
+      // keep existing image if no new image is selected in edit mode
+      reqData.append("food", JSON.stringify({
+        name: foodData.name,
+        description: foodData.description,
+        price: Number(foodData.price),
+        categoryId: foodData.categoryId,
+        restaurantId: restaurant.usersRestaurant.id,
+        vegetarian: foodData.isVegetarian,
+        seasonal: foodData.isSeasonal,
+        available: foodData.available,
+        images: foodItem.images
+      }));
     }
 
     try {
-      await dispatch(createMenuItem({ reqData, jwt }));
+      if (foodItem) {
+        await dispatch(updateMenuItem({ menuItemId: foodItem.id, reqData, jwt }));
+      } else {
+        await dispatch(createMenuItem({ reqData, jwt }));
+      }
       dispatch(
         getMenuItemsByRestaurantId({
           restaurantId: restaurant.usersRestaurant.id,
@@ -104,7 +152,7 @@ export const FoodItem = ({ onSuccess }) => {
       setImagePreview("");
       if (onSuccess) onSuccess();
     } catch (err) {
-      console.error("Failed to create menu item:", err);
+      console.error("Failed to save menu item:", err);
     }
   };
 
@@ -121,7 +169,7 @@ export const FoodItem = ({ onSuccess }) => {
 
   return (
     <div className="bg-[#1a1a1a] p-8 rounded-xl border border-white/5 shadow-xl">
-      <h1 className="text-3xl font-bold mb-6 text-white">Add Food Item</h1>
+      <h1 className="text-3xl font-bold mb-6 text-white">{foodItem ? "Edit Food Item" : "Add Food Item"}</h1>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -175,13 +223,13 @@ export const FoodItem = ({ onSuccess }) => {
 
         {menu.error && (
           <div className="col-span-2 bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-xl text-center text-sm font-semibold">
-            {menu.error?.message || "Failed to create food item. Please try again."}
+            {typeof menu.error === 'string' ? menu.error : (menu.error?.message || "Failed to save food item. Please try again.")}
           </div>
         )}
 
         <div className="col-span-2">
           <Button type="submit" variant="contained" disabled={menu.loading} fullWidth sx={{ backgroundColor: '#ea580c', '&:hover': { backgroundColor: '#c2410c' } }}>
-            {menu.loading ? "Adding..." : "Add Food Item"}
+            {menu.loading ? (foodItem ? "Updating..." : "Adding...") : (foodItem ? "Update Food Item" : "Add Food Item")}
           </Button>
         </div>
       </form>

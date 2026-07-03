@@ -97,4 +97,38 @@ public class AdminFoodController {
         Food food = foodService.updateAvailabilityStatus(id);
         return new ResponseEntity<>(food, HttpStatus.OK);
     }
+
+    @PutMapping("/{id}/edit")
+    public ResponseEntity<?> updateFood(
+            @PathVariable Long id,
+            @RequestPart("food") String foodJson,
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestHeader("Authorization") String jwt
+    ) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            CreateFoodRequest req = mapper.readValue(foodJson, CreateFoodRequest.class);
+
+            if (image != null && !image.isEmpty()) {
+                String imageUrl = cloudinaryService.uploadImage(image);
+                req.setImages(List.of(imageUrl));
+            }
+
+            userService.findUserByJwtToken(jwt);
+            
+            FoodCategory category = null;
+            if (req.getCategoryId() != null) {
+                category = categoryService.findCategoryById(req.getCategoryId());
+            }
+
+            Food food = foodService.updateFood(id, req, category);
+            return new ResponseEntity<>(food, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error updating food: " + e.getMessage());
+            MessageResponse res = new MessageResponse();
+            res.setMessage("Error updating food: " + e.getMessage());
+            return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

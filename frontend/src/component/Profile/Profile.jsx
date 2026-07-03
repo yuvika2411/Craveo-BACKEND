@@ -5,7 +5,6 @@ import Orders from "./Orders";
 import Favorites from "./Favorites";
 import Address from "./Address";
 import Payments from "./Payments";
-import Events from "./Events";
 
 const Profile = () => {
   const [openSideBar, setOpenSideBar] = useState(false);
@@ -23,8 +22,6 @@ const Profile = () => {
         return <Address />;
       case "Payments":
         return <Payments />;
-      case "Events":
-        return <Events />;
       default:
         return <UserProfile />;
     }

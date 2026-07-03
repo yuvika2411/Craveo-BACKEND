@@ -13,25 +13,35 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Chip
+  Chip,
+  IconButton
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
 import { FoodItem } from "./FoodItem";
-import { getMenuItemsByRestaurantId, updateMenuItemAvailability } from "../../State/Menu/Action";
+import { getMenuItemsByRestaurantId, updateMenuItemAvailability, deleteFoodItem } from "../../State/Menu/Action";
 
 export const FoodManagement = () => {
 
   const [tab, setTab] = useState(0);
   const [open, setOpen] = useState(false);
+  const [selectedFoodItem, setSelectedFoodItem] = useState(null);
   const dispatch = useDispatch();
-    const jwt = localStorage.getItem("jwt");
-    const { restaurant, menu } = useSelector(store => store);
+  const jwt = localStorage.getItem("jwt");
+  const { restaurant, menu } = useSelector(store => store);
 
-    const handleUpdateAvailability = (id) => {
-      dispatch(updateMenuItemAvailability({ menuItemId: id, jwt }));
-    };
+  const handleUpdateAvailability = (id) => {
+    dispatch(updateMenuItemAvailability({ menuItemId: id, jwt }));
+  };
 
-    useEffect(() => {
+  const handleDeleteFood = (menuItemId) => {
+    if (window.confirm("Are you sure you want to delete this food item?")) {
+      dispatch(deleteFoodItem({ menuItemId, jwt }));
+    }
+  };
+
+  useEffect(() => {
     if (restaurant.usersRestaurant?.id) {
         dispatch(
         getMenuItemsByRestaurantId({
@@ -40,14 +50,14 @@ export const FoodManagement = () => {
         })
         );
     }
-    }, [dispatch, restaurant.usersRestaurant?.id, jwt]);
+  }, [dispatch, restaurant.usersRestaurant?.id, jwt]);
 
-    const getImageUrl = (path) => {
+  const getImageUrl = (path) => {
     if (!path) return "";
     return path.startsWith("http")
         ? path
         : `${import.meta.env.VITE_API_URL}${path}`;
-    };
+  };
 
   return (
     <div className="font-[Poppins] bg-[#1a1a1a] rounded-2xl p-8">
@@ -66,7 +76,7 @@ export const FoodManagement = () => {
 
         <Button
           variant="contained"
-          onClick={() => setOpen(true)}
+          onClick={() => { setSelectedFoodItem(null); setOpen(true); }}
           sx={{
             backgroundColor: "#ea580c",
             "&:hover": {
@@ -106,6 +116,7 @@ export const FoodManagement = () => {
                 <TableCell sx={{ color: "white", fontWeight: 600 }}>Price</TableCell>
                 <TableCell sx={{ color: "white", fontWeight: 600 }}>Veg</TableCell>
                 <TableCell sx={{ color: "white", fontWeight: 600 }}>Available</TableCell>
+                <TableCell align="right" sx={{ color: "white", fontWeight: 600 }}>Actions</TableCell>
                 </TableRow>
             </TableHead>
 
@@ -117,8 +128,6 @@ export const FoodManagement = () => {
 
                     <TableCell>
 
-                    <>
-
                     <img
                         src={getImageUrl(item.images?.[0])}
                         alt={item.name}
@@ -129,7 +138,6 @@ export const FoodManagement = () => {
                         borderRadius: 10
                         }}
                     />
-                    </>
 
                     </TableCell>
 
@@ -144,8 +152,8 @@ export const FoodManagement = () => {
                     <TableCell>
 
                     <Chip
-                        label={item.isVegetarian ? "Veg" : "Non Veg"}
-                        color={item.isVegetarian ? "success" : "error"}
+                        label={item.vegetarian || item.isVegetarian ? "Veg" : "Non Veg"}
+                        color={item.vegetarian || item.isVegetarian ? "success" : "error"}
                     />
 
                     </TableCell>
@@ -159,6 +167,23 @@ export const FoodManagement = () => {
                         sx={{ cursor: "pointer" }}
                     />
 
+                    </TableCell>
+
+                    <TableCell align="right">
+                      <div className="flex justify-end gap-2">
+                        <IconButton 
+                          onClick={() => { setSelectedFoodItem(item); setOpen(true); }}
+                          sx={{ color: '#ea580c', '&:hover': { color: '#c2410c' } }}
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton 
+                          onClick={() => handleDeleteFood(item.id)}
+                          sx={{ color: '#ef4444', '&:hover': { color: '#b91c1c' } }}
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </div>
                     </TableCell>
 
                 </TableRow>
@@ -175,14 +200,14 @@ export const FoodManagement = () => {
         open={open}
         maxWidth="lg"
         fullWidth
-        onClose={() => setOpen(false)}
+        onClose={() => { setOpen(false); setSelectedFoodItem(null); }}
       >
         <DialogContent
           sx={{
             background: "#1a1a1a"
           }}
         >
-          <FoodItem onSuccess={() => setOpen(false)} />
+          <FoodItem foodItem={selectedFoodItem} onSuccess={() => { setOpen(false); setSelectedFoodItem(null); }} />
         </DialogContent>
       </Dialog>
 

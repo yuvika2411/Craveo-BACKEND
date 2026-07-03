@@ -110,4 +110,29 @@ public class FoodServiceImp implements FoodService{
         food.setAvailable(!food.isAvailable());
         return foodRepository.save(food);
     }
+
+    @Override
+    public Food updateFood(Long foodId, CreateFoodRequest req, FoodCategory category) throws Exception {
+        Food food = findFoodById(foodId);
+        if (req.getName() != null) {
+            food.setName(req.getName());
+        }
+        if (req.getDescription() != null) {
+            food.setDescription(req.getDescription());
+        }
+        if (req.getPrice() != null) {
+            food.setPrice(req.getPrice());
+        }
+        if (category != null) {
+            food.setFoodCategory(category);
+        }
+        if (req.getImages() != null && !req.getImages().isEmpty()) {
+            food.setImages(req.getImages());
+        }
+        food.setVegetarian(req.isVegetarian());
+        food.setSeasonal(req.isSeasonal());
+        food.setAvailable(req.isAvailable());
+
+        return foodRepository.save(food);
+    }
 }

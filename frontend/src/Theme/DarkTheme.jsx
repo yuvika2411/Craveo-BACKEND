@@ -24,4 +24,7 @@ export const darkTheme = createTheme({
       main: "#111111"
     },
   },
+  typography: {
+    fontFamily: "'Poppins', sans-serif",
+  },
 });

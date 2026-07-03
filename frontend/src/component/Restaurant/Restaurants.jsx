@@ -14,7 +14,7 @@ const Restaurant = () => {
                 Order From Our Handpicked Favorites
             </h2>
 
-            <div className="flex flex-wrap gap-5 justify-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto px-4 md:px-20">
 
                 {restaurants?.map((item) => (
                     <RestaurantCard

@@ -26,7 +26,7 @@ export const RestaurantCard = ({ item }) => {
     });
 
     return (
-        <Card className="w-[18rem]">
+        <Card className="w-full">
             <div 
                 className="cursor-pointer relative"
                 onClick={handleNavigateToRestaurant}

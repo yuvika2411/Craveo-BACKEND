@@ -11,4 +11,6 @@ public interface CategoryService {
     public List<FoodCategory> findCategoryByRestaurantIdActual(Long id) throws Exception;
 
     public FoodCategory findCategoryById(Long id) throws Exception;
+
+    public void deleteCategory(Long id) throws Exception;
 }

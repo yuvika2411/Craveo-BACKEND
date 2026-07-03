@@ -27,6 +27,21 @@ import {
     GET_ALL_EVENTS_FAILURE,
     GET_ALL_EVENTS_REQUEST,
     GET_ALL_EVENTS_SUCCESS,
+    CREATE_EVENT_FAILURE,
+    CREATE_EVENT_REQUEST,
+    CREATE_EVENT_SUCCESS,
+    UPDATE_EVENT_FAILURE,
+    UPDATE_EVENT_REQUEST,
+    UPDATE_EVENT_SUCCESS,
+    BOOK_EVENT_FAILURE,
+    BOOK_EVENT_REQUEST,
+    BOOK_EVENT_SUCCESS,
+    GET_CUSTOMER_EVENTS_FAILURE,
+    GET_CUSTOMER_EVENTS_REQUEST,
+    GET_CUSTOMER_EVENTS_SUCCESS,
+    UPDATE_EVENT_STATUS_FAILURE,
+    UPDATE_EVENT_STATUS_REQUEST,
+    UPDATE_EVENT_STATUS_SUCCESS,
     DELETE_EVENT_FAILURE,
     DELETE_EVENT_REQUEST,
     DELETE_EVENT_SUCCESS,
@@ -39,6 +54,9 @@ import {
     GET_RESTAURANT_CATEGORY_FAILURE,
     GET_RESTAURANT_CATEGORY_REQUEST,
     GET_RESTAURANT_CATEGORY_SUCCESS,
+    DELETE_CATEGORY_FAILURE,
+    DELETE_CATEGORY_REQUEST,
+    DELETE_CATEGORY_SUCCESS,
 } from "./ActionType";
 
 export const getAllRestaurantsAction = (token) => {
@@ -140,14 +158,20 @@ export const updateRestaurantStatus = (reqData) => async (dispatch) => {
     }
 }
 
-export const createEventAction = (reqData) => async (dispatch) => {
+export const createEventAction = ({ reqData, jwt }) => async (dispatch) => {
     dispatch({ type: CREATE_EVENT_REQUEST });
     try {
-        const res = await api.post("/api/events", reqData);
+        const res = await api.post("/api/admin/events", reqData, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
         dispatch({ type: CREATE_EVENT_SUCCESS, payload: res.data });
+        return res.data;
     } catch (error) {
-        console.log("Error in creating event data", error)
-        dispatch({ type: CREATE_EVENT_FAILURE,payload: error.response?.data?.message || error.message });
+        console.log("Error in creating event data", error);
+        dispatch({ type: CREATE_EVENT_FAILURE, payload: error.response?.data?.message || error.message });
+        throw error;
     }
 }
 
@@ -162,25 +186,97 @@ export const getAllEvents = (token) => async (dispatch) => {
     }
 }
 
-export const deleteEventAction = (eventId) => async (dispatch) => {
+export const deleteEventAction = ({ eventId, jwt }) => async (dispatch) => {
     dispatch({ type: DELETE_EVENT_REQUEST });
     try {
-        const res = await api.delete(`/api/events/${eventId}`);
-        dispatch({ type: DELETE_EVENT_SUCCESS, payload: res.data });
+        await api.delete(`/api/admin/events/${eventId}`, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
+        dispatch({ type: DELETE_EVENT_SUCCESS, payload: eventId });
     } catch (error) {
-        console.log("Error in deleting event data", error)
+        console.log("Error in deleting event data", error);
         dispatch({ type: DELETE_EVENT_FAILURE, payload: error.response?.data?.message || error.message });
     }
 }
 
-export const getRestaurantEvents = (restaurantId, token) => async (dispatch) => {
+export const getRestaurantEvents = ({ restaurantId, jwt }) => async (dispatch) => {
     dispatch({ type: GET_RESTAURANT_EVENTS_REQUEST });
     try {
-        const res = await api.get(`/api/restaurants/${restaurantId}/events`);
+        const res = await api.get(`/api/admin/events/restaurant/${restaurantId}`, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
         dispatch({ type: GET_RESTAURANT_EVENTS_SUCCESS, payload: res.data });
     } catch (error) {
-        console.log("Error in fetching restaurant events data", error)
+        console.log("Error in fetching restaurant events data", error);
         dispatch({ type: GET_RESTAURANT_EVENTS_FAILURE, payload: error.response?.data?.message || error.message });
+    }
+}
+
+export const updateEventAction = ({ eventId, reqData, jwt }) => async (dispatch) => {
+    dispatch({ type: UPDATE_EVENT_REQUEST });
+    try {
+        const res = await api.put(`/api/admin/events/${eventId}`, reqData, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
+        dispatch({ type: UPDATE_EVENT_SUCCESS, payload: res.data });
+        return res.data;
+    } catch (error) {
+        console.log("Error in updating event data", error);
+        dispatch({ type: UPDATE_EVENT_FAILURE, payload: error.response?.data?.message || error.message });
+        throw error;
+    }
+}
+
+export const bookEventAction = ({ restaurantId, reqData, jwt }) => async (dispatch) => {
+    dispatch({ type: BOOK_EVENT_REQUEST });
+    try {
+        const res = await api.post(`/api/events/restaurant/${restaurantId}`, reqData, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
+        dispatch({ type: BOOK_EVENT_SUCCESS, payload: res.data });
+        return res.data;
+    } catch (error) {
+        console.log("Error booking event:", error);
+        dispatch({ type: BOOK_EVENT_FAILURE, payload: error.response?.data?.message || error.message });
+        throw error;
+    }
+}
+
+export const getCustomerEventsAction = (jwt) => async (dispatch) => {
+    dispatch({ type: GET_CUSTOMER_EVENTS_REQUEST });
+    try {
+        const res = await api.get(`/api/events/customer`, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
+        dispatch({ type: GET_CUSTOMER_EVENTS_SUCCESS, payload: res.data });
+    } catch (error) {
+        console.log("Error fetching customer events:", error);
+        dispatch({ type: GET_CUSTOMER_EVENTS_FAILURE, payload: error.response?.data?.message || error.message });
+    }
+}
+
+export const updateEventStatusAction = ({ eventId, status, jwt }) => async (dispatch) => {
+    dispatch({ type: UPDATE_EVENT_STATUS_REQUEST });
+    try {
+        const res = await api.put(`/api/admin/events/${eventId}/status?status=${status}`, {}, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
+        dispatch({ type: UPDATE_EVENT_STATUS_SUCCESS, payload: res.data });
+    } catch (error) {
+        console.log("Error updating event status:", error);
+        dispatch({ type: UPDATE_EVENT_STATUS_FAILURE, payload: error.response?.data?.message || error.message });
     }
 }
 
@@ -206,6 +302,21 @@ export const getRestaurantCategory = ({ restaurantId } = {}) => async (dispatch)
     } catch (error) {
         console.log("Error in fetching restaurant category data", error)
         dispatch({ type: GET_RESTAURANT_CATEGORY_FAILURE, payload: error.response?.data?.message || error.message });
+    }
+}
+
+export const deleteCategoryAction = ({ categoryId, jwt }) => async (dispatch) => {
+    dispatch({ type: DELETE_CATEGORY_REQUEST });
+    try {
+        await api.delete(`/api/admin/category/${categoryId}`, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
+        dispatch({ type: DELETE_CATEGORY_SUCCESS, payload: categoryId });
+    } catch (error) {
+        console.log("Error in deleting category", error);
+        dispatch({ type: DELETE_CATEGORY_FAILURE, payload: error.response?.data?.message || error.message });
     }
 }
 

@@ -5,7 +5,6 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import HomeIcon from '@mui/icons-material/Home';
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import EventIcon from "@mui/icons-material/Event";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -17,7 +16,6 @@ const menu = [
   { title: "Favorites", icon: <FavoriteIcon /> },
   { title: "Address", icon: <HomeIcon /> },
   { title: "Payments", icon: <AccountBalanceWalletIcon /> },
-  { title: "Events", icon: <EventIcon /> },
   { title: "Logout", icon: <LogoutIcon /> },
 ];
 

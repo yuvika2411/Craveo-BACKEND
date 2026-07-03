@@ -13,6 +13,7 @@ export const menuItemReducer = (state = initialSatate, action) => {
         case ActionType.DELETE_MENU_ITEM_REQUEST:
         case ActionType.SEARCH_MENU_ITEM_REQUEST:
         case ActionType.UPDATE_MENU_ITEMS_AVAILABILITY_REQUEST:
+        case ActionType.UPDATE_MENU_ITEM_REQUEST:
             return {
                 ...state,
                 loading: true,
@@ -50,11 +51,19 @@ export const menuItemReducer = (state = initialSatate, action) => {
                 loading: false,
                 menuItems: state.menuItems.map((item) => item.id === action.payload.id ? action.payload : item)
             };
+        case ActionType.UPDATE_MENU_ITEM_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                menuItems: state.menuItems.map((item) => item.id === action.payload.id ? action.payload : item),
+                message: "Food updated successfully"
+            };
         case ActionType.CREATE_MENU_ITEM_FAILURE:
         case ActionType.GET_MENU_ITEMS_BY_RESTAURANT_ID_FAILURE:
         case ActionType.DELETE_MENU_ITEM_FAILURE:
         case ActionType.SEARCH_MENU_ITEM_FAILURE:
         case ActionType.UPDATE_MENU_ITEMS_AVAILABILITY_FAILURE:
+        case ActionType.UPDATE_MENU_ITEM_FAILURE:
             return {
                 ...state,
                 loading: false,

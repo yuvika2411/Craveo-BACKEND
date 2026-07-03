@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dashboard, ShoppingBag, RestaurantMenu, Category, EmojiEvents, Settings, Logout } from '@mui/icons-material';
+import { Dashboard, ShoppingBag, RestaurantMenu, Category, Settings, Logout } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../State/Authentication/Action';
@@ -12,7 +12,6 @@ const menu = [
     { title: "Food Items", icon: <RestaurantMenu />, path: "/food" },
 
     { title: "Food Category", icon: <Category />, path: "/category" },
-    { title: "Events", icon: <EmojiEvents />, path: "/events" },
     { title: "Details", icon: <Settings />, path: "/details" },
     { title: "Logout", icon: <Logout />, path: "/" }
 ];

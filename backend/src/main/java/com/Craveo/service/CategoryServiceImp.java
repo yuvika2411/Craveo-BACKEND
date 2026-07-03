@@ -1,6 +1,7 @@
 package com.Craveo.service;
 
 import com.Craveo.Repository.CategoryRepository;
+import com.Craveo.Repository.FoodRepository;
 import com.Craveo.model.Food;
 import com.Craveo.model.FoodCategory;
 import com.Craveo.model.Restaurant;
@@ -18,6 +19,9 @@ public class CategoryServiceImp implements CategoryService{
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private FoodRepository foodRepository;
 
 
     @Override
@@ -52,4 +56,15 @@ public class CategoryServiceImp implements CategoryService{
     }
 
 
+    @Override
+    public void deleteCategory(Long id) throws Exception {
+        List<Food> foods = foodRepository.findAll();
+        for (Food food : foods) {
+            if (food.getFoodCategory() != null && food.getFoodCategory().getId().equals(id)) {
+                food.setFoodCategory(null);
+                foodRepository.save(food);
+            }
+        }
+        categoryRepository.deleteById(id);
+    }
 }

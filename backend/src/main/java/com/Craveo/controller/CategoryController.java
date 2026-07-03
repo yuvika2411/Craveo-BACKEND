@@ -35,4 +35,16 @@ public class CategoryController {
         List<FoodCategory> categories= categoryService.findCategoryByRestaurantId(user.getId());
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<com.Craveo.response.MessageResponse> deleteCategory(
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String jwt
+    ) throws Exception {
+        userService.findUserByJwtToken(jwt);
+        categoryService.deleteCategory(id);
+        com.Craveo.response.MessageResponse res = new com.Craveo.response.MessageResponse();
+        res.setMessage("Category deleted successfully.");
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
 }
