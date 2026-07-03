@@ -12,7 +12,7 @@ import { createMenuItem, getMenuItemsByRestaurantId } from '../../State/Menu/Act
 import { getRestaurantCategory } from '../../State/Restaurant/Action';
 
 
-export const FoodItem = () => {
+export const FoodItem = ({ onSuccess }) => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
   const { restaurant, menu } = useSelector(store => store);
@@ -101,6 +101,7 @@ export const FoodItem = () => {
     });
     setSelectedImage(null);
     setImagePreview("");
+    if (onSuccess) onSuccess();
   };
 
   const inputStyle = {

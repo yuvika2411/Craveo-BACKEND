@@ -10,15 +10,13 @@ import com.Craveo.service.CategoryService;
 import com.Craveo.service.FoodService;
 import com.Craveo.service.RestaurantService;
 import com.Craveo.service.UserService;
+import com.Craveo.service.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +36,9 @@ public class AdminFoodController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private CloudinaryService cloudinaryService;
+
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Food> createFood(
             @RequestPart("food") String foodJson,
@@ -48,11 +49,8 @@ public class AdminFoodController {
         CreateFoodRequest req = mapper.readValue(foodJson, CreateFoodRequest.class);
 
         if (image != null && !image.isEmpty()) {
-            Files.createDirectories(Paths.get("uploads"));
-            String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
-            Path path = Paths.get("uploads", fileName);
-            Files.copy(image.getInputStream(), path);
-            req.setImages(List.of("/uploads/" + fileName));
+            String imageUrl = cloudinaryService.uploadImage(image);
+            req.setImages(List.of(imageUrl));
         } else {
             req.setImages(new ArrayList<>());
         }
