@@ -50,6 +50,11 @@ const Cart = () => {
         dispatch(findCart());
     }, [dispatch]);
 
+    const getImageUrl = (imagePath) => {
+        if (!imagePath) return 'https://via.placeholder.com/100';
+        return imagePath.startsWith("http") ? imagePath : `${import.meta.env.VITE_API_URL}${imagePath}`;
+    };
+
     const handleQuantityChange = (item, delta) => {
         if (item.quantity + delta === 0) {
             dispatch(removeCartItem(item.id));
@@ -71,7 +76,7 @@ const Cart = () => {
     };
 
     const cartItems = cart.cartItems || [];
-    const itemTotal = cart.cart?.total || 0;
+    const itemTotal = cartItems.reduce((acc, item) => acc + (item.totalPrice || 0), 0);
 
     const deliveryFee = itemTotal > 0 ? 40 : 0;
     const platformFee = itemTotal > 0 ? 5 : 0;
@@ -99,7 +104,7 @@ const Cart = () => {
                                 {cartItems.map(item => (
                                     <div key={item.id} className="flex gap-4 items-center p-4 bg-white/5 rounded-xl border border-white/5 hover:border-[#ea580c]/50 transition-colors">
                                         <img 
-                                            src={item.food?.images?.[0] || 'https://via.placeholder.com/100'} 
+                                            src={getImageUrl(item.food?.images?.[0])} 
                                             alt={item.food?.name} 
                                             className="w-20 h-20 object-cover rounded-lg"
                                         />
@@ -236,7 +241,7 @@ const Cart = () => {
             <Modal open={isAddressModalOpen} onClose={() => setIsAddressModalOpen(false)}>
                 <Box sx={modalStyle}>
                     <h2 className="text-2xl font-bold text-white mb-6">Add New Address</h2>
-                    <form onSubmit={handleAddNewAddress} className="space-y-4">
+                    <form onSubmit={handleAddNewAddress} className="flex flex-col gap-4">
                         <TextField 
                             label="Street Address" 
                             fullWidth 

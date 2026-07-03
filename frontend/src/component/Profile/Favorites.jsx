@@ -13,7 +13,7 @@ const Favorites = () => {
   };
 
   return (
-    <div className="min-h-[80vh] bg-[#0f0f0f] rounded-xl flex flex-col">
+    <div className="h-full bg-[#0f0f0f] rounded-xl flex flex-col">
       <h1 className="text-2xl font-bold text-white mb-6">Your Favorites</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {auth.favorites.map((item) => {

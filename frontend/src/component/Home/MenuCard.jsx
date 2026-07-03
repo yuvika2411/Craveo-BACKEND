@@ -1,30 +1,43 @@
 import React from 'react';
-import { Button } from '@mui/material';
-import { useDispatch } from "react-redux";
-import { addItemToCart } from "../State/Cart/Action";
+import { Button, IconButton } from '@mui/material';
+import { useDispatch, useSelector } from "react-redux";
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { addItemToCart, updateCartItem, removeCartItem } from "../State/Cart/Action";
 
 const MenuCard = ({ item }) => {
-
-    const dispatch = useDispatch(); // ✅ IMPORTANT
+    const dispatch = useDispatch();
+    const { cart } = useSelector(store => store);
 
     const getImageUrl = (imagePath) => {
         if (!imagePath) return "https://b.zmtcdn.com/data/dish_photos/4fd/3f7e6e5ced71aabec7ee0b938f3cb4fd.jpg";
         return imagePath.startsWith("http") ? imagePath : `${import.meta.env.VITE_API_URL}${imagePath}`;
     };
 
+    const cartItem = cart.cartItems?.find(cItem => cItem.food?.id === item?.id);
+
     // ✅ ADD TO CART HANDLER
     const handleAddToCart = () => {
         console.log("Item clicked:", item);
-
         dispatch(addItemToCart({
             foodId: item?.id || item?._id, // backend compatibility
             quantity: 1
         }));
     };
 
+    const handleQuantityChange = (delta) => {
+        if (cartItem.quantity + delta === 0) {
+            dispatch(removeCartItem(cartItem.id));
+        } else {
+            dispatch(updateCartItem({
+                cartItemId: cartItem.id,
+                quantity: cartItem.quantity + delta
+            }));
+        }
+    };
+
     return (
         <div className="bg-[#1a1a1a] rounded-xl overflow-hidden shadow-lg border border-white/5 p-4 md:p-6 hover:border-white/20 transition-all duration-300">
-
             <div className="flex gap-4">
                 <div className="w-[120px] h-[120px] md:w-[150px] md:h-[150px] shrink-0 relative rounded-lg overflow-hidden group">
                     <img
@@ -53,20 +66,32 @@ const MenuCard = ({ item }) => {
                     </div>
 
                     <div className="mt-4">
-                        <Button
-                            variant="contained"
-                            onClick={handleAddToCart}
-                            sx={{
-                                backgroundColor: '#ea580c',
-                                color: 'white',
-                                fontWeight: 'bold',
-                                padding: '6px 20px',
-                                textTransform: 'none',
-                                borderRadius: '8px',
-                                '&:hover': { backgroundColor: '#c2410c' }
-                            }}>
-                            ADD TO CART
-                        </Button>
+                        {cartItem ? (
+                            <div className="flex items-center gap-2 bg-white/5 rounded-full px-2 py-1 w-fit border border-white/5">
+                                <IconButton onClick={() => handleQuantityChange(-1)} sx={{ color: 'gray', '&:hover':{color: '#ea580c'}, p: 0.5 }}>
+                                    <RemoveCircleOutlineIcon fontSize="small" />
+                                </IconButton>
+                                <span className="font-semibold text-base w-6 text-center text-white">{cartItem.quantity}</span>
+                                <IconButton onClick={() => handleQuantityChange(1)} sx={{ color: 'gray', '&:hover':{color: '#ea580c'}, p: 0.5 }}>
+                                    <AddCircleOutlineIcon fontSize="small" />
+                                </IconButton>
+                            </div>
+                        ) : (
+                            <Button
+                                variant="contained"
+                                onClick={handleAddToCart}
+                                sx={{
+                                    backgroundColor: '#ea580c',
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                    padding: '6px 20px',
+                                    textTransform: 'none',
+                                    borderRadius: '8px',
+                                    '&:hover': { backgroundColor: '#c2410c' }
+                                }}>
+                                ADD TO CART
+                            </Button>
+                        )}
                     </div>
                 </div>
             </div>

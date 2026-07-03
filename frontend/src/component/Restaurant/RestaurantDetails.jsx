@@ -11,6 +11,7 @@ import { getRestaurantById, getRestaurantCategory } from '../State/Restaurant/Ac
 import { getMenuItemsByRestaurantId } from '../State/Menu/Action';
 // const { auth, restaurant, food } = useSelector(store => store);
 import { getFoodByRestaurant } from '../State/Food/Action';
+import { findCart } from '../State/Cart/Action';
 
 const foodTypes = [
     { label: "All", value: "all" },
@@ -34,8 +35,11 @@ const RestaurantDetails = () => {
             dispatch(getRestaurantCategory({ restaurantId: id }));
             dispatch(getMenuItemsByRestaurantId({ restaurantId: id }));
             dispatch(getFoodByRestaurant({ restaurantId: id }));
+            if (jwt) {
+                dispatch(findCart());
+            }
         }
-    }, [id]);
+    }, [id, jwt]);
 
     const handleFilterChange = (event) => {
         if (event.target.name === "foodType") {
