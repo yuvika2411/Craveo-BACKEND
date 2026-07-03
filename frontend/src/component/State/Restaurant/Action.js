@@ -63,7 +63,7 @@ export const getRestaurantById = (reqData) => {
             dispatch({ type: GET_RESTAURANT_BY_ID_SUCCESS, payload: res.data });
         } catch (error) {
             console.log("Error in fetching restaurant by ID data", error)
-            dispatch({ type: GET_RESTAURANT_BY_ID_FAILURE, payload: error });
+            dispatch({ type: GET_RESTAURANT_BY_ID_FAILURE, payload: error.response?.data?.message || error.message });
         }
     }
 }
@@ -103,7 +103,7 @@ export const createRestaurant = (reqData) => async (dispatch) => {
         console.log("Restaurant create error:", error);
         dispatch({
             type: CREATE_RESTAURANT_FAILURE,
-            payload: error
+            payload: error.response?.data?.message || error.message
         });
     }
 };
@@ -115,7 +115,7 @@ export const updateRestaurant = (reqData) => async (dispatch) => {
         dispatch({ type: UPDATE_RESTAURANT_SUCCESS, payload: res.data });
     } catch (error) {
         console.log("Error in updating restaurant data", error)
-        dispatch({ type: UPDATE_RESTAURANT_FAILURE, payload: error });
+        dispatch({ type: UPDATE_RESTAURANT_FAILURE, payload: error.response?.data?.message || error.message });
     }
 }
 
@@ -136,7 +136,7 @@ export const updateRestaurantStatus = (reqData) => async (dispatch) => {
         dispatch({ type: UPDATE_RESTAURANT_STATUS_SUCCESS, payload: res.data });
     } catch (error) {
         console.log("Error in updating restaurant status data", error)
-        dispatch({ type: UPDATE_RESTAURANT_STATUS_FAILURE, payload: error });
+        dispatch({ type: UPDATE_RESTAURANT_STATUS_FAILURE, payload: error.response?.data?.message || error.message});
     }
 }
 
@@ -147,7 +147,7 @@ export const createEventAction = (reqData) => async (dispatch) => {
         dispatch({ type: CREATE_EVENT_SUCCESS, payload: res.data });
     } catch (error) {
         console.log("Error in creating event data", error)
-        dispatch({ type: CREATE_EVENT_FAILURE, payload: error });
+        dispatch({ type: CREATE_EVENT_FAILURE,payload: error.response?.data?.message || error.message });
     }
 }
 
@@ -158,7 +158,7 @@ export const getAllEvents = (token) => async (dispatch) => {
         dispatch({ type: GET_ALL_EVENTS_SUCCESS, payload: res.data });
     } catch (error) {
         console.log("Error in fetching all events data", error)
-        dispatch({ type: GET_ALL_EVENTS_FAILURE, payload: error });
+        dispatch({ type: GET_ALL_EVENTS_FAILURE, payload: error.response?.data?.message || error.message });
     }
 }
 
@@ -169,7 +169,7 @@ export const deleteEventAction = (eventId) => async (dispatch) => {
         dispatch({ type: DELETE_EVENT_SUCCESS, payload: res.data });
     } catch (error) {
         console.log("Error in deleting event data", error)
-        dispatch({ type: DELETE_EVENT_FAILURE, payload: error });
+        dispatch({ type: DELETE_EVENT_FAILURE, payload: error.response?.data?.message || error.message });
     }
 }
 
@@ -180,7 +180,7 @@ export const getRestaurantEvents = (restaurantId, token) => async (dispatch) => 
         dispatch({ type: GET_RESTAURANT_EVENTS_SUCCESS, payload: res.data });
     } catch (error) {
         console.log("Error in fetching restaurant events data", error)
-        dispatch({ type: GET_RESTAURANT_EVENTS_FAILURE, payload: error });
+        dispatch({ type: GET_RESTAURANT_EVENTS_FAILURE, payload: error.response?.data?.message || error.message });
     }
 }
 
@@ -191,7 +191,7 @@ export const createCategoryAction = ({ reqData, jwt }) => async (dispatch) => {
         dispatch({ type: CREATE_CATEGORY_SUCCESS, payload: res.data });
     } catch (error) {
         console.log("Error in creating category data", error)
-        dispatch({ type: CREATE_CATEGORY_FAILURE, payload: error });
+        dispatch({ type: CREATE_CATEGORY_FAILURE, payload: error.response?.data?.message || error.message });
     }
 }
 
@@ -205,7 +205,7 @@ export const getRestaurantCategory = ({ restaurantId } = {}) => async (dispatch)
         dispatch({ type: GET_RESTAURANT_CATEGORY_SUCCESS, payload: res.data });
     } catch (error) {
         console.log("Error in fetching restaurant category data", error)
-        dispatch({ type: GET_RESTAURANT_CATEGORY_FAILURE, payload: error });
+        dispatch({ type: GET_RESTAURANT_CATEGORY_FAILURE, payload: error.response?.data?.message || error.message });
     }
 }
 
