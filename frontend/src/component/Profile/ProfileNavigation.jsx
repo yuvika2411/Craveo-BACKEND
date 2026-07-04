@@ -20,7 +20,7 @@ const menu = [
 ];
 
 const ProfileNavigation = ({ open, handleClose, activeTab, onTabChange }) => {
-  const isSmallScreen = useMediaQuery("(max-width:900px)");
+  const isSmallScreen = useMediaQuery("(max-width:1023px)");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

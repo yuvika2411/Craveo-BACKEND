@@ -2,7 +2,7 @@ import React from "react";
 
 const Hero = () => {
     return (
-        <section id="hero-section" className="font-[Poppins] w-full min-h-screen pt-24 bg-[#0f0f0f] text-white flex items-center relative overflow-hidden">
+        <section id="hero-section" className="font-[Poppins] w-full min-h-screen pt-8 bg-[#0f0f0f] text-white flex items-center relative overflow-hidden">
 
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(0, 0, 0, 0.05),transparent_60%)]"></div>
 
@@ -37,7 +37,6 @@ const Hero = () => {
                     />
                     <div className="absolute top-10 left-10 w-4 h-4 bg-red-500 rounded-full animate-bounce"></div>
                     <div className="absolute bottom-10 right-10 w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
-
                 </div>
 
             </div>

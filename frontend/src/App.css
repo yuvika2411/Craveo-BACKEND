@@ -1,7 +1,12 @@
 @import "tailwindcss";
 /* styling */
+html {
+  zoom: 1.1;
+  overflow-x: hidden;
+}
 body {
   font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
 }
 @layer base{
   button:not(:disabled),

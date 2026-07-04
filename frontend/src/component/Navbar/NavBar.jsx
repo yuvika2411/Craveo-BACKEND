@@ -59,19 +59,19 @@ const Navbar = () => {
 
   return (
     <div className="w-full fixed top-0 z-50 bg-[#0f0f0f]/95 backdrop-blur-md border-b border-white/5 font-[Poppins]">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6 text-white">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between gap-6 text-white">
         
         {/* LOGO */}
-        <div onClick={() => navigate('/')} className="text-2xl font-extrabold text-[#ea580c] tracking-wide cursor-pointer shrink-0 pl-23">
+        <div onClick={() => navigate('/')} className="text-2xl font-extrabold text-[#ea580c] tracking-wide cursor-pointer shrink-0 pl-8">
           Craveo
         </div>
 
         {/* NAV LINKS */}
         <div className="hidden lg:flex items-center gap-8 shrink-0">
-          <p onClick={handleHomeClick} className="cursor-pointer hover:text-[#ea580c] transition-colors font-medium text-md pl-20">
+          <p onClick={handleHomeClick} className="cursor-pointer hover:text-[#ea580c] transition-colors font-medium text-md">
             Home
           </p>
-          <p onClick={handleRestaurantsClick} className="cursor-pointer hover:text-[#ea580c] transition-colors font-medium text-md pl-5">
+          <p onClick={handleRestaurantsClick} className="cursor-pointer hover:text-[#ea580c] transition-colors font-medium text-md">
             Restaurants
           </p>
         </div>
@@ -92,15 +92,15 @@ const Navbar = () => {
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="flex items-center gap-4 shrink-0">
+        <div className="flex items-center gap-2 md:gap-4 shrink-0">
           {/* Mobile search toggle / icon if screen size is small */}
           <div className="block md:hidden">
-            <div className="flex items-center bg-white/10 rounded-full px-3 py-1.5">
-              <SearchIcon sx={{ color: "white", fontSize: 20 }} />
+            <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+              <SearchIcon sx={{ color: "white", fontSize: 18 }} />
               <input
                 type="text"
                 placeholder="Search..."
-                className="bg-transparent outline-none text-white text-sm ml-2 w-20"
+                className="bg-transparent outline-none text-white text-xs ml-1.5 w-12 focus:w-24 transition-all duration-300"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') navigate(`/search?q=${e.target.value}`);
                 }}
