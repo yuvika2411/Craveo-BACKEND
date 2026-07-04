@@ -15,8 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
 import com.Craveo.service.CloudinaryService;
 
 @RestController
@@ -35,24 +33,20 @@ public class AdminRestaurantController {
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Restaurant> createRestaurant(
             @RequestPart("restaurant") String restaurantJson,
-            @RequestPart(value = "image", required = false)
-            List<MultipartFile> images,
+            @RequestPart(value = "image", required = false) List<MultipartFile> images,
             @RequestHeader("Authorization") String jwt
 
     ) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
 
-        CreateRestaurantRequest req =
-                mapper.readValue(
-                        restaurantJson,
-                        CreateRestaurantRequest.class
-                );
+        CreateRestaurantRequest req = mapper.readValue(
+                restaurantJson,
+                CreateRestaurantRequest.class);
 
         if (images != null && !images.isEmpty()) {
             List<String> imagePaths = new ArrayList<>();
             for (MultipartFile img : images) {
                 String imageUrl = cloudinaryService.uploadImage(img);
-                System.out.println("Returned URL = " + imageUrl);
                 imagePaths.add(imageUrl);
             }
             req.setImages(imagePaths);
@@ -62,26 +56,44 @@ public class AdminRestaurantController {
         Restaurant restaurant = restaurantService.createRestaurant(req, user);
 
         return new ResponseEntity<>(
-                restaurant, HttpStatus.CREATED
-        );
+                restaurant, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
     public ResponseEntity<Restaurant> updateRestaurant(
-            @RequestBody CreateRestaurantRequest req,
+            @RequestPart("restaurant") String restaurantJson,
+            @RequestPart(value = "image", required = false) List<MultipartFile> images,
             @RequestHeader("Authorization") String jwt,
-            @PathVariable Long id
-    ) throws Exception {
+            @PathVariable Long id) throws Exception {
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        CreateRestaurantRequest req = mapper.readValue(restaurantJson, CreateRestaurantRequest.class);
+
+        if (images != null && !images.isEmpty()) {
+
+            List<String> imageUrls = new ArrayList<>();
+
+            for (MultipartFile img : images) {
+                if (!img.isEmpty()) {
+                    imageUrls.add(cloudinaryService.uploadImage(img));
+                }
+            }
+
+            req.setImages(imageUrls);
+        }
+
         userService.findUserByJwtToken(jwt);
+
         Restaurant restaurant = restaurantService.updateRestaurant(id, req);
-        return new ResponseEntity<>(restaurant, HttpStatus.OK);  // ✅ was CREATED, PUT should return OK
+
+        return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<MessageResponse> deleteRestaurant(
-            @RequestHeader("Authorization") String jwt,  // ✅ removed wrong @RequestBody
-            @PathVariable Long id
-    ) throws Exception {
+            @RequestHeader("Authorization") String jwt, // ✅ removed wrong @RequestBody
+            @PathVariable Long id) throws Exception {
         userService.findUserByJwtToken(jwt);
         restaurantService.deleteRestaurant(id);
         MessageResponse res = new MessageResponse();
@@ -92,8 +104,7 @@ public class AdminRestaurantController {
     @PutMapping("/{id}/status")
     public ResponseEntity<Restaurant> updateRestaurantStatus(
             @RequestHeader("Authorization") String jwt,
-            @PathVariable Long id
-    ) throws Exception {
+            @PathVariable Long id) throws Exception {
         userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.updateRestaurantStatus(id);
         return new ResponseEntity<>(restaurant, HttpStatus.OK);
@@ -101,8 +112,7 @@ public class AdminRestaurantController {
 
     @GetMapping("/user")
     public ResponseEntity<?> findRestaurantByUserId(
-            @RequestHeader("Authorization") String jwt
-    ) {
+            @RequestHeader("Authorization") String jwt) {
         try {
             User user = userService.findUserByJwtToken(jwt);
             Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());

@@ -32,7 +32,7 @@ export const AdminSidebar = () => {
 
     return (
         <div className="flex flex-col h-full py-6">
-            <div className="px-6 mb-8 cursor-pointer" onClick={() => navigate('/')}>
+            <div className="px-6 mb-8 cursor-pointer" onClick={() => navigate('/admin/restaurant')}>
                 <h1 className="text-3xl font-bold tracking-wide">
                     Craveo <span className="text-[#ea580c]">Admin</span>
                 </h1>

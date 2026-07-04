@@ -18,7 +18,7 @@ api.interceptors.request.use((config) => {
         publicRoutes.some(
             route =>
                 config.url?.startsWith(route)
-        );
+        ) && !config.url?.includes("/add-favorites");
 
     if (token && !isPublic) {
         config.headers.Authorization =

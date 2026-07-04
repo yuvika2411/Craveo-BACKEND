@@ -126,16 +126,33 @@ export const createRestaurant = (reqData) => async (dispatch) => {
     }
 };
 
-export const updateRestaurant = (reqData) => async (dispatch) => {
+export const updateRestaurant = ({ restaurantId, data, token }) => async (dispatch) => {
+
     dispatch({ type: UPDATE_RESTAURANT_REQUEST });
+
     try {
-        const res = await api.put(`/api/admin/restaurants/${reqData.restaurantId}`, reqData);
-        dispatch({ type: UPDATE_RESTAURANT_SUCCESS, payload: res.data });
+
+        const res = await api.put(
+            `/api/admin/restaurants/${restaurantId}`, data, { headers: {Authorization: `Bearer ${token}` }}
+        );
+
+        dispatch({
+            type: UPDATE_RESTAURANT_SUCCESS,
+            payload: res.data
+        });
+
+        return res.data;
+        
     } catch (error) {
-        console.log("Error in updating restaurant data", error)
-        dispatch({ type: UPDATE_RESTAURANT_FAILURE, payload: error.response?.data?.message || error.message });
+
+        dispatch({
+            type: UPDATE_RESTAURANT_FAILURE,
+            payload: error.response?.data?.message || error.message
+        });
+
+        throw error;
     }
-}
+};
 
 export const deleteRestaurant = (restaurantId) => async (dispatch) => {
     dispatch({ type: DELETE_RESTAURANT_REQUEST });
@@ -154,7 +171,7 @@ export const updateRestaurantStatus = (reqData) => async (dispatch) => {
         dispatch({ type: UPDATE_RESTAURANT_STATUS_SUCCESS, payload: res.data });
     } catch (error) {
         console.log("Error in updating restaurant status data", error)
-        dispatch({ type: UPDATE_RESTAURANT_STATUS_FAILURE, payload: error.response?.data?.message || error.message});
+        dispatch({ type: UPDATE_RESTAURANT_STATUS_FAILURE, payload: error.response?.data?.message || error.message });
     }
 }
 
@@ -294,7 +311,7 @@ export const createCategoryAction = ({ reqData, jwt }) => async (dispatch) => {
 export const getRestaurantCategory = ({ restaurantId } = {}) => async (dispatch) => {
     dispatch({ type: GET_RESTAURANT_CATEGORY_REQUEST });
     try {
-        const url = restaurantId 
+        const url = restaurantId
             ? `/api/category/restaurant/${restaurantId}`
             : `/api/admin/category/restaurant`;
         const res = await api.get(url);

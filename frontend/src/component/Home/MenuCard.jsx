@@ -68,11 +68,11 @@ const MenuCard = ({ item }) => {
                     <div className="mt-4">
                         {cartItem ? (
                             <div className="flex items-center gap-2 bg-white/5 rounded-full px-2 py-1 w-fit border border-white/5">
-                                <IconButton onClick={() => handleQuantityChange(-1)} sx={{ color: 'gray', '&:hover':{color: '#ea580c'}, p: 0.5 }}>
+                                <IconButton onClick={() => handleQuantityChange(-1)} sx={{ color: 'gray', '&:hover': { color: '#ea580c' }, p: 0.5 }}>
                                     <RemoveCircleOutlineIcon fontSize="small" />
                                 </IconButton>
                                 <span className="font-semibold text-base w-6 text-center text-white">{cartItem.quantity}</span>
-                                <IconButton onClick={() => handleQuantityChange(1)} sx={{ color: 'gray', '&:hover':{color: '#ea580c'}, p: 0.5 }}>
+                                <IconButton onClick={() => handleQuantityChange(1)} sx={{ color: 'gray', '&:hover': { color: '#ea580c' }, p: 0.5 }}>
                                     <AddCircleOutlineIcon fontSize="small" />
                                 </IconButton>
                             </div>

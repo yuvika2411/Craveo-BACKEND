@@ -11,7 +11,7 @@ export const Details = () => {
 
     const getImageUrl = (imagePath) => {
         if (!imagePath) return "";
-        return imagePath.startsWith("http") ? imagePath :`${import.meta.env.VITE_API_URL}${imagePath}`;
+        return imagePath.startsWith("http") ? imagePath : `${import.meta.env.VITE_API_URL}${imagePath}`;
     };
 
     const [isEditMode, setIsEditMode] = useState(false);
@@ -28,6 +28,10 @@ export const Details = () => {
         email: "",
         mobileNo: ""
     });
+    const [existingImages, setExistingImages] = useState([]);
+    const [selectedImages, setSelectedImages] = useState([]);
+    const [imagePreviews, setImagePreviews] = useState([]);
+    const [mainImageError, setMainImageError] = useState(false);
 
     useEffect(() => {
         if (usersRestaurant) {
@@ -44,8 +48,12 @@ export const Details = () => {
                 email: usersRestaurant.contactInformation?.email || "",
                 mobileNo: usersRestaurant.contactInformation?.mobileNo || ""
             });
+            setExistingImages(usersRestaurant.images || []);
+            setSelectedImages([]);
+            setImagePreviews([]);
+            setMainImageError(false);
         }
-    }, [usersRestaurant]);
+    }, [usersRestaurant, isEditMode]);
 
     const handleStatusToggle = () => {
         if (usersRestaurant?.id) {
@@ -64,11 +72,31 @@ export const Details = () => {
         }));
     };
 
+    const handleImageUpload = (e) => {
+        const files = Array.from(e.target.files);
+        if (!files.length) return;
+        setSelectedImages(prev => [...prev, ...files]);
+        
+        const newPreviews = files.map(file => URL.createObjectURL(file));
+        setImagePreviews(prev => [...prev, ...newPreviews]);
+    };
+
+    const handleRemoveExistingImage = (idxToRemove) => {
+        setExistingImages(prev => prev.filter((_, idx) => idx !== idxToRemove));
+    };
+
+    const handleRemoveNewImage = (idxToRemove) => {
+        setImagePreviews(prev => prev.filter((_, idx) => idx !== idxToRemove));
+        setSelectedImages(prev => prev.filter((_, idx) => idx !== idxToRemove));
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (usersRestaurant?.id) {
-            dispatch(updateRestaurant({
-                restaurantId: usersRestaurant.id,
+        const restaurantData = new FormData();
+
+        restaurantData.append(
+            "restaurant",
+            JSON.stringify({
                 name: formData.name,
                 description: formData.description,
                 cuisineType: formData.cuisineType,
@@ -85,10 +113,22 @@ export const Details = () => {
                     email: formData.email,
                     mobileNo: formData.mobileNo
                 },
-                images: usersRestaurant.images || []
-            }));
-            setIsEditMode(false);
-        }
+                images: existingImages
+            })
+        );
+
+        selectedImages.forEach((img) => {
+            restaurantData.append("image", img);
+        });
+
+        dispatch(
+            updateRestaurant({
+                restaurantId: usersRestaurant.id,
+                data: restaurantData,
+                token: jwt
+            })
+        );
+        setIsEditMode(false);
     };
 
     const inputStyle = {
@@ -184,6 +224,86 @@ export const Details = () => {
                         sx={inputStyle}
                     />
 
+                    <div className="bg-white/[0.02] p-6 rounded-2xl border border-white/5 space-y-6 mt-6">
+                        <h4 className="text-lg font-semibold text-white border-b border-white/5 pb-2 flex items-center gap-2">
+                            📷 Restaurant Images
+                        </h4>
+
+                        {/* Existing Images */}
+                        <div>
+                            <span className="text-gray-400 text-sm block mb-3 font-medium">Existing Images (Saved on Cloud):</span>
+                            <div className="flex flex-wrap gap-4">
+                                {existingImages.map((imgUrl, idx) => (
+                                    <div key={idx} className="relative w-24 h-24 rounded-xl overflow-hidden border border-white/10 group shadow-md bg-neutral-900 flex items-center justify-center">
+                                        <img 
+                                            src={getImageUrl(imgUrl)} 
+                                            alt={`Existing ${idx + 1}`} 
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 z-10"
+                                            onError={(e) => {
+                                                e.target.style.display = 'none';
+                                            }}
+                                        />
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#151515] text-gray-500 text-[10px] text-center p-1 pointer-events-none">
+                                            <span className="text-lg">🍽️</span>
+                                            <span className="truncate w-full font-medium">Image {idx + 1}</span>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleRemoveExistingImage(idx)}
+                                            className="absolute top-1 right-1 bg-red-500 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center cursor-pointer text-xs font-bold shadow-md hover:scale-110 active:scale-95 transition-all z-20"
+                                            title="Delete Image"
+                                        >
+                                            X
+                                        </button>
+                                    </div>
+                                ))}
+                                {existingImages.length === 0 && (
+                                    <p className="text-gray-500 text-xs italic py-2 pl-1">No saved images found for this restaurant.</p>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Newly Uploaded/Selected Images */}
+                        <div>
+                            <span className="text-gray-400 text-sm block mb-3 font-medium">New Uploads:</span>
+                            <div className="flex flex-wrap gap-4 mb-4">
+                                {imagePreviews.map((imgUrl, idx) => (
+                                    <div key={idx} className="relative w-24 h-24 rounded-xl overflow-hidden border border-white/10 group shadow-md bg-neutral-900">
+                                        <img 
+                                            src={imgUrl} 
+                                            alt={`Preview ${idx + 1}`} 
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => handleRemoveNewImage(idx)}
+                                            className="absolute top-1.5 right-1.5 bg-red-500 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center cursor-pointer text-xs font-bold shadow-md hover:scale-110 active:scale-95 transition-all"
+                                            title="Remove Image"
+                                        >
+                                            X
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Click/Dashed upload box */}
+                            <label className="w-full h-32 border-2 border-dashed border-[#ea580c]/50 hover:border-[#ea580c] rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 shadow-inner group">
+                                <input
+                                    type="file"
+                                    multiple
+                                    accept="image/*"
+                                    hidden
+                                    onChange={handleImageUpload}
+                                />
+                                <div className="text-center space-y-1">
+                                    <div className="text-3xl text-gray-500 group-hover:text-[#ea580c] transition-colors duration-300">📷</div>
+                                    <h5 className="text-white text-sm font-semibold tracking-wide">Upload Images</h5>
+                                    <p className="text-gray-400 text-xs">Supports multiple files (PNG, JPG, WebP)</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
                     <h3 className="text-xl font-bold text-gray-200 mt-8 mb-4 border-b border-white/10 pb-2">Location Details</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <TextField label="Street Address" name="street" value={formData.street} onChange={handleChange} fullWidth required sx={inputStyle} />
@@ -242,13 +362,19 @@ export const Details = () => {
             ) : (
                 <div className="space-y-8 relative z-10">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {usersRestaurant.images && usersRestaurant.images.length > 0 ? (
+                        {usersRestaurant.images && usersRestaurant.images.length > 0 && !mainImageError ? (
                             <div className="w-full h-64 rounded-2xl overflow-hidden border border-white/10 shadow-lg">
-                                <img src={getImageUrl(usersRestaurant.images[0])} alt={usersRestaurant.name} className="w-full h-full object-cover" />
+                                <img 
+                                    src={getImageUrl(usersRestaurant.images[0])} 
+                                    alt={usersRestaurant.name} 
+                                    className="w-full h-full object-cover" 
+                                    onError={() => setMainImageError(true)}
+                                />
                             </div>
                         ) : (
-                            <div className="w-full h-64 rounded-2xl border-2 border-dashed border-white/10 flex items-center justify-center bg-[#151515]">
-                                <span className="text-gray-500 text-sm">No Images Uploaded</span>
+                            <div className="w-full h-64 rounded-2xl border-2 border-dashed border-white/10 flex flex-col items-center justify-center bg-[#151515] text-gray-500">
+                                <span className="text-4xl mb-2">🍽️</span>
+                                <span className="text-sm font-semibold">{usersRestaurant.name}</span>
                             </div>
                         )}
                         <div className="flex flex-col justify-between space-y-4">

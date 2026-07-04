@@ -43,15 +43,18 @@ public class AdminFoodController {
     public ResponseEntity<?> createFood(
             @RequestPart("food") String foodJson,
             @RequestPart(value = "image", required = false) MultipartFile image,
-            @RequestHeader("Authorization") String jwt
-    ) {
+            @RequestHeader("Authorization") String jwt) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             CreateFoodRequest req = mapper.readValue(foodJson, CreateFoodRequest.class);
 
             if (image != null && !image.isEmpty()) {
                 String imageUrl = cloudinaryService.uploadImage(image);
-                req.setImages(List.of(imageUrl));
+
+                List<String> images = new ArrayList<>();
+                images.add(imageUrl);
+
+                req.setImages(images);
             } else {
                 req.setImages(new ArrayList<>());
             }
@@ -76,14 +79,16 @@ public class AdminFoodController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Food> getFoodById(@PathVariable Long id, @RequestHeader("Authorization") String jwt) throws Exception {
+    public ResponseEntity<Food> getFoodById(@PathVariable Long id, @RequestHeader("Authorization") String jwt)
+            throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         Food food = foodService.findFoodById(id);
         return new ResponseEntity<>(food, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<MessageResponse> deleteFood(@PathVariable Long id, @RequestHeader("Authorization") String jwt) throws Exception {
+    public ResponseEntity<MessageResponse> deleteFood(@PathVariable Long id, @RequestHeader("Authorization") String jwt)
+            throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         foodService.deleteFood(id);
         MessageResponse res = new MessageResponse();
@@ -92,7 +97,8 @@ public class AdminFoodController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Food> updateFoodAvailabilityStatus(@PathVariable Long id, @RequestHeader("Authorization") String jwt) throws Exception {
+    public ResponseEntity<Food> updateFoodAvailabilityStatus(@PathVariable Long id,
+            @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         Food food = foodService.updateAvailabilityStatus(id);
         return new ResponseEntity<>(food, HttpStatus.OK);
@@ -103,19 +109,20 @@ public class AdminFoodController {
             @PathVariable Long id,
             @RequestPart("food") String foodJson,
             @RequestPart(value = "image", required = false) MultipartFile image,
-            @RequestHeader("Authorization") String jwt
-    ) {
+            @RequestHeader("Authorization") String jwt) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             CreateFoodRequest req = mapper.readValue(foodJson, CreateFoodRequest.class);
 
             if (image != null && !image.isEmpty()) {
                 String imageUrl = cloudinaryService.uploadImage(image);
-                req.setImages(List.of(imageUrl));
+                List<String> images = new ArrayList<>();
+                images.add(imageUrl);
+                req.setImages(images);
             }
 
             userService.findUserByJwtToken(jwt);
-            
+
             FoodCategory category = null;
             if (req.getCategoryId() != null) {
                 category = categoryService.findCategoryById(req.getCategoryId());
@@ -125,10 +132,9 @@ public class AdminFoodController {
             return new ResponseEntity<>(food, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error updating food: " + e.getMessage());
-            MessageResponse res = new MessageResponse();
-            res.setMessage("Error updating food: " + e.getMessage());
-            return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.toString());
         }
     }
 }

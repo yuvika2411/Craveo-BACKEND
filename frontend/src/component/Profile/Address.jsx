@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Button, Modal, Box, TextField } from "@mui/material";
 import HomeIcon from '@mui/icons-material/Home';
+import WorkIcon from '@mui/icons-material/Work';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import { useSelector, useDispatch } from "react-redux";
 import { getUser } from "../State/Authentication/Action";
@@ -36,19 +38,53 @@ const Address = () => {
   const addresses = auth.user?.addresses || [];
 
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-  const [newAddress, setNewAddress] = useState({ street: '', city: '', state: '', pincode: '' });
+  const [editingAddressId, setEditingAddressId] = useState(null);
+  const [newAddress, setNewAddress] = useState({ street: '', city: '', state: '', pincode: '', type: 'Home' });
 
   const handleAddNewAddress = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/api/users/addresses", newAddress);
+      if (editingAddressId) {
+        await api.put(`/api/users/addresses/${editingAddressId}`, newAddress);
+      } else {
+        await api.post("/api/users/addresses", newAddress);
+      }
       dispatch(getUser());
       setIsAddressModalOpen(false);
-      setNewAddress({ street: '', city: '', state: '', pincode: '' });
+      setNewAddress({ street: '', city: '', state: '', pincode: '', type: 'Home' });
+      setEditingAddressId(null);
     } catch (error) {
-      console.error("Error adding address:", error);
-      alert("Failed to add address. Please try again.");
+      console.error("Error saving address:", error);
+      alert("Failed to save address. Please try again.");
     }
+  };
+
+  const handleDeleteAddress = async (addressId) => {
+    if (window.confirm("Are you sure you want to delete this address?")) {
+      try {
+        await api.delete(`/api/users/addresses/${addressId}`);
+        dispatch(getUser());
+      } catch (error) {
+        console.error("Error deleting address:", error);
+        alert("Failed to delete address. Please try again.");
+      }
+    }
+  };
+
+  const getAddressIcon = (type) => {
+    switch (type?.toLowerCase()) {
+      case 'work':
+        return <WorkIcon fontSize="small" />;
+      case 'other':
+        return <LocationOnIcon fontSize="small" />;
+      default:
+        return <HomeIcon fontSize="small" />;
+    }
+  };
+
+  const getAddressLabel = (type) => {
+    if (!type) return 'Home';
+    return type.charAt(0).toUpperCase() + type.slice(1);
   };
 
   return (
@@ -65,7 +101,11 @@ const Address = () => {
             borderRadius: "10px",
             "&:hover": { backgroundColor: "#c2410c" } 
           }}
-          onClick={() => setIsAddressModalOpen(true)}
+          onClick={() => {
+            setEditingAddressId(null);
+            setNewAddress({ street: '', city: '', state: '', pincode: '', type: 'Home' });
+            setIsAddressModalOpen(true);
+          }}
         >
           Add New
         </Button>
@@ -86,16 +126,36 @@ const Address = () => {
             >
                 <div className="flex items-center gap-3 mb-4">
                     <div className="p-2 rounded-xl bg-[#222] text-[#ea580c] group-hover:bg-[#ea580c] group-hover:text-white transition-colors duration-300">
-                        <HomeIcon fontSize="small" />
+                        {getAddressIcon(address.type)}
                     </div>
-                    <h4 className="font-bold text-lg text-gray-200 tracking-wide">Home</h4>
+                    <h4 className="font-bold text-lg text-gray-200 tracking-wide">{getAddressLabel(address.type)}</h4>
                 </div>
                 <p className="text-gray-400 text-sm leading-relaxed flex-1">
                     {address.street ? `${address.street}, ${address.city}, ${address.state}, ${address.pincode}` : address.address}
                 </p>
                 <div className="mt-4 flex gap-3">
-                  <span className="text-[#ea580c] text-sm font-semibold cursor-pointer hover:underline">Edit</span>
-                  <span className="text-red-500 text-sm font-semibold cursor-pointer hover:underline">Delete</span>
+                  <span 
+                    onClick={() => {
+                      setNewAddress({ 
+                        street: address.street || '', 
+                        city: address.city || '', 
+                        state: address.state || '', 
+                        pincode: address.pincode || '', 
+                        type: address.type || 'Home' 
+                      });
+                      setEditingAddressId(address.id);
+                      setIsAddressModalOpen(true);
+                    }}
+                    className="text-[#ea580c] text-sm font-semibold cursor-pointer hover:underline"
+                  >
+                    Edit
+                  </span>
+                  <span 
+                    onClick={() => handleDeleteAddress(address.id)}
+                    className="text-red-500 text-sm font-semibold cursor-pointer hover:underline"
+                  >
+                    Delete
+                  </span>
                 </div>
             </div>
           ))}
@@ -103,9 +163,17 @@ const Address = () => {
       )}
 
       {/* Address Modal */}
-      <Modal open={isAddressModalOpen} onClose={() => setIsAddressModalOpen(false)}>
+      <Modal 
+        open={isAddressModalOpen} 
+        onClose={() => {
+          setIsAddressModalOpen(false);
+          setEditingAddressId(null);
+        }}
+      >
           <Box sx={modalStyle}>
-              <h2 className="text-2xl font-bold text-white mb-6">Add New Address</h2>
+              <h2 className="text-2xl font-bold text-white mb-6">
+                {editingAddressId ? "Edit Address" : "Add New Address"}
+              </h2>
               <form onSubmit={handleAddNewAddress} className="flex flex-col gap-4">
                   <TextField 
                       label="Street Address" 
@@ -139,13 +207,39 @@ const Address = () => {
                       value={newAddress.pincode}
                       onChange={(e) => setNewAddress({...newAddress, pincode: e.target.value})}
                   />
+                  <div className="flex flex-col gap-2">
+                      <label className="text-gray-400 text-sm font-medium">Address Type</label>
+                      <div className="grid grid-cols-3 gap-3">
+                          {['Home', 'Work', 'Other'].map((type) => (
+                              <Button
+                                  key={type}
+                                  variant={newAddress.type === type ? "contained" : "outlined"}
+                                  onClick={() => setNewAddress({ ...newAddress, type })}
+                                  sx={{
+                                      textTransform: 'none',
+                                      fontWeight: 'bold',
+                                      borderRadius: '10px',
+                                      borderColor: newAddress.type === type ? '#ea580c' : 'rgba(255,255,255,0.2)',
+                                      backgroundColor: newAddress.type === type ? '#ea580c' : 'transparent',
+                                      color: newAddress.type === type ? 'white' : 'gray',
+                                      '&:hover': {
+                                          backgroundColor: newAddress.type === type ? '#c2410c' : 'rgba(255,255,255,0.05)',
+                                          borderColor: '#ea580c',
+                                      }
+                                  }}
+                              >
+                                  {type}
+                              </Button>
+                          ))}
+                      </div>
+                  </div>
                   <Button 
                       type="submit" 
                       fullWidth 
                       variant="contained" 
                       sx={{ mt: 2, py: 1.5, backgroundColor: '#ea580c', '&:hover': { backgroundColor: '#c2410c' } }}
                   >
-                      Save Address
+                      {editingAddressId ? "Update Address" : "Save Address"}
                   </Button>
               </form>
           </Box>

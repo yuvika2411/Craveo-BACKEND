@@ -1,5 +1,5 @@
 export const isPresentInFavorites=({favorites,restaurantId})=>{
-    return favorites.some(favorite => favorite.id === restaurantId || favorite.restaurant?.id === restaurantId);
+    return favorites.some(favorite => String(favorite.id) === String(restaurantId) || String(favorite.restaurant?.id) === String(restaurantId));
 }
 
 export const isPresentInCart=({cart,restaurantId})=>{

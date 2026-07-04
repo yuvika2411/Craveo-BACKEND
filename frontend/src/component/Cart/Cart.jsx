@@ -3,12 +3,16 @@ import { Button, Divider, IconButton, Modal, Box, TextField } from '@mui/materia
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import HomeIcon from '@mui/icons-material/Home';
+import WorkIcon from '@mui/icons-material/Work';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { findCart, updateCartItem, removeCartItem } from '../State/Cart/Action';
 import { createOrder } from '../State/Order/Action';
+import { api } from '../Config/api';
+import { getUser } from '../State/Authentication/Action';
 //cart component l
 const modalStyle = {
   position: 'absolute',
@@ -39,9 +43,9 @@ const Cart = () => {
     const { cart, auth } = useSelector(store => store);
     const dispatch = useDispatch();
 
-    const [selectedAddress, setSelectedAddress] = useState(null);
+     const [selectedAddress, setSelectedAddress] = useState(null);
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-    const [newAddress, setNewAddress] = useState({ street: '', city: '', state: '', pincode: '' });
+    const [newAddress, setNewAddress] = useState({ street: '', city: '', state: '', pincode: '', type: 'Home' });
     const [localAddresses, setLocalAddresses] = useState([]);
 
     const allAddresses = [...(auth.user?.addresses || []), ...localAddresses];
@@ -66,13 +70,50 @@ const Cart = () => {
         }
     };
 
-    const handleAddNewAddress = (e) => {
+    const handleAddNewAddress = async (e) => {
         e.preventDefault();
-        const addressObj = { ...newAddress, id: Date.now() };
-        setLocalAddresses([...localAddresses, addressObj]);
-        setSelectedAddress(addressObj);
-        setIsAddressModalOpen(false);
-        setNewAddress({ street: '', city: '', state: '', pincode: '' });
+        try {
+            if (auth.user) {
+                const { data } = await api.post("/api/users/addresses", newAddress);
+                dispatch(getUser());
+                if (data && data.addresses) {
+                    const latestAddress = data.addresses[data.addresses.length - 1];
+                    setSelectedAddress(latestAddress);
+                }
+                setIsAddressModalOpen(false);
+                setNewAddress({ street: '', city: '', state: '', pincode: '', type: 'Home' });
+            } else {
+                const addressObj = { ...newAddress, id: Date.now() };
+                setLocalAddresses([...localAddresses, addressObj]);
+                setSelectedAddress(addressObj);
+                setIsAddressModalOpen(false);
+                setNewAddress({ street: '', city: '', state: '', pincode: '', type: 'Home' });
+            }
+        } catch (error) {
+            console.error("Error adding address:", error);
+            const addressObj = { ...newAddress, id: Date.now() };
+            setLocalAddresses([...localAddresses, addressObj]);
+            setSelectedAddress(addressObj);
+            setIsAddressModalOpen(false);
+            setNewAddress({ street: '', city: '', state: '', pincode: '', type: 'Home' });
+        }
+    };
+
+    const getAddressIcon = (type, isSelected) => {
+        const sxColor = { color: isSelected ? '#ea580c' : 'gray', mt: 0.5 };
+        switch (type?.toLowerCase()) {
+            case 'work':
+                return <WorkIcon sx={sxColor} />;
+            case 'other':
+                return <LocationOnIcon sx={sxColor} />;
+            default:
+                return <HomeIcon sx={sxColor} />;
+        }
+    };
+
+    const getAddressLabel = (type) => {
+        if (!type) return 'Home';
+        return type.charAt(0).toUpperCase() + type.slice(1);
     };
 
     const cartItems = cart.cartItems || [];
@@ -150,9 +191,9 @@ const Cart = () => {
                                         onClick={() => setSelectedAddress(addr)}
                                         className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex gap-3 ${isSelected ? 'border-[#ea580c] bg-[#ea580c]/10' : 'border-white/10 hover:border-white/30 bg-white/5'}`}
                                     >
-                                        <HomeIcon sx={{ color: isSelected ? '#ea580c' : 'gray', mt: 0.5 }} />
+                                        {getAddressIcon(addr.type, isSelected)}
                                         <div className="flex-1">
-                                            <h4 className={`font-semibold ${isSelected ? 'text-[#ea580c]' : 'text-gray-300'}`}>Home</h4>
+                                            <h4 className={`font-semibold ${isSelected ? 'text-[#ea580c]' : 'text-gray-300'}`}>{getAddressLabel(addr.type)}</h4>
                                             <p className="text-gray-400 text-sm mt-1 leading-relaxed">
                                                 {addr.street ? `${addr.street}, ${addr.city}, ${addr.state}, ${addr.pincode}` : addr.address}
                                             </p>
@@ -274,6 +315,32 @@ const Cart = () => {
                             value={newAddress.pincode}
                             onChange={(e) => setNewAddress({...newAddress, pincode: e.target.value})}
                         />
+                        <div className="flex flex-col gap-2">
+                            <label className="text-gray-400 text-sm font-medium">Address Type</label>
+                            <div className="grid grid-cols-3 gap-3">
+                                {['Home', 'Work', 'Other'].map((type) => (
+                                    <Button
+                                        key={type}
+                                        variant={newAddress.type === type ? "contained" : "outlined"}
+                                        onClick={() => setNewAddress({ ...newAddress, type })}
+                                        sx={{
+                                            textTransform: 'none',
+                                            fontWeight: 'bold',
+                                            borderRadius: '10px',
+                                            borderColor: newAddress.type === type ? '#ea580c' : 'rgba(255,255,255,0.2)',
+                                            backgroundColor: newAddress.type === type ? '#ea580c' : 'transparent',
+                                            color: newAddress.type === type ? 'white' : 'gray',
+                                            '&:hover': {
+                                                backgroundColor: newAddress.type === type ? '#c2410c' : 'rgba(255,255,255,0.05)',
+                                                borderColor: '#ea580c',
+                                            }
+                                        }}
+                                    >
+                                        {type}
+                                    </Button>
+                                ))}
+                            </div>
+                        </div>
                         <Button 
                             type="submit" 
                             fullWidth 

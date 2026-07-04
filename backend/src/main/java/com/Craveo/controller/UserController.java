@@ -52,4 +52,33 @@ public class UserController {
         User updatedUser = userRepository.save(user);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
+
+    @PutMapping("/addresses/{id}")
+    public ResponseEntity<User> updateAddress(@PathVariable Long id,
+                                              @RequestBody Address addressData,
+                                              @RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
+        Address address = addressRepository.findById(id)
+                .orElseThrow(() -> new Exception("Address not found"));
+        address.setStreet(addressData.getStreet());
+        address.setCity(addressData.getCity());
+        address.setState(addressData.getState());
+        address.setPincode(addressData.getPincode());
+        address.setType(addressData.getType());
+        addressRepository.save(address);
+        
+        // Return updated user profile
+        User updatedUser = userService.findUserByJwtToken(jwt);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/addresses/{id}")
+    public ResponseEntity<User> deleteAddress(@PathVariable Long id,
+                                              @RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
+        user.getAddresses().removeIf(a -> a.getId().equals(id));
+        User updatedUser = userRepository.save(user);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
 }
+
