@@ -2,7 +2,7 @@
 
 Craveo is a full-stack online food ordering platform inspired by modern food delivery applications. It enables customers to discover restaurants, browse menus, manage carts, and order food through a responsive and intuitive interface. Restaurant owners can efficiently manage their restaurants, menu items, food categories, and events through a dedicated dashboard.
 
-The project is built using **React.js**, **Spring Boot**, **TiDB Cloud**, and **Cloudinary**, following RESTful architecture, JWT-based authentication, and scalable backend design.
+The application is built using **React.js**, **Spring Boot**, **TiDB Cloud**, **Cloudinary**, and **Docker**, following RESTful architecture, JWT-based authentication, and scalable backend design. It demonstrates end-to-end full-stack development, cloud deployment, secure authentication, image management, and modern UI/UX practices.
 
 This project showcases practical experience in full-stack development, cloud deployment, secure authentication, database management, and modern UI/UX design.
 
@@ -18,7 +18,6 @@ This project showcases practical experience in full-stack development, cloud dep
 - Search Restaurants & Food Items
 - Restaurant Details Page
 - Browse Food Categories
-- View Restaurant Events
 - Add & Remove Items from Cart
 - Favourite Restaurants
 - Responsive User Interface
@@ -31,7 +30,6 @@ This project showcases practical experience in full-stack development, cloud dep
 - Add, Edit & Delete Food Items
 - Upload & Update Food Images
 - Food Category Management
-- Event Management
 - Food Availability Toggle
 - Restaurant Open / Close Status
 
@@ -58,13 +56,15 @@ This project showcases practical experience in full-stack development, cloud dep
 - Spring Data JPA
 - Hibernate
 - REST APIs
+- Maven
 
 ### Database
 
 - TiDB Cloud (MySQL Compatible)
 
-### Cloud & Deployment
+### Cloud & Devops
 
+- Docker
 - Cloudinary
 - Render
 - Vercel
@@ -138,8 +138,9 @@ This project demonstrates experience with:
 - Spring Security
 - JWT Authentication
 - Cloudinary Integration
+- Docker Containerization
 - Cloud Database Management
-- Cloud Deployment
+- Cloud Deployment (Render & Vercel)
 - Responsive UI Design
 - File Upload Handling
 - Git & GitHub Workflow
@@ -148,7 +149,7 @@ This project demonstrates experience with:
 
 ## Developer
 
-**Ishita Jindal**
+**Yuvika Jindal**
 
 **GitHub:**  
 https://github.com/yuvika2411
