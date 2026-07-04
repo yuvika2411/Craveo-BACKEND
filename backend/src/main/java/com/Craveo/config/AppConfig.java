@@ -71,9 +71,7 @@ public class AppConfig {
             CorsConfiguration cfg = new CorsConfiguration();
 
             cfg.setAllowedOrigins(Arrays.asList(
-                    "http://localhost:5174",
-                    "https://9t14rxjr-5174.inc1.devtunnels.ms/"
-                    // ✅ your frontend
+                    "http://localhost:5174"
             ));
 
             cfg.setAllowedMethods(Collections.singletonList("*"));
