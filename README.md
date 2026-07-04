@@ -1,124 +1,163 @@
-# 🍔 Craveo – Online Food Ordering Website
+# Craveo - Online Food Ordering Platform
 
-Craveo is a full-stack multi-restaurant online food ordering platform built to provide a smooth, secure, and user-friendly food delivery experience for customers, restaurant owners, and admins.
+Craveo is a full-stack online food ordering platform inspired by modern food delivery applications. It enables customers to discover restaurants, browse menus, manage carts, and order food through a responsive and intuitive interface. Restaurant owners can efficiently manage their restaurants, menu items, food categories, and events through a dedicated dashboard.
 
-The platform allows users to browse restaurants, explore menus, manage carts, place orders, and complete secure payments through a responsive and modern interface.
+The project is built using **React.js**, **Spring Boot**, **TiDB Cloud**, and **Cloudinary**, following RESTful architecture, JWT-based authentication, and scalable backend design.
 
-Craveo is being developed using React.js, Spring Boot, MySQL, and Docker with a focus on clean UI/UX, secure JWT authentication, RESTful APIs, and scalable architecture.
-The project aims to replicate the workflow of real-world food delivery platforms while showcasing strong frontend, backend, database, and DevOps development skills.
-
-The project focuses on responsive UI, secure authentication, role-based access control, cart management, & scalable backend APIs.
+This project showcases practical experience in full-stack development, cloud deployment, secure authentication, database management, and modern UI/UX design.
 
 ---
 
-## 🚀 Features
+## Features
 
-### 👤 User Features
+### Customer
 
-* User Registration & Login
-* Secure JWT Authentication
-* Browse Restaurants & Food Items
-* Add to Cart Functionality
-* Order Management
-* Responsive UI for all devices
-* Secure Checkout Integration
+- User Registration & Login
+- JWT Authentication
+- Browse Restaurants
+- Search Restaurants & Food Items
+- Restaurant Details Page
+- Browse Food Categories
+- View Restaurant Events
+- Add & Remove Items from Cart
+- Favourite Restaurants
+- Responsive User Interface
 
-### 🏪 Restaurant Owner Features
+### Restaurant Owner
 
-* Restaurant Owner Dashboard
-* Add / Update / Delete Food Items
-* Manage Orders
-* Restaurant Management
-
-### 🛠️ Admin Features
-
-* Role-Based Access Control
-* Manage Users & Restaurant Owners
-* Monitor Platform Activities
+- Restaurant Registration
+- Restaurant Profile Management
+- Upload & Update Restaurant Images
+- Add, Edit & Delete Food Items
+- Upload & Update Food Images
+- Food Category Management
+- Event Management
+- Food Availability Toggle
+- Restaurant Open / Close Status
 
 ---
 
-## 🧑‍💻 Tech Stack
+## Tech Stack
 
 ### Frontend
 
-* React.js
-* Redux
-* Tailwind CSS
-* Axios
+- React.js
+- Redux
+- React Router
+- Axios
+- Tailwind CSS
+- Material UI
+- Vite
 
 ### Backend
 
-* Spring Boot 3
-* Spring Security
-* JWT Authentication
-* REST APIs
+- Java
+- Spring Boot
+- Spring Security
+- JWT Authentication
+- Spring Data JPA
+- Hibernate
+- REST APIs
 
 ### Database
 
-* MySQL
+- TiDB Cloud (MySQL Compatible)
 
-### DevOps & Tools
+### Cloud & Deployment
 
-* Docker
-* Git & GitHub
-* Postman
-
-### Payment Integration
-
-* Stripe
+- Cloudinary
+- Render
+- Vercel
+- Git & GitHub
 
 ---
 
-## 📂 Project Structure
+## Authentication & Security
 
-```bash
-Craveo-Ordering-Website/
+- JWT Authentication
+- Spring Security
+- Role-Based Authorization
+- Protected Routes
+- Secure REST APIs
+
+---
+
+## Project Structure
+
+```text
+Craveo-Ordering-Website
 │
-├── frontend/          # React Frontend
-├── backend/           # Spring Boot Backend
-├── docker/            # Docker Configuration
-└── README.md
+├── frontend
+│   ├── Components
+│   ├── Pages
+│   ├── Redux
+│   ├── Config
+│   └── Assets
+│
+└── backend
+    ├── Controller
+    ├── Service
+    ├── Repository
+    ├── Model
+    ├── Security
+    ├── Config
+    └── Request
 ```
 
 ---
 
-## 🔐 Authentication
+## Cloud Integrations
 
-Craveo uses:
-
-* Spring Security
-* JWT Token Authentication
-* Role-Based Authorization
-
----
-
-## 💳 Payment Integration
-
-Stripe is integrated for secure payment processing.
+- Cloudinary for image storage
+- TiDB Cloud as the managed database
+- Render for backend deployment
+- Vercel for frontend deployment
 
 ---
 
-## 🌟 Future Enhancements
+## Upcoming Features
 
-* Real-time Order Tracking
-* AI-based Food Recommendations
-* Live Chat Support
-* Ratings & Reviews
-* Push Notifications
-* Delivery Partner Module
-
----
-
-## 👩‍💻 Developer
-
-**Yuvika Jindal**
-
-* GitHub:  https://github.com/yuvika2411
-* LinkedIn: https://www.linkedin.com/in/yuvika-jindal-6b3181328/
+- Stripe Payment Gateway Integration
+- Checkout & Order Placement
+- Restaurant Order Dashboard
+- Customer Order History
+- Real-time Order Status Updates
+- Ratings & Reviews
+- Email Notifications
 
 ---
 
-## ⭐ Support
+## Learning Outcomes
 
-If you like this project, give it a ⭐ on GitHub!
+This project demonstrates experience with:
+
+- Full Stack Web Development
+- REST API Development
+- React & Redux
+- Spring Boot
+- Spring Security
+- JWT Authentication
+- Cloudinary Integration
+- Cloud Database Management
+- Cloud Deployment
+- Responsive UI Design
+- File Upload Handling
+- Git & GitHub Workflow
+
+---
+
+## Developer
+
+**Ishita Jindal**
+
+**GitHub:**  
+https://github.com/yuvika2411
+
+**LinkedIn:**  
+https://www.linkedin.com/in/yuvika-jindal-6b3181328/
+
+---
+
+## Support
+
+If you found this project helpful, consider giving it a ⭐ on GitHub.
